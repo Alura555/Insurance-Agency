@@ -1,0 +1,20 @@
+<header  xmlns:th="http://thymeleaf.org"
+         xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <h1 class="home-ref">
+        <a  th:href="@{/}">Insurance Agency</a>
+    </h1>
+    <nav>
+        <ul>
+            <li><a href="/offers">Offers</a></li>
+            <li sec:authorize="isAuthenticated()">
+                <a th:href="@{/personal}">Personal page</a>
+            </li>
+            <li sec:authorize="isAuthenticated()">
+                <a th:href="@{/logout}">Logout</a>
+            </li>
+            <li sec:authorize="isAnonymous()">
+                <a th:href="@{/login}">Login</a>
+            </li>
+        </ul>
+    </nav>
+</header>

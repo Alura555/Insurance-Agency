@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Insurance Offer</title>
+    <link th:href="@{/style.css}" rel="stylesheet" />
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+<h1>Insurance Offer</h1>
+
+<div class="account offer-page">
+
+    <div class="offer-info">
+        <h2 th:text="${offer.title}"></h2>
+        <p>Type: <span th:text="${offer.insuranceType.title}"></span></p>
+
+        <p>Company: <span th:text="${offer.companyName}"></span></p>
+        <p>Period: <span th:text="${offer.period}"></span></p>
+
+
+        <p>
+            <span th:text="${offer.description}"></span>
+        </p>
+
+
+    </div>
+
+    <div class="offer-price">
+        <ul>
+            <li>
+                <span th:text="${offer.price}"></span>
+            </li>
+            <li>
+                <div th:if="${offer.active}">
+                    <form th:action="@{/policies/new/{id}(id=${offer.id})}" method="post">
+                        <button type="submit">Buy</button>
+                    </form>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+</body>
+</html>

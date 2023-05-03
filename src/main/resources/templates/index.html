@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org">
+  <head>
+    <meta charset="UTF-8">
+    <title>Insurance Agency Webapp</title>
+      <link th:href="@{/style.css}" rel="stylesheet" />
+  </head>
+  <body>
+    <div th:replace="fragments/header :: header"></div>
+    <main>
+      <section id="home">
+        <h2>Welcome to our Insurance Agency</h2>
+        <p>At our agency, we offer a wide range of insurance policies to meet your needs. Whether you're looking for auto, home, or life insurance, we have you covered.</p>
+        <p>Use the links above to learn more about our policies and how we can help protect you and your family.</p>
+      </section>
+      <section>
+          <h2>Companies:</h2>
+          <ul class="main-page-links">
+              <li th:each="company : ${companies}">
+                  <a th:href="@{/offers(company=${company.id})}" th:text="${company.name}"></a>
+              </li>
+          </ul>
+
+          <h2>Insurance Types:</h2>
+          <ul class="main-page-links">
+              <li th:each="type : ${types}">
+                  <a th:href="@{/offers(type=${type.id})}" th:text="${type.title}"></a>
+              </li>
+          </ul>
+      </section>
+    </main>
+  </body>
+</html>

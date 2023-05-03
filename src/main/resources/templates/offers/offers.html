@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org">
+<head>
+	<title>Catalog of offers</title>
+    <link rel="stylesheet" href="js/nouislider.min.css">
+    <link rel="stylesheet" href="style.css"/>
+
+</head>
+<body>
+	<div th:replace="fragments/header :: header"></div>
+
+    <div class="content">
+    <div class="filter-box">
+        <h2>Filters</h2>
+        <form  th:action="@{/offers}" th:obj id="filter" method="get">
+          <label for="type">Insurance type:</label>
+          <select id="type" th:name="type">
+            <option th:selected="${selectedType == 0}" value="0">All</option>
+            <option th:each="type : ${types}"
+                    th:value="${type.id}"
+                    th:text="${type.title}"
+                    th:selected="${selectedType == type.id}"></option>
+          </select>
+          <label>Price:</label>
+            <div class="filter-price__inputs">
+                <label class="filter-price__label">
+                    <span class="filter-price__text">from</span>
+                    <input th:name="minPrice" th:value="${selectedMinPrice != null} ? ${selectedMinPrice}" type="number" th:min="${minPrice}" th:max="${maxPrice}" class="filter-price__input" id="input-min-price">
+                </label>
+                <label class="filter-price__label">
+                    <span class="filter-price__text">to</span>
+                    <input th:name="maxPrice" th:value="${selectedMaxPrice != null} ? ${selectedMaxPrice} : ${maxPrice}" type="number" th:min="${minPrice}" th:max="${maxPrice}" class="filter-price__input" id="input-max-price" th:placeholder="${maxPrice}">
+                </label>
+            </div>
+            <div class="filter-price__slider" id="range-slider-price"></div>
+          <label>Insurance company:</label>
+            <select th:name="company" id="company">
+                <option value="0">All</option>
+                <option th:each="company : ${companies}"
+                        th:value="${company.id}"
+                        th:text="${company.name}"
+                        th:selected="${selectedCompany == company.id}"></option>
+            </select>
+
+          <button type="submit">Apply Filters</button>
+            </form>
+        </div>
+
+
+	<div class="split right">
+        <div class="search-box">
+            <input form="filter" type="text" name="q" placeholder="Search..." th:value="${query != null} ? ${query}">
+            <button form="filter" type="submit">Search</button>
+        </div>
+
+        <div class="sort-box">
+		    <label for="sort">Sort by:</label>
+            <select form="filter" id="sort" th:name="sort">
+                <option th:each="option, index : ${sortOptions}"
+                        th:value="${index.count}"
+                        th:text="${option}"
+                        th:selected="${selectedSort == index.count}"></option>
+            </select>
+        </div>
+        <ul class="offer-list">
+            <li th:each="offer : ${offers}" class="offer-card">
+                <a class="offer-card-title-link" th:href="@{/offers/{id}(id=${offer.id})}">
+                    <h3 class="offer-card-title" th:text="${offer.title}"></h3>
+                    <span class="offer-card-price" th:text="${offer.price}"></span>
+                    <br>
+                    <div class="add-button">
+                        <form th:action="@{/policies/new/{id}(id=${offer.id})}" method="post">
+                            <button type="submit">Buy</button>
+                        </form>
+                    </div>
+                </a>
+            </li>
+        </ul>
+
+        <div th:if="${totalPages==0 or page >= totalPages}">
+            <H2>No results found.</H2>
+            We didn't find any results with the filter you selected.
+        </div>
+
+        <nav aria-label="Page navigation" th:if="${totalPages > 0 and page < totalPages}">
+            <div th:with="params=(${!#strings.isEmpty(selectedMaxPrice) && maxPrice != maxPrice} ? |&selectedMaxPrice=${selectedMaxPrice}| : '') +
+                    (${!#strings.isEmpty(selectedMinPrice) && selectedMinPrice != minPrice} ? |&minPrice=${selectedMinPrice}| : '') +
+                    (${!#strings.isEmpty(query)} ? |&q=${query}| : '') +
+                    (${selectedCompany != 0} ? |&company=${selectedCompany}| : '') +
+                    (${selectedType != 0} ? |&type=${selectedType}| : '') +
+                    (${selectedSort != 0} ? |&sort=${selectedSort}| : '')">
+
+                <ul class="pagination">
+                            <li class="page-item" th:if="${page > 0}">
+                                <a class="page-link" th:href="@{|/offers?page=0${params}|}">«</a>
+                            </li>
+                            <li class="page-item" th:if="${page > 0}">
+                                <a class="page-link" th:href="@{|/offers?page=${page-1}${params}|}">‹</a>
+                            </li>
+                            <li class="page-item" th:classappend="${page == 0 ? 'active' : ''}">
+                                <a class="page-link" th:href="@{|/offers?page=0${params}|}">1</a>
+                            </li>
+
+                            <li class="page-item" th:if="${page - 3 > 0}">
+                                <a class="page-link">...</a>
+                            </li>
+                            <li class="page-item" th:if="${totalPages > 2}"
+                                th:classappend="${page == p} ? 'active'"
+                                th:each="p : ${#numbers.sequence(page > 2 ? page - 2 : 1, page + 3 < totalPages ? page + 2 : totalPages - 2)}">
+                                <a class="page-link" th:href="@{|/offers?page=${p}${params}|}" th:text="${p+1}"></a>
+                            </li>
+                            <li class="page-item" th:if="${page + 4 < totalPages}">
+                                <a class="page-link">...</a>
+                            </li>
+                            <li class="page-item" th:if="${totalPages > 1}"
+                                th:classappend="${page == totalPages - 1 ? 'active' : ''}">
+                                <a class="page-link" th:href="@{|/offers?page=${totalPages-1}${params}|}" th:text="${totalPages}"></a>
+                            </li>
+                            <li class="page-item" th:if="${page != totalPages - 1}">
+                                <a class="page-link" th:href="@{|/offers?page=${page+1}${params}|}">›</a>
+                            </li>
+                            <li class="page-item" th:if="${page != totalPages - 1}">
+                                <a class="page-link" th:href="@{|/offers?page=${totalPages-1}${params}|}">»</a>
+                            </li>
+                        </ul>
+                    </div>
+        </nav>
+
+	</div>
+    </div>
+    <script src="js/nouislider.min.js"></script>
+    <script src="js/range-slider.js"></script>
+    <script src="js/filter-submit.js"></script>
+</body>
+</html>
