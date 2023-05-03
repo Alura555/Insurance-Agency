@@ -1,0 +1,102 @@
+CREATE TABLE IF NOT EXISTS Insurance_types(
+id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+title VARCHAR(20) NOT NULL,
+is_active BOOLEAN NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS Document_types(
+id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+title VARCHAR(30) NOT NULL,
+is_active BOOLEAN NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS Roles(
+id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+title VARCHAR(20) NOT NULL,
+is_active BOOLEAN NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS Companies (
+id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+name VARCHAR(255) NOT NULL,
+email VARCHAR(255) NOT NULL,
+phone VARCHAR(20) NOT NULL,
+address VARCHAR(255) NOT NULL,
+is_active BOOLEAN NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS Users(
+id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+username VARCHAR(20) NOT NULL UNIQUE,
+second_name VARCHAR(20) NULL,
+name VARCHAR(20) NOT NULL,
+birthday DATE NULL,
+phone VARCHAR(20) NOT NULL,
+email VARCHAR(45) NOT NULL UNIQUE,
+password VARCHAR(255) NOT NULL,
+is_active BOOLEAN NOT NULL,
+role_id INT NOT NULL,
+FOREIGN KEY (role_id) REFERENCES Roles(ID)
+);
+
+CREATE TABLE IF NOT EXISTS Companies_managers(
+id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+manager_id INT NOT NULL, 
+company_id INT NOT NULL,
+FOREIGN KEY (company_id) REFERENCES Companies(id),
+FOREIGN KEY (manager_id) REFERENCES Users(id)
+);
+
+
+CREATE TABLE IF NOT EXISTS Offers(
+id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+title VARCHAR(50) NOT NULL,
+period_in_months TINYINT UNSIGNED NOT NULL,
+description TEXT NOT NULL,
+price DECIMAL(10, 2) NOT NULL,
+is_active BOOLEAN NOT NULL,
+company_id INT NOT NULL,
+insurance_type_id INT NOT NULL,
+FOREIGN KEY (company_id) REFERENCES Companies(id),
+FOREIGN KEY (insurance_type_id) REFERENCES Insurance_types(id)
+);
+
+
+CREATE TABLE IF NOT EXISTS Required_documents(
+id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+document_type_id INT NOT NULL, 
+offer_id INT NOT NULL,
+FOREIGN KEY (document_type_id) REFERENCES Document_types(id),
+FOREIGN KEY (offer_id) REFERENCES Offers(id)
+);
+
+CREATE TABLE IF NOT EXISTS Documents(
+id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+document_type_id int not null, 
+number varchar(25) not null,
+issue_date date,
+FOREIGN KEY (document_type_id) REFERENCES Document_types(id)
+);
+
+CREATE TABLE IF NOT EXISTS Policies(
+id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+client_id INT NOT NULL,
+manager_id INT NULL,
+offer_id INT NOT NULL,
+creation_date DATE NOT NULL,
+start_date DATE NULL,
+is_approved BOOLEAN NOT NULL,
+is_active BOOLEAN NOT NULL,
+FOREIGN KEY (client_id) REFERENCES Users(id),
+FOREIGN KEY (manager_id) REFERENCES Users(id),
+FOREIGN KEY (offer_id) REFERENCES Offers(id)
+);
+
+
+CREATE TABLE IF NOT EXISTS Documents_sets(
+id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+document_id INT NOT NULL, 
+policy_id INT NOT NULL,
+FOREIGN KEY (document_id) REFERENCES Documents(id),
+FOREIGN KEY (policy_id) REFERENCES Policies(id)
+);
