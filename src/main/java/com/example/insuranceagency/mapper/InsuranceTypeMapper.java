@@ -1,7 +1,7 @@
-package com.example.insuranceagency.mappers;
+package com.example.insuranceagency.mapper;
 
-import com.example.insuranceagency.dtos.InsuranceTypeDto;
-import com.example.insuranceagency.entities.InsuranceType;
+import com.example.insuranceagency.dto.InsuranceTypeDto;
+import com.example.insuranceagency.entity.InsuranceType;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
