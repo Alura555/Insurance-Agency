@@ -1,22 +1,22 @@
-package com.example.insuranceagency.controllers;
+package com.example.insuranceagency.controller;
 
-import com.example.insuranceagency.dtos.InsuranceTypeDto;
-import com.example.insuranceagency.dtos.OfferDto;
-import com.example.insuranceagency.entities.Company;
-import com.example.insuranceagency.entities.Offer;
-import com.example.insuranceagency.exceptions.NotFoundException;
-import com.example.insuranceagency.filters.OfferFilter;
-import com.example.insuranceagency.mappers.OfferMapper;
-import com.example.insuranceagency.services.CompanyService;
-import com.example.insuranceagency.services.InsuranceTypeService;
-import com.example.insuranceagency.services.OfferService;
+import com.example.insuranceagency.dto.InsuranceTypeDto;
+import com.example.insuranceagency.dto.OfferDto;
+import com.example.insuranceagency.entity.Company;
+import com.example.insuranceagency.entity.Offer;
+import com.example.insuranceagency.exception.NotFoundException;
+import com.example.insuranceagency.filter.OfferFilter;
+import com.example.insuranceagency.mapper.OfferMapper;
+import com.example.insuranceagency.service.CompanyService;
+import com.example.insuranceagency.service.InsuranceTypeService;
+import com.example.insuranceagency.service.OfferService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -67,8 +67,8 @@ public class OffersController {
         List<InsuranceTypeDto> insuranceTypeList = insuranceTypeService.getInsuranceTypes();
         List<Company> companies = companyService.getActiveCompanies();
         List<String> sortOptions = offerService.getSortTypes();
-        Integer maxPrice = offerService.getMaxPrice();
-        Integer minPrice = offerService.getMinPrice();
+        BigDecimal maxPrice = offerService.getMaxPrice();
+        BigDecimal minPrice = offerService.getMinPrice();
 
 
         model.addAttribute("offers", offerDtos);
