@@ -1,8 +1,7 @@
-package com.example.insuranceagency.repositories;
+package com.example.insuranceagency.repository;
 
-import com.example.insuranceagency.entities.DocumentType;
+import com.example.insuranceagency.entity.DocumentType;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 import java.util.Optional;

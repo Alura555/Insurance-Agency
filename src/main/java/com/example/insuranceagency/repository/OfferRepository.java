@@ -1,14 +1,13 @@
-package com.example.insuranceagency.repositories;
+package com.example.insuranceagency.repository;
 
 
-import com.example.insuranceagency.entities.Offer;
+import com.example.insuranceagency.entity.Offer;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface OfferRepository extends JpaRepository<Offer, Long>, JpaSpecificationExecutor<Offer> {

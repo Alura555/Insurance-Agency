@@ -1,9 +1,7 @@
-package com.example.insuranceagency.repositories;
+package com.example.insuranceagency.repository;
 
 
-import com.example.insuranceagency.entities.Company;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import com.example.insuranceagency.entity.Company;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

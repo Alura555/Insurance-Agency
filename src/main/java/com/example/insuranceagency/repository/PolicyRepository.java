@@ -1,7 +1,7 @@
-package com.example.insuranceagency.repositories;
+package com.example.insuranceagency.repository;
 
-import com.example.insuranceagency.entities.Policy;
-import com.example.insuranceagency.entities.User;
+import com.example.insuranceagency.entity.Policy;
+import com.example.insuranceagency.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

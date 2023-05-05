@@ -1,6 +1,6 @@
-package com.example.insuranceagency.repositories;
+package com.example.insuranceagency.repository;
 
-import com.example.insuranceagency.entities.Role;
+import com.example.insuranceagency.entity.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface RoleRepository extends JpaRepository<Role, Long> {
