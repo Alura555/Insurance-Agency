@@ -1,13 +1,9 @@
-package com.example.insuranceagency.services.implementation;
+package com.example.insuranceagency.service.implementation;
 
-import com.example.insuranceagency.entities.Company;
-import com.example.insuranceagency.exceptions.NotFoundException;
-import com.example.insuranceagency.repositories.CompanyRepository;
-import com.example.insuranceagency.services.CompanyService;
+import com.example.insuranceagency.entity.Company;
+import com.example.insuranceagency.repository.CompanyRepository;
+import com.example.insuranceagency.service.CompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;

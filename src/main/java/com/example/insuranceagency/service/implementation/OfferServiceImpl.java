@@ -1,17 +1,18 @@
-package com.example.insuranceagency.services.implementation;
+package com.example.insuranceagency.service.implementation;
 
-import com.example.insuranceagency.entities.Offer;
-import com.example.insuranceagency.filters.OfferFilter;
-import com.example.insuranceagency.repositories.OfferRepository;
-import com.example.insuranceagency.services.OfferService;
+import com.example.insuranceagency.dto.OfferDto;
+import com.example.insuranceagency.entity.Offer;
+import com.example.insuranceagency.filter.OfferFilter;
+import com.example.insuranceagency.mapper.OfferMapper;
+import com.example.insuranceagency.repository.OfferRepository;
+import com.example.insuranceagency.service.OfferService;
 import com.example.insuranceagency.sorting.SortOption;
+import com.example.insuranceagency.sorting.SortOptionsList;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,11 +44,12 @@ public class OfferServiceImpl implements OfferService {
         return offerRepository.findById(id).orElse(null);
     }
 
-    public Integer getMaxPrice(){
-        return offerRepository.findTopByOrderByPriceDesc().getPrice().intValue();
+
+    public BigDecimal getMaxPrice(){
+        return offerRepository.findTopByOrderByPriceDesc().getPrice();
     }
 
-    public Integer getMinPrice(){
-        return offerRepository.findTopByOrderByPrice().getPrice().intValue();
+    public BigDecimal getMinPrice(){
+        return offerRepository.findTopByOrderByPrice().getPrice();
     }
 }

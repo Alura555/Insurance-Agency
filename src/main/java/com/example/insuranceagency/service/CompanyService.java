@@ -1,7 +1,6 @@
-package com.example.insuranceagency.services;
+package com.example.insuranceagency.service;
 
-import com.example.insuranceagency.entities.Company;
-import org.springframework.stereotype.Service;
+import com.example.insuranceagency.entity.Company;
 
 import java.util.List;
 
