@@ -1,4 +1,4 @@
-INSERT INTO Insurance_types(title, is_active) VALUES
+INSERT INTO insurance_type(title, is_active) VALUES
 ("Auto", true),
 ("Home", true),
 ("Renters", true),

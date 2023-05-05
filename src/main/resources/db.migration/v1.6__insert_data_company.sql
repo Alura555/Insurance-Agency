@@ -1,4 +1,4 @@
-INSERT INTO Companies (name, email, phone, address, is_active) VALUES
+INSERT INTO company (name, email, phone, address, is_active) VALUES
 ('ABC Insurance Company', 'abc.insurance@gmail.com', '1234567890', '123 Main Street, Anytown, USA', true),
 ('XYZ Insurance Company', 'xyz.insurance@gmail.com', '0987654321', '456 Oak Avenue, Anytown, USA', true),
 ('ABC Insurance Solutions', 'abc.solutions@gmail.com', '5555555555', '789 Elm Street, Anytown, USA', true),

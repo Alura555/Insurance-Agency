@@ -1,4 +1,4 @@
-INSERT INTO Document_types(title, is_active) VALUES
+INSERT INTO document_type(title, is_active) VALUES
 ("Passport", true),
 ("Driving License", true),
 ("Vehicle registration", true),

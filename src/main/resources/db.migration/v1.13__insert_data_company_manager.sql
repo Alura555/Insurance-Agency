@@ -1,4 +1,4 @@
-INSERT INTO Companies_managers (company_id, manager_id) VALUES
+INSERT INTO company_manager(company_id, manager_id) VALUES
 (1, 28),
 (2, 29),
 (3, 30),

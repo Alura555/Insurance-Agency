@@ -1,4 +1,4 @@
-INSERT INTO Offers (title, period_in_months, description, price, is_active, company_id, insurance_type_id)
+INSERT INTO offer(title, period_in_months, description, price, is_active, company_id, insurance_type_id)
 VALUES
 ('Basic Auto Insurance', 12, 'Coverage for damages caused by accidents', 100.00, 1, 1, 1),
 ('Comprehensive Auto Insurance', 24, 'Coverage for damages caused by accidents, theft, and natural disasters', 200.00, 1, 2, 1),

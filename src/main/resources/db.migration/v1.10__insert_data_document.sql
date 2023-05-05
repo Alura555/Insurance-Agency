@@ -1,4 +1,4 @@
-INSERT INTO Documents (document_type_id, number, issue_date)
+INSERT INTO document(document_type_id, number, issue_date)
 VALUES
 (1, 'DOC-001', '2020-01-01'),
 (2, 'DOC-002', '2019-03-12'),

@@ -1,4 +1,4 @@
-INSERT INTO Roles(title, is_active) VALUES
+INSERT INTO role(title, is_active) VALUES
 ("ADMIN", true),
 ("MANAGER", true),
 ("CLIENT", true),

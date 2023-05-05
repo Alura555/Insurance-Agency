@@ -1,4 +1,4 @@
-INSERT INTO Policies (client_id, manager_id, offer_id, creation_date, start_date, is_approved, is_active)
+INSERT INTO policy (client_id, manager_id, offer_id, creation_date, start_date, is_approved, is_active)
 VALUES
 (1, NULL, 5, '2023-02-01', NULL, false, true),
 (2, NULL, 12, '2023-02-02', NULL, false, true),

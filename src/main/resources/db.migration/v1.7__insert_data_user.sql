@@ -1,4 +1,4 @@
-INSERT INTO Users(username, second_name, name, birthday, phone, email, password, is_active, role_id) VALUES
+INSERT INTO user(username, second_name, name, birthday, phone, email, password, is_active, role_id) VALUES
 ('client1', 'Doe', 'John', '1990-01-01', '123456789', 'client1@example.com', '$2a$10$1lzN5PDfyrs/eHVRKgZN4OHG21oCa8z7inh9/tDPSBA6GfUVuKZMC', true, 3),
 ('client2', 'Smith', 'Jane', '1995-05-05', '987654321', 'client2@example.com', '$2a$10$1lzN5PDfyrs/eHVRKgZN4OHG21oCa8z7inh9/tDPSBA6GfUVuKZMC', true, 3),
 ('client3', 'Williams', 'David', '1985-12-25', '555555555', 'client3@example.com', '$2a$10$1lzN5PDfyrs/eHVRKgZN4OHG21oCa8z7inh9/tDPSBA6GfUVuKZMC', true, 3),

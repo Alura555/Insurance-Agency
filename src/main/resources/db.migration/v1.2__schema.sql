@@ -1,22 +1,22 @@
-CREATE TABLE IF NOT EXISTS Insurance_types(
+CREATE TABLE IF NOT EXISTS insurance_type(
 id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
 title VARCHAR(20) NOT NULL,
 is_active BOOLEAN NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS Document_types(
+CREATE TABLE IF NOT EXISTS document_type(
 id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
 title VARCHAR(30) NOT NULL,
 is_active BOOLEAN NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS Roles(
+CREATE TABLE IF NOT EXISTS role(
 id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
 title VARCHAR(20) NOT NULL,
 is_active BOOLEAN NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS Companies (
+CREATE TABLE IF NOT EXISTS company(
 id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
 name VARCHAR(255) NOT NULL,
 email VARCHAR(255) NOT NULL,
@@ -25,7 +25,7 @@ address VARCHAR(255) NOT NULL,
 is_active BOOLEAN NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS Users(
+CREATE TABLE IF NOT EXISTS user(
 id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
 username VARCHAR(20) NOT NULL UNIQUE,
 second_name VARCHAR(20) NULL,
@@ -36,19 +36,19 @@ email VARCHAR(45) NOT NULL UNIQUE,
 password VARCHAR(255) NOT NULL,
 is_active BOOLEAN NOT NULL,
 role_id INT NOT NULL,
-FOREIGN KEY (role_id) REFERENCES Roles(ID)
+FOREIGN KEY (role_id) REFERENCES role(id)
 );
 
-CREATE TABLE IF NOT EXISTS Companies_managers(
+CREATE TABLE IF NOT EXISTS company_manager(
 id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
 manager_id INT NOT NULL, 
 company_id INT NOT NULL,
-FOREIGN KEY (company_id) REFERENCES Companies(id),
-FOREIGN KEY (manager_id) REFERENCES Users(id)
+FOREIGN KEY (company_id) REFERENCES company(id),
+FOREIGN KEY (manager_id) REFERENCES user(id)
 );
 
 
-CREATE TABLE IF NOT EXISTS Offers(
+CREATE TABLE IF NOT EXISTS offer(
 id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
 title VARCHAR(50) NOT NULL,
 period_in_months TINYINT UNSIGNED NOT NULL,
@@ -57,28 +57,28 @@ price DECIMAL(10, 2) NOT NULL,
 is_active BOOLEAN NOT NULL,
 company_id INT NOT NULL,
 insurance_type_id INT NOT NULL,
-FOREIGN KEY (company_id) REFERENCES Companies(id),
-FOREIGN KEY (insurance_type_id) REFERENCES Insurance_types(id)
+FOREIGN KEY (company_id) REFERENCES company(id),
+FOREIGN KEY (insurance_type_id) REFERENCES insurance_type(id)
 );
 
 
-CREATE TABLE IF NOT EXISTS Required_documents(
+CREATE TABLE IF NOT EXISTS required_document(
 id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
 document_type_id INT NOT NULL, 
 offer_id INT NOT NULL,
-FOREIGN KEY (document_type_id) REFERENCES Document_types(id),
-FOREIGN KEY (offer_id) REFERENCES Offers(id)
+FOREIGN KEY (document_type_id) REFERENCES document_type(id),
+FOREIGN KEY (offer_id) REFERENCES offer(id)
 );
 
-CREATE TABLE IF NOT EXISTS Documents(
+CREATE TABLE IF NOT EXISTS document(
 id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
 document_type_id int not null, 
 number varchar(25) not null,
 issue_date date,
-FOREIGN KEY (document_type_id) REFERENCES Document_types(id)
+FOREIGN KEY (document_type_id) REFERENCES document_type(id)
 );
 
-CREATE TABLE IF NOT EXISTS Policies(
+CREATE TABLE IF NOT EXISTS policy(
 id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
 client_id INT NOT NULL,
 manager_id INT NULL,
@@ -87,16 +87,16 @@ creation_date DATE NOT NULL,
 start_date DATE NULL,
 is_approved BOOLEAN NOT NULL,
 is_active BOOLEAN NOT NULL,
-FOREIGN KEY (client_id) REFERENCES Users(id),
-FOREIGN KEY (manager_id) REFERENCES Users(id),
-FOREIGN KEY (offer_id) REFERENCES Offers(id)
+FOREIGN KEY (client_id) REFERENCES user(id),
+FOREIGN KEY (manager_id) REFERENCES user(id),
+FOREIGN KEY (offer_id) REFERENCES offer(id)
 );
 
 
-CREATE TABLE IF NOT EXISTS Documents_sets(
+CREATE TABLE IF NOT EXISTS document_set(
 id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
 document_id INT NOT NULL, 
 policy_id INT NOT NULL,
-FOREIGN KEY (document_id) REFERENCES Documents(id),
-FOREIGN KEY (policy_id) REFERENCES Policies(id)
+FOREIGN KEY (document_id) REFERENCES document(id),
+FOREIGN KEY (policy_id) REFERENCES policy(id)
 );
