@@ -1,4 +1,4 @@
-package com.example.insuranceagency.entities;
+package com.example.insuranceagency.entity;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -6,7 +6,7 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name="users")
+@Table
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,7 +15,7 @@ public class User {
     @Column(nullable = false, unique = true, length = 20)
     private String username;
 
-    @Column(nullable = true, length = 45)
+    @Column(length = 45)
     private String secondName;
 
     @Column(nullable = false, length = 45)

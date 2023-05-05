@@ -1,12 +1,13 @@
-package com.example.insuranceagency.entities;
+package com.example.insuranceagency.entity;
 
 import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.Set;
 
 @Entity
-@Table(name = "Offers")
+@Table
 public class Offer {
 
     @Id
@@ -23,7 +24,7 @@ public class Offer {
     private String description;
 
     @Column(nullable = false)
-    private Double price;
+    private BigDecimal price;
 
     @Column(nullable = false)
     private Boolean isActive;
@@ -43,7 +44,7 @@ public class Offer {
             inverseJoinColumns = @JoinColumn(name = "document_type_id"))
     private Set<DocumentType> documents;
 
-    @Formula("(SELECT COUNT(*) FROM Policies p WHERE p.offer_id = id AND p.is_approved = true)")
+    @Formula("(SELECT COUNT(*) FROM Policy p WHERE p.offer_id = id AND p.is_approved = true)")
     private Integer approvedPolicyCount;
     public Long getId() {
         return id;
@@ -69,11 +70,11 @@ public class Offer {
         this.description = description;
     }
 
-    public Double getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(Double price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 

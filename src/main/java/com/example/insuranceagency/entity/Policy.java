@@ -1,4 +1,4 @@
-package com.example.insuranceagency.entities;
+package com.example.insuranceagency.entity;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.Set;
 
 @Entity
-@Table(name = "Policies")
+@Table
 public class Policy {
 
     @Id

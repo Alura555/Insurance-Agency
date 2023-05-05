@@ -1,14 +1,13 @@
-package com.example.insuranceagency.entities;
+package com.example.insuranceagency.entity;
 
 import javax.persistence.*;
 
 @Entity
-@Table(name = "Document_types")
-public class DocumentType {
-
+@Table
+public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private int id;
 
     @Column(nullable = false, length = 20)
     private String title;
@@ -16,19 +15,11 @@ public class DocumentType {
     @Column(nullable = false)
     private boolean isActive;
 
-    public Boolean getActive() {
-        return isActive;
-    }
-
-    public void setActive(Boolean active) {
-        isActive = active;
-    }
-
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -38,5 +29,13 @@ public class DocumentType {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
     }
 }

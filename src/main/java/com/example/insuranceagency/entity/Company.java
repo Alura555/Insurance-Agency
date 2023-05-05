@@ -1,4 +1,4 @@
-package com.example.insuranceagency.entities;
+package com.example.insuranceagency.entity;
 
 import org.hibernate.annotations.Formula;
 
@@ -7,9 +7,8 @@ import java.util.Objects;
 import java.util.Set;
 
 @Entity
-@Table(name = "Companies")
+@Table
 public class Company {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -36,7 +35,7 @@ public class Company {
             inverseJoinColumns = @JoinColumn(name = "manager_id"))
     private Set<User> managers;
 
-    @Formula("(SELECT COUNT(*) FROM Offers o WHERE o.company_id = id AND o.is_active = true)")
+    @Formula("(SELECT COUNT(*) FROM Offer o WHERE o.company_id = id AND o.is_active = true)")
     private Integer activeOffersCount;
 
     public Company() {

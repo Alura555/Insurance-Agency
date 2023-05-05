@@ -1,4 +1,4 @@
-package com.example.insuranceagency.entities;
+package com.example.insuranceagency.entity;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -6,7 +6,7 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "Documents")
+@Table
 public class Document {
 
     @Id

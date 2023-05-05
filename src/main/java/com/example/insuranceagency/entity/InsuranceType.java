@@ -1,4 +1,4 @@
-package com.example.insuranceagency.entities;
+package com.example.insuranceagency.entity;
 
 import org.hibernate.annotations.Formula;
 
@@ -6,7 +6,7 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "Insurance_types")
+@Table
 public class InsuranceType {
 
     @Id
@@ -19,7 +19,7 @@ public class InsuranceType {
     @Column(nullable = false)
     private boolean isActive;
 
-    @Formula("(SELECT COUNT(*) FROM Offers o WHERE o.insurance_type_id = id AND o.is_active = true)")
+    @Formula("(SELECT COUNT(*) FROM Offer o WHERE o.insurance_type_id = id AND o.is_active = true)")
     private Integer activeOffersCount;
 
     public InsuranceType(String title, boolean isActive, Integer activeOffersCount) {
