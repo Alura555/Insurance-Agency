@@ -10,7 +10,6 @@ import com.example.insuranceagency.mapper.OfferMapper;
 import com.example.insuranceagency.service.CompanyService;
 import com.example.insuranceagency.service.InsuranceTypeService;
 import com.example.insuranceagency.service.OfferService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,17 +22,17 @@ import java.util.stream.Collectors;
 @Controller
 @RequestMapping("/offers")
 public class OffersController {
-    @Autowired
-    private OfferService offerService;
 
-    @Autowired
-    private OfferMapper offerMapper;
+    private final OfferService offerService;
 
-    @Autowired
-    private CompanyService companyService;
 
-    @Autowired
-    private InsuranceTypeService insuranceTypeService;
+    private final OfferMapper offerMapper;
+
+
+    private final CompanyService companyService;
+
+
+    private final InsuranceTypeService insuranceTypeService;
 
 
     @GetMapping("")

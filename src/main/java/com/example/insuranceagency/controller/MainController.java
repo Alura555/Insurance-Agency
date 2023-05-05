@@ -16,14 +16,18 @@ import java.util.List;
 @RequestMapping("/")
 public class MainController {
 
-    @Autowired
-    private CompanyService companyService;
-
-    @Autowired
-    private InsuranceTypeService insuranceTypeService;
-
     public static final int COMPANY_COUNT = 9;
     public static final int INSURANCE_TYPE_COUNT = 6;
+    private final CompanyService companyService;
+
+
+    private final InsuranceTypeService insuranceTypeService;
+
+    public MainController(CompanyService companyService, InsuranceTypeService insuranceTypeService) {
+        this.companyService = companyService;
+        this.insuranceTypeService = insuranceTypeService;
+    }
+
     @GetMapping
     public String indexPage(Model model){
         List<Company> companies = companyService.getPopularCompanies(COMPANY_COUNT);
