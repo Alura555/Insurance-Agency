@@ -1,4 +1,4 @@
-package com.example.insuranceagency.dtos;
+package com.example.insuranceagency.dto;
 
 public class InsuranceTypeDto {
 
