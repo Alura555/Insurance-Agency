@@ -1,6 +1,6 @@
-package com.example.insuranceagency.filters;
+package com.example.insuranceagency.filter;
 
-import com.example.insuranceagency.entities.Offer;
+import com.example.insuranceagency.entity.Offer;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -22,31 +22,27 @@ public class OfferFilter implements Specification<Offer> {
     public Predicate toPredicate(Root<Offer> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
         List<Predicate> predicates = new ArrayList<>();
 
-        if (minPrice != null)
-        {
+        if (minPrice != null) {
             predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("price"), minPrice));
         }
-        if (maxPrice != null)
-        {
+        if (maxPrice != null) {
             predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("price"), maxPrice));
         }
-        if (company != null && company != 0L)
-        {
+        if (company != null && company != 0L) {
             predicates.add(criteriaBuilder.equal(root.get("company").get("id"), company));
         }
-        if (insuranceType != null && insuranceType != 0L)
-        {
+        if (insuranceType != null && insuranceType != 0L) {
             predicates.add(criteriaBuilder.equal(root.get("insuranceType").get("id"), insuranceType));
         }
-        if (searchQuery != null && !searchQuery.equals("")){
+        if (searchQuery != null && !searchQuery.equals("")) {
             Predicate titleContaining = criteriaBuilder.like(root.get("title"), "%" + searchQuery + "%");
             Predicate descriptionContaining = criteriaBuilder.like(root.get("description"), "%" + searchQuery + "%");
             Predicate typeContaining = criteriaBuilder.like(root.get("insuranceType").get("title"), "%" + searchQuery + "%");
             predicates.add(criteriaBuilder.or(titleContaining, descriptionContaining, typeContaining));
         }
-        return predicates.size() <= 0
+        return predicates.size() == 0
                 ? null
-                : criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
+                : criteriaBuilder.and(predicates.toArray(new Predicate[0]));
     }
 
 
