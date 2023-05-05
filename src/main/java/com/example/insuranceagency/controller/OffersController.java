@@ -3,10 +3,8 @@ package com.example.insuranceagency.controller;
 import com.example.insuranceagency.dto.InsuranceTypeDto;
 import com.example.insuranceagency.dto.OfferDto;
 import com.example.insuranceagency.entity.Company;
-import com.example.insuranceagency.entity.Offer;
 import com.example.insuranceagency.exception.NotFoundException;
 import com.example.insuranceagency.filter.OfferFilter;
-import com.example.insuranceagency.mapper.OfferMapper;
 import com.example.insuranceagency.service.CompanyService;
 import com.example.insuranceagency.service.InsuranceTypeService;
 import com.example.insuranceagency.service.OfferService;
@@ -17,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/offers")
@@ -25,12 +22,7 @@ public class OffersController {
 
     private final OfferService offerService;
 
-
-    private final OfferMapper offerMapper;
-
-
     private final CompanyService companyService;
-
 
     private final InsuranceTypeService insuranceTypeService;
 
@@ -58,10 +50,7 @@ public class OffersController {
 
 
 
-        Page<Offer> offers = offerService.findAll(page, size, offerFilter, sort - 1);
-        List<OfferDto> offerDtos = offers.get()
-                .map(x -> offerMapper.toOfferDto(x))
-                .collect(Collectors.toList());
+        Page<OfferDto> offers = offerService.findAll(page, size, offerFilter, sort);
 
         List<InsuranceTypeDto> insuranceTypeList = insuranceTypeService.getInsuranceTypes();
         List<Company> companies = companyService.getActiveCompanies();
@@ -70,7 +59,7 @@ public class OffersController {
         BigDecimal minPrice = offerService.getMinPrice();
 
 
-        model.addAttribute("offers", offerDtos);
+        model.addAttribute("offers", offers.getContent());
         model.addAttribute("types", insuranceTypeList);
         model.addAttribute("companies", companies);
         model.addAttribute("totalPages", offers.getTotalPages());
@@ -89,21 +78,18 @@ public class OffersController {
 
     @GetMapping("/{id}")
     public String getOfferById(Model model, @PathVariable Long id){
-        Offer offer = offerService.findById(id);
-        if (offer == null){
+        OfferDto offerDto = offerService.findById(id);
+        if (offerDto == null){
             throw new NotFoundException();
         }
-        OfferDto offerDto = offerMapper.toOfferDto(offer);
         model.addAttribute("offer", offerDto);
         return "offers/page";
     }
 
     public OffersController(OfferService offerService,
-                            OfferMapper offerMapper,
                             CompanyService companyService,
                             InsuranceTypeService insuranceTypeService) {
         this.offerService = offerService;
-        this.offerMapper = offerMapper;
         this.companyService = companyService;
         this.insuranceTypeService = insuranceTypeService;
     }

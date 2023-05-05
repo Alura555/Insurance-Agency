@@ -6,9 +6,7 @@ import com.example.insuranceagency.filter.OfferFilter;
 import com.example.insuranceagency.mapper.OfferMapper;
 import com.example.insuranceagency.repository.OfferRepository;
 import com.example.insuranceagency.service.OfferService;
-import com.example.insuranceagency.sorting.SortOption;
 import com.example.insuranceagency.sorting.SortOptionsList;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
@@ -21,11 +19,17 @@ import java.util.stream.Collectors;
 public class OfferServiceImpl implements OfferService {
 
     private final OfferRepository offerRepository;
+
     private final SortOptionsList sortOptions;
 
-    public OfferServiceImpl(OfferRepository offerRepository, SortOptionsList sortOptions) {
+    private final OfferMapper offerMapper;
+
+    public OfferServiceImpl(OfferRepository offerRepository,
+                            SortOptionsList sortOptions,
+                            OfferMapper offerMapper) {
         this.offerRepository = offerRepository;
         this.sortOptions = sortOptions;
+        this.offerMapper = offerMapper;
     }
 
     public List<String> getSortTypes(){
@@ -33,14 +37,21 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
-    public Page<Offer> findAll(int page, int size, OfferFilter offerFilter, int sortType) {
-        Sort sortOption = sortOptions.getSortByIndex(sortType);
+    public Page<OfferDto> findAll(int page, int size, OfferFilter offerFilter, int sortType) {
+        Sort sortOption = sortOptions.getSortByIndex(sortType - 1);
         Pageable pageable = PageRequest.of(page, size, sortOption);
-        return offerRepository.findAll(offerFilter, pageable);
+        Page<Offer> offerPage = offerRepository.findAll(offerFilter, pageable);
+        List<OfferDto> offerDtoList = offerPage
+                .getContent()
+                .stream()
+                .map(offerMapper::toOfferDto)
+                .collect(Collectors.toList());
+        return new PageImpl<>(offerDtoList, pageable, offerPage.getTotalElements());
     }
 
-    public Offer findById(Long id) {
-        return offerRepository.findById(id).orElse(null);
+    public OfferDto findById(Long id) {
+        Offer offer = offerRepository.findById(id).orElse(null);
+        return offerMapper.toOfferDto(offer);
     }
 
     public BigDecimal getMaxPrice(){
