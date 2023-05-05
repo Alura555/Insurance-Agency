@@ -1,7 +1,7 @@
-package com.example.insuranceagency.configs;
+package com.example.insuranceagency.config;
 
-import com.example.insuranceagency.mappers.InsuranceTypeMapper;
-import com.example.insuranceagency.mappers.OfferMapper;
+import com.example.insuranceagency.mapper.InsuranceTypeMapper;
+import com.example.insuranceagency.mapper.OfferMapper;
 import org.mapstruct.factory.Mappers;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
