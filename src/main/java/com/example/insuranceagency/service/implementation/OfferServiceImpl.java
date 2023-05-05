@@ -19,11 +19,14 @@ import java.util.stream.Collectors;
 
 @Service
 public class OfferServiceImpl implements OfferService {
-    @Autowired
-    private OfferRepository offerRepository;
 
-    @Autowired
-    private List<SortOption> sortOptions;
+    private final OfferRepository offerRepository;
+    private final List<SortOption> sortOptions;
+
+    public OfferServiceImpl(OfferRepository offerRepository, List<SortOption> sortOptions) {
+        this.offerRepository = offerRepository;
+        this.sortOptions = sortOptions;
+    }
 
     public List<String> getSortTypes(){
         return sortOptions
@@ -35,7 +38,6 @@ public class OfferServiceImpl implements OfferService {
     @Override
     public Page<Offer> findAll(int page, int size, OfferFilter offerFilter, int sortType) {
         SortOption sortOption = sortOptions.get(sortType);
-        List<Offer> offerList = offerRepository.findAll();
         Pageable pageable = PageRequest.of(page, size, sortOption.getSort());
         return offerRepository.findAll(offerFilter, pageable);
     }
@@ -43,7 +45,6 @@ public class OfferServiceImpl implements OfferService {
     public Offer findById(Long id) {
         return offerRepository.findById(id).orElse(null);
     }
-
 
     public BigDecimal getMaxPrice(){
         return offerRepository.findTopByOrderByPriceDesc().getPrice();
