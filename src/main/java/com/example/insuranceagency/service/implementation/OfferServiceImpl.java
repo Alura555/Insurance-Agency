@@ -21,24 +21,21 @@ import java.util.stream.Collectors;
 public class OfferServiceImpl implements OfferService {
 
     private final OfferRepository offerRepository;
-    private final List<SortOption> sortOptions;
+    private final SortOptionsList sortOptions;
 
-    public OfferServiceImpl(OfferRepository offerRepository, List<SortOption> sortOptions) {
+    public OfferServiceImpl(OfferRepository offerRepository, SortOptionsList sortOptions) {
         this.offerRepository = offerRepository;
         this.sortOptions = sortOptions;
     }
 
     public List<String> getSortTypes(){
-        return sortOptions
-                .stream()
-                .map(SortOption::getName)
-                .collect(Collectors.toList());
+        return sortOptions.getSortOptionNames();
     }
 
     @Override
     public Page<Offer> findAll(int page, int size, OfferFilter offerFilter, int sortType) {
-        SortOption sortOption = sortOptions.get(sortType);
-        Pageable pageable = PageRequest.of(page, size, sortOption.getSort());
+        Sort sortOption = sortOptions.getSortByIndex(sortType);
+        Pageable pageable = PageRequest.of(page, size, sortOption);
         return offerRepository.findAll(offerFilter, pageable);
     }
 
