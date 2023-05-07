@@ -4,8 +4,10 @@ import com.example.insuranceagency.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-public interface UserRepository extends JpaRepository<User, Long> {
+import java.util.Optional;
 
-    @Query("SELECT c FROM User c WHERE c.email = ?1")
-    User findByEmail(String email);
+public interface UserRepository extends JpaRepository<User, Long> {
+    Optional<User> findByEmail(String email);
+    Optional<User> findByUsername(String username);
+
 }
