@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org">
+  <head>
+    <title>My Account</title>
+    <link th:href="@{/style.css}" rel="stylesheet" />
+  </head>
+  <body>
+  <div th:replace="fragments/header :: header"></div>
+    <div class="account">
+      <div class="info">
+        <ul>
+          <li><h2 th:text="|${user.name} ${user.secondName}|"></h2></li>
+          <li><strong>Email:</strong> <span th:text="${user.email}"/></li>
+          <li><strong>Phone:</strong> <span th:text="${user.phone}"/></li>
+          <li><strong>Date of birth:</strong> <span th:text="${user.birthday}"/></li>
+        </ul>
+      </div>
+    </div>
+  </body>
+</html>
