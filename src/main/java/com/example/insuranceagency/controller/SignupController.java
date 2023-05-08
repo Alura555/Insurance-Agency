@@ -35,6 +35,6 @@ public class SignupController {
             result.rejectValue(e.getField(), "error.userDto", e.getMessage());
             return "signup";
         }
-        return "redirect:/login";
+        return "redirect:/login?registerSuccess";
     }
 }

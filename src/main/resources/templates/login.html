@@ -7,6 +7,9 @@
   </head>
   <body>
   <div th:replace="fragments/header :: header"></div>
+  <div th:if="${param.registerSuccess}" class="alert-success">
+    <p>Congratulations! You have successfully registered.</p>
+  </div>
     <div class="login-container">
       <h1>Login</h1>
       <form th:action="@{/login}" method="post">
@@ -19,9 +22,11 @@
         <input type="password" id="password" name="password" required>
         <button type="submit">Login</button>
       </form>
-      <p>Don't have an account? <a href="/signup">Sign up</a></p>
 
     </div>
+  <div class="signup-suggestion">
+    Don't have an account yet? <a href="/signup">Sign up now!</a>
+  </div>
 
   </body>
 </html>
