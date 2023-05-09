@@ -30,7 +30,7 @@ public class Company {
 
     @ManyToMany
     @JoinTable(
-            name = "companies_managers",
+            name = "company_manager",
             joinColumns = @JoinColumn(name = "company_id"),
             inverseJoinColumns = @JoinColumn(name = "manager_id"))
     private Set<User> managers;

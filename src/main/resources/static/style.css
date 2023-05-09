@@ -182,40 +182,38 @@ input {
 }
 
 
-/* Style for the recent list-of-orders section */
-.list-of-orders {
+.list-of-policies {
   margin-top: 40px;
 }
 
-.list-of-orders h3 {
+.list-of-policies h3 {
   margin-bottom: 10px;
   font-size: 24px;
 }
 
-.list-of-orders table {
+.list-of-policies table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 40px;
 }
 
-.list-of-orders table th,
-.list-of-orders table td {
+.list-of-policies table th,
+.list-of-policies table td {
   padding: 5px;
   text-align: left;
   border-bottom: 1px solid #ccc;
 }
 
-.list-of-orders table th {
+.list-of-policies table th {
   font-weight: bold;
 }
 
-.list-of-orders table td:first-child {
+.list-of-policies table td:first-child {
   width: 10%;
 }
 
-.list-of-orders a {
+.list-of-policies a {
   display: inline-block;
-  margin-top: 10px;
   padding: 5px 10px;
   background-color: #333;
   color: #fff;
@@ -546,7 +544,7 @@ ul.documents-list li{
   margin-right: 5px;
 }
 
-.pagination li.active a {
+li.active a {
   background-color: #f00;
   color: #fff;
 }
@@ -719,3 +717,22 @@ input[type=number] {
   color: #FF0000;
   text-decoration: underline;
 }
+
+.title-and-pagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.title-and-pagination ul{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    list-style-type: none;
+}
+
+.title-and-pagination li{
+    display: inline-block;
+    margin: 0 5px;
+}
+

@@ -39,12 +39,12 @@ public class Offer {
 
     @ManyToMany
     @JoinTable(
-            name = "required_documents",
+            name = "required_document",
             joinColumns = @JoinColumn(name = "offer_id"),
             inverseJoinColumns = @JoinColumn(name = "document_type_id"))
     private Set<DocumentType> documents;
 
-    @Formula("(SELECT COUNT(*) FROM Policy p WHERE p.offer_id = id AND p.is_approved = true)")
+    @Formula("(SELECT COUNT(*) FROM policy p WHERE p.offer_id = id AND p.is_approved = true)")
     private Integer approvedPolicyCount;
     public Long getId() {
         return id;

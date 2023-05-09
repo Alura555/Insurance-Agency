@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>My Account</title>
+    <link th:href="@{/style.css}" rel="stylesheet" />
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+<div class="account-nav">
+    <h2>Personal account</h2>
+    <nav >
+        <ul>
+            <li th:classappend="${page == 'info'} ? active">
+                <a th:href="@{/personal/info}">General information</a>
+            </li>
+            <li th:classappend="${page == 'policies'} ? active">
+                <a th:href="@{/personal/policies}">Policies</a>
+            </li>
+        </ul>
+    </nav>
+</div>
+<div class="account">
+    <div th:switch="${page}">
+        <td th:case="'info'">
+            <div th:replace="personal/info :: div"></div>
+        </td>
+        <td th:case="'policies'">
+            <div th:replace="personal/policies :: div"></div>
+        </td>
+    </div>
+</div>
+</body>
+</html>

@@ -45,7 +45,7 @@ public class Policy {
 
     @ManyToMany
     @JoinTable(
-            name = "documents_sets",
+            name = "document_set",
             joinColumns = @JoinColumn(name = "policy_id"),
             inverseJoinColumns = @JoinColumn(name = "document_id"))
     private Set<Document> documents;

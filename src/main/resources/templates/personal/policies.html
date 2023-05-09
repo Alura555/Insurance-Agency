@@ -1,0 +1,37 @@
+<div class="list-of-policies">
+    <div class="title-and-pagination">
+        <div>
+            <h3>Policies</h3>
+        </div>
+        <div th:if="${policies.totalPages >1}">
+            <ul>
+                <li th:if="${policies.number > 0}">
+                    <a th:href="@{${page}(page=${policies.number - 1}, size=${policies.size})}"><</a>
+                </li>
+                <li th:text="|${(policies.number * policies.size) + 1} - ${((policies.number + 1) * policies.size) &lt; policies.totalElements ? ((policies.number + 1) * policies.size) : policies.totalElements} out of ${policies.totalElements}|"></li>
+                <li th:if="${policies.number < policies.totalPages - 1}">
+                    <a th:href="@{${page}(page=${policies.number + 1}, size=${policies.size})}"> > </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Type of insurance</th>
+            <th>Insurance offer</th>
+            <th>Status</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="policy : ${policies.content}">
+            <td ><a th:href="@{/personal/policies/{id}(id=${policy.id})}" th:text="${policy.id}"></a></td>
+            <td th:text="${policy.insuranceType}"></td>
+            <td th:text="${policy.offer}"></td>
+            <td th:text="${policy.status}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+</div>

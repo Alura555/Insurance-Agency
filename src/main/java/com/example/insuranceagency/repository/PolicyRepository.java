@@ -2,6 +2,9 @@ package com.example.insuranceagency.repository;
 
 import com.example.insuranceagency.entity.Policy;
 import com.example.insuranceagency.entity.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -18,13 +21,5 @@ public interface PolicyRepository extends JpaRepository<Policy, Long> {
 
     Optional<Policy> findByIdAndClientEmail(Long id, String email);
 
-    Optional<Policy> findByIdAndManagerEmail(Long id, String email);
-
-    List<Policy> findAllByManager(User manager);
-
-    List<Policy> findAllByManagerEmail(String managerEmail);
-
-    List<Policy> findAllByClientEmail(String clientEmail);
-
-
+    Page<Policy> findAll(Specification<Policy> spec, Pageable pageable);
 }
