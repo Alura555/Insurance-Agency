@@ -30,7 +30,9 @@ public class PolicyFilter implements Specification<Policy> {
                 predicates.add(criteriaBuilder.equal(root.get("client"), user));
                 break;
             case "MANAGER":
-                predicates.add(criteriaBuilder.equal(root.get("manager"), user));
+                if (isPolicy) {
+                    predicates.add(criteriaBuilder.equal(root.get("manager"), user));
+                }
                 break;
             case "COMPANY MANAGER":
                 predicates.add(criteriaBuilder.isMember(user, root.get("offer")

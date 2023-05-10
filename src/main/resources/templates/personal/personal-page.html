@@ -17,6 +17,9 @@
             <li th:classappend="${page == 'policies'} ? active">
                 <a th:href="@{/personal/policies}">Policies</a>
             </li>
+            <li th:classappend="${page == 'applications'} ? active">
+                <a th:href="@{/personal/applications}">Applications</a>
+            </li>
         </ul>
     </nav>
 </div>
@@ -26,6 +29,9 @@
             <div th:replace="personal/info :: div"></div>
         </td>
         <td th:case="'policies'">
+            <div th:replace="personal/policies :: div"></div>
+        </td>
+        <td th:case="'applications'">
             <div th:replace="personal/policies :: div"></div>
         </td>
     </div>

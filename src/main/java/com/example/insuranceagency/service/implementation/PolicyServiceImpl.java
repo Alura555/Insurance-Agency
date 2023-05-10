@@ -34,11 +34,20 @@ public class PolicyServiceImpl implements PolicyService {
 
     @Override
     public Page<PolicyDto> getPoliciesByUser(String email, int page, int size) {
+        return getPolicyByFilter(email, true, page, size);
+    }
+
+    @Override
+    public Page<PolicyDto> getApplicationsByUser(String email, int page, int size) {
+        return getPolicyByFilter(email, false, page, size);
+    }
+
+    private PageImpl<PolicyDto> getPolicyByFilter(String email, boolean isPolicy, int page, int size) {
         User user = userDetailsService.findByEmail(email);
 
         PolicyFilter policyFilter = new PolicyFilter();
         policyFilter.setActive(true);
-        policyFilter.setPolicy(true);
+        policyFilter.setPolicy(isPolicy);
         policyFilter.setUser(user);
 
         Sort sort = Sort.by("creationDate").descending();

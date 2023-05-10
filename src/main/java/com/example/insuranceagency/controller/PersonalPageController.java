@@ -41,14 +41,19 @@ public class PersonalPageController {
         return "personal/personal-page";
     }
 
-    @GetMapping("/policies")
-    public String getPolicies(@RequestParam(name = "page", defaultValue = "0") int page,
-                              @RequestParam(name = "size", defaultValue = "10") int size,
-                              Model model, Principal principal){
+    @GetMapping("/{tab:applications|policies}")
+    public String getPoliciesOrApplications(@RequestParam(name = "page", defaultValue = "0") int page,
+                                            @RequestParam(name = "size", defaultValue = "10") int size,
+                                            @PathVariable(name = "tab") String tab,
+                                            Model model, Principal principal) {
         String email = principal.getName();
-        Page<PolicyDto> policies = policyService.getPoliciesByUser(email, page, size);
-
-        model.addAttribute("page", "policies");
+        Page<PolicyDto> policies = null;
+        if (tab.equals("policies")) {
+            policies = policyService.getPoliciesByUser(email, page, size);
+        } else if (tab.equals("applications")) {
+            policies = policyService.getApplicationsByUser(email, page, size);
+        }
+        model.addAttribute("page", tab);
         model.addAttribute("policies", policies);
         return "personal/personal-page";
     }
