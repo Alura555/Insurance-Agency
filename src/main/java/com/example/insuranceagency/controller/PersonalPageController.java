@@ -3,11 +3,13 @@ package com.example.insuranceagency.controller;
 
 import com.example.insuranceagency.dto.PolicyDto;
 import com.example.insuranceagency.entity.User;
+import com.example.insuranceagency.exception.InvalidInputException;
 import com.example.insuranceagency.service.PolicyService;
 import com.example.insuranceagency.service.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -56,6 +58,35 @@ public class PersonalPageController {
         model.addAttribute("page", tab);
         model.addAttribute("policies", policies);
         return "personal/personal-page";
+    }
+    @GetMapping("/{tab:applications|policies}/{id}")
+    public String getPoliciesOrApplicationsById(@PathVariable(name = "id") Long id,
+                                            @PathVariable(name = "tab") String tab,
+                                            Model model, Principal principal) {
+        String email = principal.getName();
+        PolicyDto policy = null;
+        if (tab.equals("policies")) {
+            policy = policyService.getPolicyByUserAndId(email, id);
+        } else if (tab.equals("applications")) {
+            policy = policyService.getApplicationByUserAndId(email, id);
+        }
+        model.addAttribute("page", "policy");
+        model.addAttribute("policyDto", policy);
+        return "personal/policy";
+    }
+
+    @PostMapping("/applications/{id}")
+    public String updatePolicy(@PathVariable("id") Long id,
+                               @ModelAttribute("policyDto") PolicyDto policyDto,
+                               BindingResult result,
+                               Model model, Principal principal) {
+        try {
+            policyService.updatePolicy(id, policyDto);
+        } catch (InvalidInputException e) {
+            result.rejectValue(e.getField(), "error.policyDto", e.getMessage());
+            return "personal/policy";
+        }
+        return "redirect:/personal/applications/" + id;
     }
 
 }

@@ -2,28 +2,31 @@ package com.example.insuranceagency.dto;
 
 import com.example.insuranceagency.entity.Document;
 import com.example.insuranceagency.entity.DocumentType;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 import java.util.Map;
 
 public class PolicyDto {
-    private int id;
+    private Long id;
     private String client;
     private String manager;
-    private String offer;
-    private String insuranceType;
+    private OfferDto offer;
     private Date creationDate;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date startDate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date expiredDate;
     private int periodInMonths;
     private Map<DocumentType, Document> documents;
     private String status;
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -43,20 +46,12 @@ public class PolicyDto {
         this.manager = manager;
     }
 
-    public String getOffer() {
+    public OfferDto getOffer() {
         return offer;
     }
 
-    public void setOffer(String offer) {
+    public void setOffer(OfferDto offer) {
         this.offer = offer;
-    }
-
-    public String getInsuranceType() {
-        return insuranceType;
-    }
-
-    public void setInsuranceType(String insuranceType) {
-        this.insuranceType = insuranceType;
     }
 
     public Date getCreationDate() {

@@ -13,6 +13,8 @@ public class PolicyFilter implements Specification<Policy> {
     private boolean isPolicy;
     private boolean isActive;
 
+    private long id;
+
     @Override
     public Predicate toPredicate(Root<Policy> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
         List<Predicate> predicates = new ArrayList<>();
@@ -23,6 +25,10 @@ public class PolicyFilter implements Specification<Policy> {
             predicates.add(criteriaBuilder.isNotNull(root.get("manager")));
         } else {
             predicates.add(criteriaBuilder.isNull(root.get("manager")));
+        }
+
+        if (id != 0L){
+            predicates.add(criteriaBuilder.equal(root.get("id"), id));
         }
 
         switch (user.getRole().getTitle()){
@@ -66,5 +72,13 @@ public class PolicyFilter implements Specification<Policy> {
 
     public void setActive(boolean active) {
         isActive = active;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 }

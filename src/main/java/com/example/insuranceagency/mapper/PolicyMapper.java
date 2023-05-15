@@ -5,23 +5,30 @@ import com.example.insuranceagency.entity.Document;
 import com.example.insuranceagency.entity.DocumentType;
 import com.example.insuranceagency.entity.Policy;
 import com.example.insuranceagency.entity.User;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.Named;
+import org.mapstruct.*;
 
 import java.time.Instant;
 import java.util.*;
 
-@Mapper
+@Mapper(uses = InsuranceTypeMapper.class)
 public interface PolicyMapper {
     @Mapping(source = "client", target = "client", qualifiedByName = "fullName")
     @Mapping(source = "manager", target = "manager", qualifiedByName = "fullName")
-    @Mapping(target = "offer", source = "offer.title")
-    @Mapping(target = "insuranceType", source = "offer.insuranceType.title")
     @Mapping(target = "expiredDate", expression = "java(calculateExpiredDate(policy.getOffer().getPeriodInMonths(), policy.getStartDate()))", dateFormat = "yyyy-MM-dd")
     @Mapping(target = "documents", expression = "java(mapDocuments(policy.getOffer().getDocuments(), policy.getDocuments()))")
     @Mapping(target = "status", expression = "java(getStatus(policy.isApproved(), policy.getStartDate(), policy.getManager(), policyDto.getDocuments(), policyDto.getExpiredDate()))")
     PolicyDto toPolicyDto(Policy policy);
+
+    @BeanMapping(ignoreByDefault = true)
+    @Mapping(source = "existing.client", target = "client")
+    @Mapping(source = "existing.offer", target = "offer")
+    @Mapping(source = "existing.creationDate", target = "creationDate")
+    @Mapping(source = "existing.status", target = "status")
+    @Mapping(target = "startDate",
+            expression = "java(setStartDateIfNotNull(policyDto.getStartDate(), existing.getStartDate()))")
+    @Mapping(target = "documents",
+            expression = "java(setDocumentsIfNotNull(policyDto.getDocuments(), existing.getDocuments()))")
+    void updatePolicyDtoFromExisting(@MappingTarget PolicyDto policyDto, PolicyDto existing);
 
     @Named("fullName")
     default String mapClientToFullName(User user) {
@@ -62,5 +69,21 @@ public interface PolicyMapper {
 
     }
 
+    default Date setStartDateIfNotNull(Date targetStartDate, Date existingStartDate) {
+        if (existingStartDate != null){
+            return existingStartDate;
+        } else {
+            return targetStartDate;
+        }
+    }
 
+    default Map<DocumentType, Document> setDocumentsIfNotNull(Map<DocumentType, Document> targetDocuments,
+                                                              Map<DocumentType, Document> existingDocuments) {
+        if (targetDocuments != null){
+            return targetDocuments;
+        } else {
+            return existingDocuments;
+        }
+
+    }
 }

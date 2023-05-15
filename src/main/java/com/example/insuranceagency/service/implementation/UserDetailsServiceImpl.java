@@ -3,7 +3,7 @@ package com.example.insuranceagency.service.implementation;
 import com.example.insuranceagency.detail.UserDetailsImpl;
 import com.example.insuranceagency.dto.UserDto;
 import com.example.insuranceagency.entity.User;
-import com.example.insuranceagency.exception.UserRegistrationException;
+import com.example.insuranceagency.exception.InvalidInputException;
 import com.example.insuranceagency.mapper.UserMapper;
 import com.example.insuranceagency.repository.RoleRepository;
 import com.example.insuranceagency.repository.UserRepository;
@@ -13,11 +13,13 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Calendar;
 import java.util.Date;
 
 @Service
+@Transactional
 public class UserDetailsServiceImpl implements UserDetailsService, UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
@@ -51,10 +53,10 @@ public class UserDetailsServiceImpl implements UserDetailsService, UserService {
     public void registerNewUser(UserDto userDto, String role) {
         userDto.setRole(role);
         if (userRepository.findByUsername(userDto.getUsername()).isPresent()){
-            throw new UserRegistrationException("username", "Username already exists");
+            throw new InvalidInputException("username", "Username already exists");
         }
         if (userRepository.findByEmail(userDto.getEmail()).isPresent()){
-            throw new UserRegistrationException("email", "Email already exists");
+            throw new InvalidInputException("email", "Email already exists");
         }
         Date today = new Date();
         Calendar calendar = Calendar.getInstance();
@@ -62,11 +64,11 @@ public class UserDetailsServiceImpl implements UserDetailsService, UserService {
         calendar.add(Calendar.YEAR, -18);
 
         if (userDto.getBirthday().after(calendar.getTime())) {
-            throw new UserRegistrationException("birthday", "You must be at least 18 years old to register");
+            throw new InvalidInputException("birthday", "You must be at least 18 years old to register");
         }
 
         if (!userDto.getPassword().equals(userDto.getConfirmPassword())) {
-            throw new UserRegistrationException("confirmPassword", "Passwords do not match");
+            throw new InvalidInputException("confirmPassword", "Passwords do not match");
         }
         User user = userMapper.mapToUser(userDto, passwordEncoder, roleRepository);
         user.setActive(true);

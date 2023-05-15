@@ -1,9 +1,9 @@
 package com.example.insuranceagency.exception;
 
-public class UserRegistrationException extends RuntimeException {
+public class InvalidInputException extends RuntimeException {
 
     private String field;
-    public UserRegistrationException(String field, String message) {
+    public InvalidInputException(String field, String message) {
         super(message);
         this.field = field;
 

@@ -6,20 +6,19 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface PolicyRepository extends JpaRepository<Policy, Long> {
+public interface PolicyRepository extends JpaRepository<Policy, Long>, JpaSpecificationExecutor<Policy> {
     @Override
     List<Policy> findAll();
 
     @Override
     Optional<Policy> findById(Long id);
 
-    Optional<Policy> findByIdAndManager(Long id, User user);
-
-    Optional<Policy> findByIdAndClientEmail(Long id, String email);
-
     Page<Policy> findAll(Specification<Policy> spec, Pageable pageable);
+
+    Optional<Policy> findOne(Specification<Policy> spec);
 }

@@ -1,7 +1,7 @@
 package com.example.insuranceagency.controller;
 
 import com.example.insuranceagency.dto.UserDto;
-import com.example.insuranceagency.exception.UserRegistrationException;
+import com.example.insuranceagency.exception.InvalidInputException;
 import com.example.insuranceagency.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,7 +31,7 @@ public class SignupController {
                          BindingResult result, Model model) {
         try {
             userService.registerNewUser(userDto, "CLIENT");
-        } catch (UserRegistrationException e){
+        } catch (InvalidInputException e){
             result.rejectValue(e.getField(), "error.userDto", e.getMessage());
             return "signup";
         }
