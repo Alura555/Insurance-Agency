@@ -7,6 +7,7 @@
 </head>
 <body>
     <div th:replace="fragments/header :: header"></div>
+    <div class="personal-page">
     <div class="account policy-info-fragment">
         <form th:action="@{{id}(id=${policyDto.id})}" th:object="${policyDto}" method="post">
             <div class="title">
@@ -102,6 +103,14 @@
         </form>
     </div>
 
+    <div class="handle-buttons" sec:authorize="hasAuthority('MANAGER')" th:if="${policyDto.manager == null}">
+        <form  th:action="@{/personal/applications/{id}/approve (id=${policyDto.id})}" method="post">
+            <div>
+                <button type="submit" name="action" value="approve">Approve</button>
+                <button type="submit" name="action" value="reject">Reject</button>
+            </div>
+        </form>
+    </div>
     </div>
 </body>
 </html>

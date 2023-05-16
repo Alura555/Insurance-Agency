@@ -132,6 +132,7 @@ input {
 /* Style for the account container */
 .account {
   max-width: 800px;
+  width: 60%;
   margin: 20px auto;
   padding: 20px;
   background-color: #fff;
@@ -736,3 +737,15 @@ input[type=number] {
     margin: 0 5px;
 }
 
+.personal-page {
+    display: flex;
+    justify-content: space-between;
+}
+
+.handle-buttons {
+    width: 20%;
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 30px;
+    margin-top: 30px;
+}

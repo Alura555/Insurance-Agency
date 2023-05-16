@@ -15,6 +15,8 @@ import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -107,6 +109,19 @@ public class PolicyServiceImpl implements PolicyService {
                         documents.add(x.getValue());
                     });
             policy.setDocuments(documents);
+        }
+        policyRepository.save(policy);
+    }
+
+    @Override
+    public void handleApplication(String manager, String action, Long applicationId) {
+        Policy policy = policyRepository.findById(applicationId).orElseThrow(IllegalArgumentException::new);
+        policy.setManager(userDetailsService.findByEmail(manager));
+        if (policy.getStartDate() == null){
+            policy.setStartDate(Date.from(LocalDateTime.now().toInstant(ZoneOffset.UTC)));
+        }
+        if (action.equals("approve")){
+            policy.setApproved(true);
         }
         policyRepository.save(policy);
     }

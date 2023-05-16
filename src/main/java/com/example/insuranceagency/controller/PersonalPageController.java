@@ -78,8 +78,7 @@ public class PersonalPageController {
     @PostMapping("/applications/{id}")
     public String updatePolicy(@PathVariable("id") Long id,
                                @ModelAttribute("policyDto") PolicyDto policyDto,
-                               BindingResult result,
-                               Model model, Principal principal) {
+                               BindingResult result) {
         try {
             policyService.updatePolicy(id, policyDto);
         } catch (InvalidInputException e) {
@@ -87,6 +86,15 @@ public class PersonalPageController {
             return "personal/policy";
         }
         return "redirect:/personal/applications/" + id;
+    }
+
+    @PostMapping("/applications/{id}/approve")
+    public String handleApplication(@PathVariable("id") Long id,
+                                    @RequestParam("action") String action,
+                                    Principal principal) {
+        String email = principal.getName();
+        policyService.handleApplication(email, action, id);
+        return "redirect:/personal/policies/" + id;
     }
 
 }

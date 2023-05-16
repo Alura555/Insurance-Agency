@@ -12,4 +12,6 @@ public interface PolicyService {
     PolicyDto getApplicationByUserAndId(String email, Long id);
 
     void updatePolicy(Long id, PolicyDto policyDto);
+
+    void handleApplication(String manager, String action, Long applicationId);
 }
