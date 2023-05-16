@@ -129,7 +129,6 @@ input {
   border-radius: 5px;
 }
 
-/* Style for the account container */
 .account {
   max-width: 800px;
   width: 60%;
@@ -140,12 +139,26 @@ input {
 }
 
 .account-nav{
-  max-width: 800px;
   margin: 20px auto;
   padding: 20px;
+  max-width: 250px;
 }
 
-/* Style for the account information section */
+.account-nav ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.account-nav li {
+  margin-bottom: 30px;
+  display: flex;
+}
+
+.account-nav a {
+  width: 100%;
+}
+
 .info {
   margin-top: 40px;
 }

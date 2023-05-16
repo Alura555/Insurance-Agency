@@ -1,0 +1,12 @@
+<div class="account-nav"><ul>
+    <li th:classappend="${page == 'info'} ? active">
+        <a th:href="@{/personal/info}">General information</a>
+    </li>
+    <li th:classappend="${page == 'policies'} ? active">
+        <a th:href="@{/personal/policies}">Policies</a>
+    </li>
+    <li th:classappend="${page == 'applications'} ? active">
+        <a th:href="@{/personal/applications}">Applications</a>
+    </li>
+    </ul>
+</div>

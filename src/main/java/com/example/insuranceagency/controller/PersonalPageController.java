@@ -70,7 +70,7 @@ public class PersonalPageController {
         } else if (tab.equals("applications")) {
             policy = policyService.getApplicationByUserAndId(email, id);
         }
-        model.addAttribute("page", "policy");
+        model.addAttribute("page", tab);
         model.addAttribute("policyDto", policy);
         return "personal/policy";
     }
