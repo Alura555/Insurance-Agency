@@ -7,6 +7,9 @@ import com.example.insuranceagency.exception.InvalidInputException;
 import com.example.insuranceagency.service.PolicyService;
 import com.example.insuranceagency.service.UserService;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -53,12 +56,15 @@ public class PersonalPageController {
                                             @RequestParam(name = "size", defaultValue = "10") int size,
                                             @PathVariable(name = "tab") String tab,
                                             Model model, Principal principal) {
+
         String email = principal.getName();
+        Sort sort = Sort.by("creationDate").descending();
+        Pageable pageable = PageRequest.of(page, size, sort);
         Page<PolicyDto> policies = null;
         if (tab.equals("policies")) {
-            policies = policyService.getPoliciesByUser(email, page, size);
+            policies = policyService.getPoliciesByUser(email, pageable);
         } else if (tab.equals("applications")) {
-            policies = policyService.getApplicationsByUser(email, page, size);
+            policies = policyService.getApplicationsByUser(email, pageable);
         }
         model.addAttribute("page", tab);
         model.addAttribute("policies", policies);

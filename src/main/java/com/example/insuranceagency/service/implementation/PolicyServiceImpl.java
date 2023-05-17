@@ -46,8 +46,8 @@ public class PolicyServiceImpl implements PolicyService {
     }
 
     @Override
-    public Page<PolicyDto> getPoliciesByUser(String email, int page, int size) {
-        return getPolicyByFilter(email, true, page, size);
+    public Page<PolicyDto> getPoliciesByUser(String email, Pageable pageable) {
+        return getPolicyByFilter(email, true, pageable);
     }
 
     @Override
@@ -56,8 +56,8 @@ public class PolicyServiceImpl implements PolicyService {
     }
 
     @Override
-    public Page<PolicyDto> getApplicationsByUser(String email, int page, int size) {
-        return getPolicyByFilter(email, false, page, size);
+    public Page<PolicyDto> getApplicationsByUser(String email, Pageable pageable) {
+        return getPolicyByFilter(email, false, pageable);
     }
 
     @Override
@@ -135,7 +135,7 @@ public class PolicyServiceImpl implements PolicyService {
         policyRepository.save(policy);
     }
 
-    private PageImpl<PolicyDto> getPolicyByFilter(String email, boolean isPolicy, int page, int size) {
+    private PageImpl<PolicyDto> getPolicyByFilter(String email, boolean isPolicy, Pageable pageable) {
         User user = userDetailsService.findByEmail(email);
 
         PolicyFilter policyFilter = new PolicyFilter();
@@ -143,8 +143,6 @@ public class PolicyServiceImpl implements PolicyService {
         policyFilter.setPolicy(isPolicy);
         policyFilter.setUser(user);
 
-        Sort sort = Sort.by("creationDate").descending();
-        Pageable pageable = PageRequest.of(page, size, sort);
         Page<Policy> policies = policyRepository.findAll(policyFilter, pageable);
 
         List<PolicyDto> offerDtoList = policies
