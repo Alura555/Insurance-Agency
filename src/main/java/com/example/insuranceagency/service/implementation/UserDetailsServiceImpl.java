@@ -1,6 +1,6 @@
 package com.example.insuranceagency.service.implementation;
 
-import com.example.insuranceagency.detail.UserDetailsImpl;
+import com.example.insuranceagency.security.UserDetailsImpl;
 import com.example.insuranceagency.dto.UserDto;
 import com.example.insuranceagency.entity.User;
 import com.example.insuranceagency.exception.InvalidInputException;
