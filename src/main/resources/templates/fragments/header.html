@@ -7,7 +7,7 @@
         <ul>
             <li><a href="/offers">Offers</a></li>
             <li sec:authorize="isAuthenticated()">
-                <a th:href="@{/personal}">Personal page</a>
+                <a th:href="@{/personal}">Personal account</a>
             </li>
             <li sec:authorize="isAuthenticated()">
                 <a th:href="@{/logout}">Logout</a>

@@ -48,7 +48,7 @@ public class PersonalPageController {
         User user = userService.findByEmail(email);
         model.addAttribute("user", user);
         model.addAttribute("page", "info");
-        return "personal/personal-page";
+        return "personal/personal-account";
     }
 
     @GetMapping("/policies")
@@ -62,7 +62,7 @@ public class PersonalPageController {
         Page<PolicyDto> policies = policyService.getPoliciesByUser(email, pageable);
         model.addAttribute("page", "policies");
         model.addAttribute("policies", policies);
-        return "personal/personal-page";
+        return "personal/personal-account";
     }
 
     @GetMapping("/applications")
@@ -75,7 +75,7 @@ public class PersonalPageController {
         Page<PolicyDto> policies = policyService.getApplicationsByUser(email, pageable);
         model.addAttribute("page", "applications");
         model.addAttribute("policies", policies);
-        return "personal/personal-page";
+        return "personal/personal-account";
     }
 
     @GetMapping("/policies/{id}")
