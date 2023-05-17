@@ -8,11 +8,14 @@
 		<version>2.7.10</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.example</groupId>
+	<groupId>com.gitlab.alura</groupId>
 	<artifactId>insurance-agency</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>insurance-agency</name>
-	<description>Demo project for Spring Boot</description>
+	<description>
+		A comprehensive insurance agency web application built using Spring Boot,
+		offering policy management, application processing, and user authentication features.
+	</description>
 	<properties>
 		<java.version>11</java.version>
 	</properties>
