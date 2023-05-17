@@ -40,7 +40,7 @@ public class OfferFilter implements Specification<Offer> {
             Predicate typeContaining = criteriaBuilder.like(root.get("insuranceType").get("title"), "%" + searchQuery + "%");
             predicates.add(criteriaBuilder.or(titleContaining, descriptionContaining, typeContaining));
         }
-        return predicates.size() == 0
+        return predicates.isEmpty()
                 ? null
                 : criteriaBuilder.and(predicates.toArray(new Predicate[0]));
     }
