@@ -1,4 +1,4 @@
-package com.example.insuranceagency.detail;
+package com.example.insuranceagency.security;
 
 import com.example.insuranceagency.entity.User;
 import org.springframework.security.core.GrantedAuthority;
