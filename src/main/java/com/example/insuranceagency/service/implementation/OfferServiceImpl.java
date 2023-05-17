@@ -20,26 +20,16 @@ public class OfferServiceImpl implements OfferService {
 
     private final OfferRepository offerRepository;
 
-    private final SortOptionsList sortOptions;
-
     private final OfferMapper offerMapper;
 
     public OfferServiceImpl(OfferRepository offerRepository,
-                            SortOptionsList sortOptions,
                             OfferMapper offerMapper) {
         this.offerRepository = offerRepository;
-        this.sortOptions = sortOptions;
         this.offerMapper = offerMapper;
     }
 
-    public List<String> getSortTypes(){
-        return sortOptions.getSortOptionNames();
-    }
-
     @Override
-    public Page<OfferDto> findAll(int page, int size, OfferFilter offerFilter, int sortType) {
-        Sort sortOption = sortOptions.getSortByIndex(sortType - 1);
-        Pageable pageable = PageRequest.of(page, size, sortOption);
+    public Page<OfferDto> findAll(Pageable pageable, OfferFilter offerFilter) {
         Page<Offer> offerPage = offerRepository.findAll(offerFilter, pageable);
         List<OfferDto> offerDtoList = offerPage
                 .getContent()

@@ -8,10 +8,17 @@ import com.example.insuranceagency.filter.OfferFilter;
 import com.example.insuranceagency.service.CompanyService;
 import com.example.insuranceagency.service.InsuranceTypeService;
 import com.example.insuranceagency.service.OfferService;
+import com.example.insuranceagency.sorting.SortOptionsList;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -26,6 +33,16 @@ public class OffersController {
 
     private final InsuranceTypeService insuranceTypeService;
 
+    private final SortOptionsList sortOptionsList;
+
+    public OffersController(OfferService offerService,
+                            CompanyService companyService,
+                            InsuranceTypeService insuranceTypeService, SortOptionsList sortOptionsList) {
+        this.offerService = offerService;
+        this.companyService = companyService;
+        this.insuranceTypeService = insuranceTypeService;
+        this.sortOptionsList = sortOptionsList;
+    }
 
     @GetMapping("")
     public String getOffers(@RequestParam(name = "page", defaultValue = "0") int page,
@@ -37,9 +54,6 @@ public class OffersController {
                             @RequestParam(name = "minPrice", required = false) Integer selectedMinPrice,
                             @RequestParam(name = "maxPrice", required = false) Integer selectedMaxPrice,
                             Model model){
-        if (page < 0 || size < 0){
-            throw new NotFoundException();
-        }
         OfferFilter offerFilter = new OfferFilter();
         offerFilter.setActive(true);
         offerFilter.setInsuranceType(type);
@@ -48,13 +62,18 @@ public class OffersController {
         offerFilter.setCompany(company);
         offerFilter.setSearchQuery(query);
 
+        if (page < 0 || size < 0){
+            page = 0;
+            size = 12;
+        }
+        Sort sortOption = sortOptionsList.getSortByIndex(sort - 1);
+        Pageable pageable = PageRequest.of(page, size, sortOption);
 
-
-        Page<OfferDto> offers = offerService.findAll(page, size, offerFilter, sort);
+        Page<OfferDto> offers = offerService.findAll(pageable, offerFilter);
 
         List<InsuranceTypeDto> insuranceTypeList = insuranceTypeService.getInsuranceTypes();
         List<Company> companies = companyService.getActiveCompanies();
-        List<String> sortOptions = offerService.getSortTypes();
+        List<String> sortOptions = sortOptionsList.getSortOptionNames();//offerService.getSortTypes();
         BigDecimal maxPrice = offerService.getMaxPrice();
         BigDecimal minPrice = offerService.getMinPrice();
 
@@ -84,13 +103,5 @@ public class OffersController {
         }
         model.addAttribute("offer", offerDto);
         return "offers/page";
-    }
-
-    public OffersController(OfferService offerService,
-                            CompanyService companyService,
-                            InsuranceTypeService insuranceTypeService) {
-        this.offerService = offerService;
-        this.companyService = companyService;
-        this.insuranceTypeService = insuranceTypeService;
     }
 }
