@@ -1,7 +1,7 @@
 <div class="list-of-policies">
     <div class="title-and-pagination">
         <div>
-            <h3>Policies</h3>
+            <h3 th:text="${#strings.capitalize(page)}"></h3>
         </div>
         <div th:if="${policies.totalPages >1}">
             <ul>
@@ -29,7 +29,12 @@
             <td ><a th:href="@{/personal/{page}/{id}(id=${policy.id}, page=${page})}" th:text="${policy.id}"></a></td>
             <td th:text="${policy.offer.insuranceType.title}"></td>
             <td th:text="${policy.offer.title}"></td>
-            <td th:text="${policy.status}"></td>
+            <td>
+                <div class="status-cell">
+                    <span th:class="${'status-circle status-circle-' + #strings.arraySplit(policy.status, ' ')[0]}"></span>
+                    <span th:text="${policy.status}"></span>
+                </div>
+            </td>
         </tr>
         </tbody>
     </table>

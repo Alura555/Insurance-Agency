@@ -7,15 +7,21 @@
 </head>
 <body>
     <div th:replace="fragments/header :: header"></div>
-    <div class="personal-page">
+    <div class="personal-account">
         <div th:replace="personal/account-nav :: div"></div>
 
         <div class="account policy-info-fragment">
-            <form th:action="@{{id}(id=${policyDto.id})}" th:object="${policyDto}" method="post">
-                <div class="title">
-                    <h2 th:text="${policyDto.manager != null} ? 'Policy ' : 'Application ' + ${policyDto.id}"></h2>
+            <div class="title">
+                <h2 th:text="${policyDto.manager != null} ? 'Policy ' : 'Application ' + ${policyDto.id}"></h2>
+                <div class="handle-buttons" sec:authorize="hasAuthority('MANAGER')"
+                     th:if="${policyDto.status == 'Awaiting manager approval'}">
+                    <form  th:action="@{/personal/applications/{id}/approve (id=${policyDto.id})}" method="post">
+                        <button type="submit" name="action" value="approve" class="approve-button">Approve</button>
+                        <button type="submit" name="action" value="reject" class="reject-button">Reject</button>
+                    </form>
                 </div>
-
+            </div>
+            <form th:action="@{{id}(id=${policyDto.id})}" th:object="${policyDto}" method="post">
                 <div class="offer-title">
                     <b th:text="${policyDto.offer.title}"></b>
                 </div>
@@ -35,7 +41,10 @@
                     <div class="policy-field">
                         <b>Status:</b>
                         <br>
-                        <span th:text="${policyDto.status}"></span>
+                        <div class="status-cell">
+                            <span th:class="${'status-circle status-circle-' + #strings.arraySplit(policyDto.status, ' ')[0]}"></span>
+                            <span th:text="${policyDto.status}"></span>
+                        </div>
                     </div>
                 </div>
                 <div>
@@ -105,14 +114,7 @@
             </form>
         </div>
 
-        <div class="handle-buttons" sec:authorize="hasAuthority('MANAGER')" th:if="${policyDto.manager == null}">
-            <form  th:action="@{/personal/applications/{id}/approve (id=${policyDto.id})}" method="post">
-                <div>
-                    <button type="submit" name="action" value="approve">Approve</button>
-                    <button type="submit" name="action" value="reject">Reject</button>
-                </div>
-            </form>
-        </div>
+
     </div>
 </body>
 </html>
