@@ -2,6 +2,7 @@ package com.example.insuranceagency.service.implementation;
 
 import com.example.insuranceagency.dto.PolicyDto;
 import com.example.insuranceagency.entity.Document;
+import com.example.insuranceagency.entity.DocumentType;
 import com.example.insuranceagency.entity.Policy;
 import com.example.insuranceagency.entity.User;
 import com.example.insuranceagency.exception.InvalidInputException;
@@ -19,6 +20,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -53,21 +55,6 @@ public class PolicyServiceImpl implements PolicyService {
         return getPolicyDtoByIdAndUser(email, true, id);
     }
 
-    private PolicyDto getPolicyDtoByIdAndUser(String email, boolean isPolicy, Long id) {
-        User user = userDetailsService.findByEmail(email);
-
-        PolicyFilter policyFilter = new PolicyFilter();
-        policyFilter.setActive(true);
-        policyFilter.setPolicy(isPolicy);
-        policyFilter.setUser(user);
-        policyFilter.setId(id);
-
-        Policy policy = policyRepository.findOne(policyFilter)
-                .orElseThrow(NotFoundException::new);
-
-        return policyMapper.toPolicyDto(policy);
-    }
-
     @Override
     public Page<PolicyDto> getApplicationsByUser(String email, int page, int size) {
         return getPolicyByFilter(email, false, page, size);
@@ -80,38 +67,60 @@ public class PolicyServiceImpl implements PolicyService {
 
     @Override
     public void updatePolicy(Long id, PolicyDto policyDto) {
+        Policy policy = getUpdatedPolicy(id, policyDto);
+
+        Date currentDate = new Date();
+        validatePolicyDate(policyDto, currentDate);
+        policy.setStartDate(policyDto.getStartDate());
+
+        if (policyDto.getDocuments() != null) {
+            setPolicyDocuments(policyDto, policy, currentDate);
+        }
+        policyRepository.save(policy);
+    }
+
+    private Policy getUpdatedPolicy(Long id, PolicyDto policyDto) {
         Policy policy = policyRepository.findById(id).orElseThrow(NotFoundException::new);
 
         PolicyDto existingPolicyDto = policyMapper.toPolicyDto(policy);
         policyMapper.updatePolicyDtoFromExisting(policyDto, existingPolicyDto);
+        return policy;
+    }
 
-        Date currentDate = new Date();
+    private void validatePolicyDate(PolicyDto policyDto, Date currentDate) {
         if (policyDto.getStartDate() != null && policyDto.getStartDate().before(currentDate)) {
             throw new InvalidInputException("startDate", "Start date must be later than current date.");
         }
-        policy.setStartDate(policyDto.getStartDate());
-
-        if (policyDto.getDocuments() != null) {
-            Set<Document> documents = policy.getDocuments();
-            policyDto.getDocuments()
-                    .entrySet()
-                    .stream()
-                    .filter(x -> !x.getValue().getNumber().equals(""))
-                    .forEach(x -> {
-                        x.getValue().setDocumentType(x.getKey());
-                        if (x.getValue().getIssueDate().after(currentDate)) {
-                            throw new InvalidInputException("documents[" + x.getKey().getId() + "].issueDate",
-                                    "Issue date of document must be earlier than current date.");
-                        }
-                        if (!documents.contains(x.getValue())) {
-                            documentService.addNewDocument(x.getValue());
-                        }
-                        documents.add(x.getValue());
-                    });
-            policy.setDocuments(documents);
-        }
-        policyRepository.save(policy);
     }
+
+    private void setPolicyDocuments(PolicyDto policyDto, Policy policy, Date currentDate) {
+        Set<Document> documents = policy.getDocuments();
+        policyDto.getDocuments()
+                .entrySet()
+                .stream()
+                .filter(documentEntry -> !documentEntry.getValue().getNumber().equals(""))
+                .forEach(documentEntry -> processDocument(currentDate, documents, documentEntry));
+        policy.setDocuments(documents);
+    }
+
+    private void processDocument(Date currentDate, Set<Document> documents, Map.Entry<DocumentType, Document> documentEntry) {
+        documentEntry.getValue().setDocumentType(documentEntry.getKey());
+        validateDocumentDate(currentDate, documentEntry);
+        if (!documents.contains(documentEntry.getValue())) {
+            documentService.addNewDocument(documentEntry.getValue());
+        }
+        documents.add(documentEntry.getValue());
+    }
+
+    private void validateDocumentDate(Date currentDate, Map.Entry<DocumentType, Document> documentEntry) {
+        if (documentEntry.getValue().getIssueDate().after(currentDate)) {
+            throw new InvalidInputException(
+                    String.format("documents[%d].issueDate", documentEntry.getKey().getId()),
+                    "Issue date of document must be earlier than current date."
+            );
+        }
+    }
+
 
     @Override
     public void handleApplication(String manager, String action, Long applicationId) {
@@ -144,5 +153,20 @@ public class PolicyServiceImpl implements PolicyService {
                 .map(policyMapper::toPolicyDto)
                 .collect(Collectors.toList());
         return new PageImpl<>(offerDtoList, pageable, policies.getTotalElements());
+    }
+
+    private PolicyDto getPolicyDtoByIdAndUser(String email, boolean isPolicy, Long id) {
+        User user = userDetailsService.findByEmail(email);
+
+        PolicyFilter policyFilter = new PolicyFilter();
+        policyFilter.setActive(true);
+        policyFilter.setPolicy(isPolicy);
+        policyFilter.setUser(user);
+        policyFilter.setId(id);
+
+        Policy policy = policyRepository.findOne(policyFilter)
+                .orElseThrow(NotFoundException::new);
+
+        return policyMapper.toPolicyDto(policy);
     }
 }
