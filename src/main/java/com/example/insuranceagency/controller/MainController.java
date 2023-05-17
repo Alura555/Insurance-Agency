@@ -4,7 +4,6 @@ import com.example.insuranceagency.dto.InsuranceTypeDto;
 import com.example.insuranceagency.entity.Company;
 import com.example.insuranceagency.service.CompanyService;
 import com.example.insuranceagency.service.InsuranceTypeService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
