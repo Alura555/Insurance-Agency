@@ -29,10 +29,12 @@ header {
 
 nav ul {
   display: flex;
+  text-align: center;
 }
 
 nav li {
   margin: 0 10px;
+  display: flex;
 }
 
 
@@ -55,9 +57,6 @@ button, a {
   transition: all 0.2s ease-in-out;
   text-decoration: none;
   top: 20px;
-  display: flex;
-  text-align: center;
-  flex-direction: column;
 }
 
 button:hover, a:hover {
@@ -573,7 +572,7 @@ ul.documents-list li{
   width: 250px;
   top: 110px;
   height: 50px;
-  display: block;
+  display: flex;
 }
 
 .add-button form{
@@ -589,10 +588,15 @@ ul.documents-list li{
 
 .add-button a{
     margin: auto;
-    max-width: 70px;
+    width: 70%;
     background-color: #333;
     height: 20px;
     padding: 10px 5px;
+    text-align: center;
+}
+
+.add-button a:hover{
+    background-color: #FF0000;
 }
 
 .pagination {
@@ -705,7 +709,7 @@ input[type=number] {
     position: relative;
     background-color: #fafafa;
     padding: 20px;
-    border-radius: 5px; */
+    border-radius: 5px;
     height: 100px;
     margin-top: auto;
     margin-bottom: auto;
