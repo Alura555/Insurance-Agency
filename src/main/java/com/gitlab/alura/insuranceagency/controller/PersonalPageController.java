@@ -119,5 +119,32 @@ public class PersonalPageController {
         policyService.handleApplication(email, action, id);
         return "redirect:/personal/policies/" + id;
     }
+    @GetMapping("/applications/new")
+    public String getNewApplicationForm(@RequestParam("id") Long id,
+                                        Principal principal,
+                                        Model model) {
+        String email = principal.getName();
+        PolicyDto applicationDto = policyService.getApplicationForm(email, id);
+        model.addAttribute("policyDto", applicationDto);
+        model.addAttribute("offerId", id);
+
+        return "personal/policy";
+    }
+    @PostMapping("/applications/new")
+    public String createNewApplication(@RequestParam("id") Long offerId,
+                                       Principal principal,
+                                       PolicyDto policyDto,
+                                       Model model,
+                                       BindingResult result) {
+        String email = principal.getName();
+        Long id = null;
+        try {
+            id = policyService.createApplication(email, policyDto, offerId);
+        } catch (InvalidInputException e) {
+            result.rejectValue(e.getField(), "error.policyDto", e.getMessage());
+            return "personal/policy";
+        }
+        return "redirect:/personal/applications/" + id;
+    }
 
 }

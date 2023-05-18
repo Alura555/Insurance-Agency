@@ -38,9 +38,15 @@ public class OfferServiceImpl implements OfferService {
         return new PageImpl<>(offerDtoList, pageable, offerPage.getTotalElements());
     }
 
-    public OfferDto findById(Long id) {
-        Offer offer = offerRepository.findById(id).orElse(null);
+    @Override
+    public OfferDto findDtoById(Long id) {
+        Offer offer = findById(id);
         return offerMapper.toOfferDto(offer);
+    }
+
+    @Override
+    public Offer findById(Long id) {
+        return offerRepository.findById(id).orElse(null);
     }
 
     public BigDecimal getMaxPrice(){

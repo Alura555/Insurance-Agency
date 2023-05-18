@@ -68,12 +68,10 @@
                     <h3 class="offer-card-title" th:text="${offer.title}"></h3>
                     <span class="offer-card-price" th:text="${offer.price}"></span>
                     <br>
-                    <div class="add-button">
-                        <form th:action="@{/policies/new/{id}(id=${offer.id})}" method="post">
-                            <button type="submit">Buy</button>
-                        </form>
-                    </div>
                 </a>
+                <div class="add-button">
+                    <a th:href="@{/personal/applications/new(id=${offer.id})}">Buy</a>
+                </div>
             </li>
         </ul>
 

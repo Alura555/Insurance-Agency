@@ -12,7 +12,7 @@
 
         <div class="account policy-info-fragment">
             <div class="title">
-                <h2 th:text="${policyDto.manager != null} ? 'Policy ' : 'Application ' + ${policyDto.id}"></h2>
+                <h2 th:text="${policyDto.manager != null} ? 'Policy ' : 'Application ' + ${policyDto.id != null ? policyDto.id : ''}"></h2>
                 <div class="handle-buttons" sec:authorize="hasAuthority('MANAGER')"
                      th:if="${policyDto.status == 'Awaiting manager approval'}">
                     <form  th:action="@{/personal/applications/{id}/approve (id=${policyDto.id})}" method="post">
@@ -21,7 +21,9 @@
                     </form>
                 </div>
             </div>
-            <form th:action="@{{id}(id=${policyDto.id})}" th:object="${policyDto}" method="post">
+            <form th:with="url=${((policyDto.id != null) ? policyDto.id : 'new/?id=' + offerId)}"
+                  th:action="@{${url}}"
+                  th:object="${policyDto}" method="post">
                 <div class="offer-title">
                     <b th:text="${policyDto.offer.title}"></b>
                 </div>
@@ -32,7 +34,7 @@
                         <span th:text="${policyDto.offer.insuranceType.title}"></span>
                     </div>
                 </div>
-                <div>
+                <div th:if="${policyDto.id != null}">
                     <div class="policy-field">
                         <b>Date of creation:</b>
                         <br>

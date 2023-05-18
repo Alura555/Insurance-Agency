@@ -3,6 +3,7 @@ package com.gitlab.alura.insuranceagency.service.implementation;
 import com.gitlab.alura.insuranceagency.dto.PolicyDto;
 import com.gitlab.alura.insuranceagency.entity.Document;
 import com.gitlab.alura.insuranceagency.entity.DocumentType;
+import com.gitlab.alura.insuranceagency.entity.Offer;
 import com.gitlab.alura.insuranceagency.entity.Policy;
 import com.gitlab.alura.insuranceagency.entity.User;
 import com.gitlab.alura.insuranceagency.exception.InvalidInputException;
@@ -11,6 +12,7 @@ import com.gitlab.alura.insuranceagency.filter.PolicyFilter;
 import com.gitlab.alura.insuranceagency.mapper.PolicyMapper;
 import com.gitlab.alura.insuranceagency.repository.PolicyRepository;
 import com.gitlab.alura.insuranceagency.service.DocumentService;
+import com.gitlab.alura.insuranceagency.service.OfferService;
 import com.gitlab.alura.insuranceagency.service.PolicyService;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
@@ -34,15 +36,19 @@ public class PolicyServiceImpl implements PolicyService {
     private final UserDetailsServiceImpl userDetailsService;
     private final DocumentService documentService;
 
+    private final OfferService offerService;
+
+
 
     public PolicyServiceImpl(PolicyRepository policyRepository,
                              PolicyMapper policyMapper,
                              UserDetailsServiceImpl userDetailsService,
-                             DocumentService documentService) {
+                             DocumentService documentService, OfferService offerService) {
         this.policyRepository = policyRepository;
         this.policyMapper = policyMapper;
         this.userDetailsService = userDetailsService;
         this.documentService = documentService;
+        this.offerService = offerService;
     }
 
     @Override
@@ -70,13 +76,64 @@ public class PolicyServiceImpl implements PolicyService {
         Policy policy = getUpdatedPolicy(id, policyDto);
 
         Date currentDate = new Date();
+        setNewPolicyInfo(policyDto, currentDate, policy);
+        policyRepository.save(policy);
+    }
+
+    @Override
+    public void handleApplication(String manager, String action, Long applicationId) {
+        Policy policy = policyRepository.findById(applicationId).orElseThrow(IllegalArgumentException::new);
+        policy.setManager(userDetailsService.findByEmail(manager));
+        if (policy.getStartDate() == null){
+            policy.setStartDate(Date.from(LocalDateTime.now().toInstant(ZoneOffset.UTC)));
+        }
+        if (action.equals("approve")){
+            policy.setApproved(true);
+        }
+        policyRepository.save(policy);
+    }
+
+    @Override
+    public PolicyDto getApplicationForm(String clientEmail, Long offerId) {
+        Policy application = new Policy();
+        User client = userDetailsService.findByEmail(clientEmail);
+        Offer offer = offerService.findById(offerId);
+
+        application.setActive(true);
+        application.setClient(client);
+        application.setOffer(offer);
+
+
+        return policyMapper.toPolicyDto(application);
+    }
+
+    @Override
+    public Long createApplication(String clientEmail, PolicyDto policyDto, Long offerId) {
+        User client = userDetailsService.findByEmail(clientEmail);
+        Offer offer = offerService.findById(offerId);
+        Date currentDate = new Date();
+
+        Policy policy = new Policy();
+        policy.setActive(true);
+        policy.setClient(client);
+        policy.setOffer(offer);
+        policy.setCreationDate(currentDate);
+
+        PolicyDto existingPolicyDto = policyMapper.toPolicyDto(policy);
+        policyMapper.updatePolicyDtoFromExisting(policyDto, existingPolicyDto);
+
+        setNewPolicyInfo(policyDto, currentDate, policy);
+
+        return policyRepository.save(policy).getId();
+    }
+
+    private void setNewPolicyInfo(PolicyDto policyDto, Date currentDate, Policy policy) {
         validatePolicyDate(policyDto, currentDate);
         policy.setStartDate(policyDto.getStartDate());
 
         if (policyDto.getDocuments() != null) {
             setPolicyDocuments(policyDto, policy, currentDate);
         }
-        policyRepository.save(policy);
     }
 
     private Policy getUpdatedPolicy(Long id, PolicyDto policyDto) {
@@ -122,18 +179,7 @@ public class PolicyServiceImpl implements PolicyService {
     }
 
 
-    @Override
-    public void handleApplication(String manager, String action, Long applicationId) {
-        Policy policy = policyRepository.findById(applicationId).orElseThrow(IllegalArgumentException::new);
-        policy.setManager(userDetailsService.findByEmail(manager));
-        if (policy.getStartDate() == null){
-            policy.setStartDate(Date.from(LocalDateTime.now().toInstant(ZoneOffset.UTC)));
-        }
-        if (action.equals("approve")){
-            policy.setApproved(true);
-        }
-        policyRepository.save(policy);
-    }
+
 
     private PageImpl<PolicyDto> getPolicyByFilter(String email, boolean isPolicy, Pageable pageable) {
         User user = userDetailsService.findByEmail(email);

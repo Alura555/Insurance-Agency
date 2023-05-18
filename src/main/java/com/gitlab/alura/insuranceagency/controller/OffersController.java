@@ -73,7 +73,7 @@ public class OffersController {
 
         List<InsuranceTypeDto> insuranceTypeList = insuranceTypeService.getInsuranceTypes();
         List<Company> companies = companyService.getActiveCompanies();
-        List<String> sortOptions = sortOptionsList.getSortOptionNames();//offerService.getSortTypes();
+        List<String> sortOptions = sortOptionsList.getSortOptionNames();
         BigDecimal maxPrice = offerService.getMaxPrice();
         BigDecimal minPrice = offerService.getMinPrice();
 
@@ -97,7 +97,7 @@ public class OffersController {
 
     @GetMapping("/{id}")
     public String getOfferById(Model model, @PathVariable Long id){
-        OfferDto offerDto = offerService.findById(id);
+        OfferDto offerDto = offerService.findDtoById(id);
         if (offerDto == null){
             throw new NotFoundException();
         }

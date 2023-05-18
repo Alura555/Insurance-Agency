@@ -15,6 +15,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -60,6 +61,10 @@ public class Policy {
             joinColumns = @JoinColumn(name = "policy_id"),
             inverseJoinColumns = @JoinColumn(name = "document_id"))
     private Set<Document> documents;
+
+    public Policy() {
+        documents = new HashSet<>();
+    }
 
     public Long getId() {
         return id;

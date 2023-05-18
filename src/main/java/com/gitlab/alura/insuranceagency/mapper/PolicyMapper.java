@@ -48,7 +48,9 @@ public interface PolicyMapper {
     default Map<DocumentType, Document> mapDocuments(Set<DocumentType> offerDocuments,
                                                      Set<Document> policyDocuments){
         Map<DocumentType, Document> documents = new HashMap<>();
-        policyDocuments.forEach(x -> documents.put(x.getDocumentType(), x));
+        if (policyDocuments != null){
+            policyDocuments.forEach(x -> documents.put(x.getDocumentType(), x));
+        }
         offerDocuments.forEach(x -> documents.putIfAbsent(x, null));
         return documents;
     }
