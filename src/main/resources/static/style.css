@@ -55,6 +55,9 @@ button, a {
   transition: all 0.2s ease-in-out;
   text-decoration: none;
   top: 20px;
+  display: flex;
+  text-align: center;
+  flex-direction: column;
 }
 
 button:hover, a:hover {

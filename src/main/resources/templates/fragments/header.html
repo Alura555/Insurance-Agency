@@ -7,7 +7,14 @@
         <ul>
             <li><a href="/offers">Offers</a></li>
             <li sec:authorize="isAuthenticated()">
-                <a th:href="@{/personal}">Personal account</a>
+                <a th:href="@{/personal}">
+                    Personal account
+                    <br>
+                    <span th:with="role=${#authentication.getAuthorities()[0]}"
+                          th:text="${'Role: ' + #strings.toLowerCase(role.getAuthority())}">
+
+                    </span>
+                </a>
             </li>
             <li sec:authorize="isAuthenticated()">
                 <a th:href="@{/logout}">Logout</a>
