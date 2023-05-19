@@ -1,6 +1,7 @@
 package com.gitlab.alura.insuranceagency.filter;
 
 import com.gitlab.alura.insuranceagency.entity.Offer;
+import com.gitlab.alura.insuranceagency.entity.User;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -17,6 +18,8 @@ public class OfferFilter implements Specification<Offer> {
     private Long company;
     private Long insuranceType;
     private String searchQuery;
+    private User user;
+    private Long id;
 
     @Override
     public Predicate toPredicate(Root<Offer> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
@@ -39,6 +42,12 @@ public class OfferFilter implements Specification<Offer> {
             Predicate descriptionContaining = criteriaBuilder.like(root.get("description"), "%" + searchQuery + "%");
             Predicate typeContaining = criteriaBuilder.like(root.get("insuranceType").get("title"), "%" + searchQuery + "%");
             predicates.add(criteriaBuilder.or(titleContaining, descriptionContaining, typeContaining));
+        }
+        if (user != null && user.getRole().getTitle().equals("COMPANY MANAGER")){
+            predicates.add(criteriaBuilder.isMember(user, root.get("company").get("managers")));
+        }
+        if (id != null){
+            predicates.add(criteriaBuilder.equal(root.get("id"), id));
         }
         return predicates.isEmpty()
                 ? null
@@ -92,5 +101,21 @@ public class OfferFilter implements Specification<Offer> {
 
     public void setSearchQuery(String searchQuery) {
         this.searchQuery = searchQuery;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

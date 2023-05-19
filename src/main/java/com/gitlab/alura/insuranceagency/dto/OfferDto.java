@@ -1,5 +1,9 @@
 package com.gitlab.alura.insuranceagency.dto;
 
+import com.gitlab.alura.insuranceagency.entity.DocumentType;
+
+import java.util.Set;
+
 public class OfferDto {
     private Long id;
     private String title;
@@ -9,6 +13,7 @@ public class OfferDto {
     private Boolean isActive;
     private String companyName;
     private InsuranceTypeDto insuranceType;
+    private Set<DocumentType> documents;
 
     public Long getId() {
         return id;
@@ -72,5 +77,13 @@ public class OfferDto {
 
     public void setInsuranceType(InsuranceTypeDto insuranceType) {
         this.insuranceType = insuranceType;
+    }
+
+    public Set<DocumentType> getDocuments() {
+        return documents;
+    }
+
+    public void setDocuments(Set<DocumentType> documents) {
+        this.documents = documents;
     }
 }

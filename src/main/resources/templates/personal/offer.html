@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>My Account</title>
+    <link th:href="@{/style.css}" rel="stylesheet" />
+</head>
+<body>
+    <div th:replace="fragments/header :: header"></div>
+    <div class="personal-account">
+        <div th:replace="personal/account-nav :: div"></div>
+
+        <div class="account policy-info-fragment">
+            <div class="title">
+                <h2 th:text="'Offer ' + ${offer.id}"></h2>
+            </div>
+            <form th:with="url=${((offer.id != null) ? offer.id : 'new')}"
+                  th:action="@{${url}}"
+                  th:object="${offerDto}" method="post">
+                <div class="offer-title">
+                    <b th:text="${offer.title}"></b>
+                </div>
+                <div>
+                    <div class="policy-field">
+                        <b>Insurance type:</b>
+                        <br>
+                        <span th:text="${offer.insuranceType.title}"></span>
+                    </div>
+                </div>
+                <div>
+                    <div class="policy-field">
+                        <label>Price:</label>
+                        <br>
+                        <span th:text="${offer.price}"></span>
+                    </div>
+                    <div  class="policy-field">
+                        <b>Period:</b>
+                        <br>
+                        <span th:text="${offer.period}"></span>
+                    </div>
+                </div>
+                <div class="policy-field">
+                    <b>Required documents:</b>
+                    <br>
+                    <ul class="required-documents-list">
+                        <li th:each="documentType : ${offer.documents}">
+                            <span th:text="${documentType.title}"></span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <b>Description:</b>
+                    <br>
+                    <span th:text="${offer.description}"></span>
+                </div>
+            </form>
+        </div>
+
+
+    </div>
+</body>
+</html>

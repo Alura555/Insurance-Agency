@@ -2,6 +2,7 @@ package com.gitlab.alura.insuranceagency.repository;
 
 
 import com.gitlab.alura.insuranceagency.entity.Offer;
+import com.gitlab.alura.insuranceagency.entity.Policy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -23,5 +24,7 @@ public interface OfferRepository extends JpaRepository<Offer, Long>, JpaSpecific
     Offer findTopByOrderByPriceDesc();
 
     Offer findTopByOrderByPrice();
+
+    Optional<Offer> findOne(Specification<Offer> spec);
 
 }

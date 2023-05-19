@@ -10,6 +10,7 @@ public interface OfferMapper {
     @Mapping(target = "period", expression = "java(formatPeriod(offer.getPeriodInMonths()))")
     @Mapping(target = "companyName", source = "offer.company.name")
     @Mapping(source = "price", target = "price", numberFormat = "$#.##")
+    @Mapping(source = "documents", target = "documents")
     OfferDto toOfferDto(Offer offer);
 
 

@@ -1,0 +1,39 @@
+<div class="list-of-policies">
+    <div class="title-and-pagination">
+        <div>
+            <h3 th:text="${#strings.capitalize(page)}"></h3>
+        </div>
+        <div th:if="${offers.totalPages >1}">
+            <ul>
+                <li th:if="${offers.number > 0}">
+                    <a th:href="@{${page}(page=${offers.number - 1}, size=${offers.size})}"><</a>
+                </li>
+                <li th:text="|${(offers.number * offers.size) + 1} - ${((offers.number + 1) * offers.size) &lt; offers.totalElements ? ((offers.number + 1) * offers.size) : offers.totalElements} out of ${offers.totalElements}|"></li>
+                <li th:if="${offers.number < offers.totalPages - 1}">
+                    <a th:href="@{${page}(page=${offers.number + 1}, size=${offers.size})}"> > </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Type of insurance</th>
+            <th>Title</th>
+            <th sec:authorize="hasAuthority('ADMIN')">Company</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="offer : ${offers.content}">
+            <td ><a th:href="@{/personal/{page}/{id}(id=${offer.id}, page=${page})}" th:text="${offer.id}"></a></td>
+            <td th:text="${offer.insuranceType.title}"></td>
+            <td th:text="${offer.title}"></td>
+            <td sec:authorize="hasAuthority('ADMIN')" th:text="${offer.companyName}"></td>
+            <td> update/delete</td>
+        </tr>
+        </tbody>
+    </table>
+
+</div>

@@ -1,16 +1,20 @@
 package com.gitlab.alura.insuranceagency.service.implementation;
 
+import com.gitlab.alura.insuranceagency.entity.User;
+import com.gitlab.alura.insuranceagency.exception.NotFoundException;
 import com.gitlab.alura.insuranceagency.repository.OfferRepository;
 import com.gitlab.alura.insuranceagency.dto.OfferDto;
 import com.gitlab.alura.insuranceagency.entity.Offer;
 import com.gitlab.alura.insuranceagency.filter.OfferFilter;
 import com.gitlab.alura.insuranceagency.mapper.OfferMapper;
 import com.gitlab.alura.insuranceagency.service.OfferService;
+import com.gitlab.alura.insuranceagency.service.UserService;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -21,10 +25,13 @@ public class OfferServiceImpl implements OfferService {
 
     private final OfferMapper offerMapper;
 
+    private final UserService userService;
+
     public OfferServiceImpl(OfferRepository offerRepository,
-                            OfferMapper offerMapper) {
+                            OfferMapper offerMapper, UserService userService) {
         this.offerRepository = offerRepository;
         this.offerMapper = offerMapper;
+        this.userService = userService;
     }
 
     @Override
@@ -39,8 +46,28 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
+    public Page<OfferDto> findAll(Pageable pageable, String userEmail) {
+        User user = userService.findByEmail(userEmail);
+        OfferFilter offerFilter = new OfferFilter();
+        offerFilter.setActive(true);
+        offerFilter.setUser(user);
+        return findAll(pageable, offerFilter);
+    }
+
+    @Override
     public OfferDto findDtoById(Long id) {
         Offer offer = findById(id);
+        return offerMapper.toOfferDto(offer);
+    }
+
+    @Override
+    public OfferDto getOfferByUserAndId(String userEmail, Long id) {
+        User user = userService.findByEmail(userEmail);
+        OfferFilter offerFilter = new OfferFilter();
+        offerFilter.setActive(true);
+        offerFilter.setUser(user);
+        offerFilter.setId(id);
+        Offer offer = offerRepository.findOne(offerFilter).orElseThrow(NotFoundException::new);
         return offerMapper.toOfferDto(offer);
     }
 
