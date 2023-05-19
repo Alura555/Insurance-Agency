@@ -2,19 +2,22 @@ package com.gitlab.alura.insuranceagency.dto;
 
 import com.gitlab.alura.insuranceagency.entity.DocumentType;
 
+import java.math.BigDecimal;
 import java.util.Set;
 
 public class OfferDto {
     private Long id;
     private String title;
     private String period;
+    private int months;
+    private int years;
     private String description;
-    private String price;
+    private String formattedPrice;
+    private BigDecimal price;
     private Boolean isActive;
     private String companyName;
     private InsuranceTypeDto insuranceType;
     private Set<DocumentType> documents;
-
     public Long getId() {
         return id;
     }
@@ -47,12 +50,12 @@ public class OfferDto {
         this.description = description;
     }
 
-    public String getPrice() {
-        return price;
+    public String getFormattedPrice() {
+        return formattedPrice;
     }
 
-    public void setPrice(String price) {
-        this.price = price;
+    public void setFormattedPrice(String formattedPrice) {
+        this.formattedPrice = formattedPrice;
     }
 
     public Boolean getActive() {
@@ -85,5 +88,29 @@ public class OfferDto {
 
     public void setDocuments(Set<DocumentType> documents) {
         this.documents = documents;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
+
+    public int getMonths() {
+        return months;
+    }
+
+    public void setMonths(int months) {
+        this.months = months;
+    }
+
+    public int getYears() {
+        return years;
+    }
+
+    public void setYears(int years) {
+        this.years = years;
     }
 }

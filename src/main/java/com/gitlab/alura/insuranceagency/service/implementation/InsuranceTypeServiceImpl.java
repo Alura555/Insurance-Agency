@@ -1,5 +1,6 @@
 package com.gitlab.alura.insuranceagency.service.implementation;
 
+import com.gitlab.alura.insuranceagency.exception.NotFoundException;
 import com.gitlab.alura.insuranceagency.repository.InsuranceTypeRepository;
 import com.gitlab.alura.insuranceagency.dto.InsuranceTypeDto;
 import com.gitlab.alura.insuranceagency.entity.InsuranceType;
@@ -43,5 +44,10 @@ public class InsuranceTypeServiceImpl implements InsuranceTypeService {
                 .limit(n)
                 .map(insuranceTypeMapper::toDto)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public InsuranceType getById(Long id) {
+        return insuranceTypeRepository.findById(id).orElseThrow(NotFoundException::new);
     }
 }

@@ -1,5 +1,7 @@
 package com.gitlab.alura.insuranceagency.service.implementation;
 
+import com.gitlab.alura.insuranceagency.entity.Company;
+import com.gitlab.alura.insuranceagency.entity.InsuranceType;
 import com.gitlab.alura.insuranceagency.entity.User;
 import com.gitlab.alura.insuranceagency.exception.NotFoundException;
 import com.gitlab.alura.insuranceagency.repository.OfferRepository;
@@ -7,6 +9,7 @@ import com.gitlab.alura.insuranceagency.dto.OfferDto;
 import com.gitlab.alura.insuranceagency.entity.Offer;
 import com.gitlab.alura.insuranceagency.filter.OfferFilter;
 import com.gitlab.alura.insuranceagency.mapper.OfferMapper;
+import com.gitlab.alura.insuranceagency.service.CompanyService;
 import com.gitlab.alura.insuranceagency.service.OfferService;
 import com.gitlab.alura.insuranceagency.service.UserService;
 import org.springframework.data.domain.*;
@@ -14,7 +17,6 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -25,12 +27,17 @@ public class OfferServiceImpl implements OfferService {
 
     private final OfferMapper offerMapper;
 
+    private final CompanyService companyService;
+
     private final UserService userService;
 
     public OfferServiceImpl(OfferRepository offerRepository,
-                            OfferMapper offerMapper, UserService userService) {
+                            OfferMapper offerMapper,
+                            CompanyService companyService,
+                            UserService userService) {
         this.offerRepository = offerRepository;
         this.offerMapper = offerMapper;
+        this.companyService = companyService;
         this.userService = userService;
     }
 
@@ -82,5 +89,20 @@ public class OfferServiceImpl implements OfferService {
 
     public BigDecimal getMinPrice(){
         return offerRepository.findTopByOrderByPrice().getPrice();
+    }
+
+    @Override
+    public Long createNewOffer(OfferDto offerDto,
+                               InsuranceType insuranceType,
+                               String managerEmail) {
+        User manager = userService.findByEmail(managerEmail);
+        Company company = companyService.getCompanyByManager(manager);
+
+        Offer offer = offerMapper.toOffer(offerDto);
+        offer.setActive(true);
+        offer.setInsuranceType(insuranceType);
+        offer.setCompany(company);
+
+        return offerRepository.save(offer).getId();
     }
 }

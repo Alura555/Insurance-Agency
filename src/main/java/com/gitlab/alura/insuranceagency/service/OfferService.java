@@ -2,6 +2,7 @@ package com.gitlab.alura.insuranceagency.service;
 
 import com.gitlab.alura.insuranceagency.dto.OfferDto;
 import com.gitlab.alura.insuranceagency.dto.PolicyDto;
+import com.gitlab.alura.insuranceagency.entity.InsuranceType;
 import com.gitlab.alura.insuranceagency.entity.Offer;
 import com.gitlab.alura.insuranceagency.filter.OfferFilter;
 import org.springframework.data.domain.Page;
@@ -23,4 +24,6 @@ public interface OfferService {
     BigDecimal getMaxPrice();
 
     BigDecimal getMinPrice();
+
+    Long createNewOffer(OfferDto offerDto, InsuranceType insuranceType, String managerEmail);
 }

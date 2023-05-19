@@ -208,7 +208,7 @@ input {
 .list-of-policies table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 40px;
+  margin-top: 20px;
 }
 
 .list-of-policies table th,
@@ -340,20 +340,18 @@ select{
 }
 
 
-.filter-box input[type="checkbox"]{
+input[type="checkbox"]{
   appearance: none;
   border: 1px solid #999;
   border-radius: 3px;
   width: 18px;
   height: 18px;
-  margin-right: 5px;
   vertical-align: middle;
   position: relative;
-  top: 0px;
   padding: 0px;
 }
 
-.filter-box input[type="checkbox"]:checked::before {
+input[type="checkbox"]:checked::before {
   content: "\2713";
   font-size: 16px;
   color: #fff;
@@ -362,9 +360,9 @@ select{
   left: 2px;
 }
 
-.filter-box input[type="checkbox"]:checked {
-  background-color: #c21f1f;
-  border-color: #b41036;
+input[type="checkbox"]:checked {
+  background-color: #333;
+  border-color: #333;
   color: #fff;
 }
 
@@ -509,6 +507,10 @@ section.range-slider{
     margin: auto;
 }
 
+.policy-info-fragment select{
+    width: 30%;
+}
+
 .policy-info-fragment#offer span{
     color: #ff0000;
 }
@@ -625,7 +627,6 @@ input::-webkit-inner-spin-button {
 
 input[type=number] {
 	-moz-appearance: textfield;
-	width: 35%;
 }
 
 .filter-price__inputs{
@@ -655,7 +656,7 @@ input[type=number] {
     color: #333;
     padding: 0 5px;
     font-size: 14px;
-    width: 40%;
+    width: 35%;
 }
 
 .filter-price__slider {
@@ -810,10 +811,12 @@ input[type=number] {
 }
 
 .handle-buttons {
+    margin-block: auto;
     width: 25%;
     display: flex;
     justify-content: space-between;
     flex-direction: row;
+    height: 40px;
 }
 
 .handle-buttons form{
@@ -827,12 +830,14 @@ input[type=number] {
     background-color: #438d43;
     color: white;
     width: 45%;
+    height: 100%;
 }
 
 .reject-button {
     background-color: #dd4d4d;
     color: white;
     width: 45%;
+    height: 100%;
 }
 
 .approve-button:hover{
@@ -846,4 +851,61 @@ input[type=number] {
 .required-documents-list{
     list-style: inside;
     margin: 5px;
+}
+
+.new-element{
+    width: 20%;
+    margin-left: auto;
+}
+
+.new-element a{
+    width: 80%;
+    background-color: #5b88b8;
+}
+
+.required-documents-list-form {
+    width: 80%;
+    display: grid;
+    grid-template-columns: repeat(3, 200px);
+    list-style-type: none;
+    margin: 10px 5px;
+    padding: 0;
+    margin-bottom: 20px;
+    gap: 10px;
+}
+
+.required-documents-list-form input{
+    margin: 0px;
+}
+
+.offer-form__label {
+    width: 90px;
+    height: 25px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 0px 10px;
+    background-color: #fff;
+    font-weight: revert;
+}
+
+.offer-form__label input{
+    height: 90%;
+    border: none;
+    padding: 0px;
+    position: relative;
+    background-color: #fff;
+    top: -1px;
+}
+
+.offer-form-price__input{
+    width:30%;
+}
+
+.offer-form-period__input{
+    width: 20px;
+    text-align: right;
+}
+
+.offer-form-title {
+    width: 40%;
 }

@@ -12,46 +12,74 @@
 
         <div class="account policy-info-fragment">
             <div class="title">
-                <h2 th:text="'Offer ' + ${offer.id}"></h2>
+                <h2 th:text="'Offer ' + ${offer.id != null ? offer.id : ''}"></h2>
+                <div th:if="${offer.id!=null}" class="handle-buttons" sec:authorize="hasAuthority('COMPANY MANAGER')">
+                    <button form="offerForm" type="submit" name="action" value="approve" class="approve-button">Create</button>
+                    <button onclick="location.href='/personal/offers/'" class="reject-button">Cancel</button>
+                </div>
             </div>
-            <form th:with="url=${((offer.id != null) ? offer.id : 'new')}"
+            <form id="offerForm" th:with="url=${((offer.id != null) ? offer.id : 'new')}"
                   th:action="@{${url}}"
-                  th:object="${offerDto}" method="post">
+                  th:object="${offer}" method="post">
                 <div class="offer-title">
-                    <b th:text="${offer.title}"></b>
+                    <b th:if="${offer.title!=null}" th:text="${offer.title}"></b>
+                </div>
+                <div class="offer-form-title" th:unless="${offer.title!=null}">
+                    <label for="title">Title:</label>
+                    <input th:field="*{title}" type="text" id="title"/>
                 </div>
                 <div>
-                    <div class="policy-field">
-                        <b>Insurance type:</b>
-                        <br>
-                        <span th:text="${offer.insuranceType.title}"></span>
-                    </div>
+                    <label for="type">Insurance type:</label>
+                    <span th:if="${offer.id != null}" th:text="${offer.insuranceType.title}"></span>
+                    <select th:unless="${offer.id != null}" id="type" th:name="type">
+                        <option th:each="type : ${types}"
+                                th:field="*{insuranceType}"
+                                th:value="${type.id}"
+                                th:text="${type.title}"></option>
+                    </select>
                 </div>
                 <div>
                     <div class="policy-field">
                         <label>Price:</label>
-                        <br>
-                        <span th:text="${offer.price}"></span>
+                        <span th:if="${offer.id != null}" th:text="${offer.formattedPrice}"></span>
+                        <label class="offer-form__label" th:unless="${offer.id != null}">
+                            <span>$</span>
+                            <input class="offer-form-price__input" type="number" th:field="*{price}" min="0"/>
+                        </label>
                     </div>
-                    <div  class="policy-field">
-                        <b>Period:</b>
-                        <br>
-                        <span th:text="${offer.period}"></span>
+                    <div class="policy-field">
+                        <label>Period:</label>
+                        <span th:if="${offer.id != null}" th:text="${offer.period}"></span>
+                        <label class="offer-form__label" th:unless="${offer.id != null}" >
+                            <input class="offer-form-period__input" type="number" id="years" th:field="*{years}" min="0" max="10">
+                            <span> years </span>
+                            <input class="offer-form-period__input" type="number" id="months" th:field="*{months}" min="0" max="11">
+                            <span> months</span>
+                        </label>
                     </div>
                 </div>
-                <div class="policy-field">
+                <div>
                     <b>Required documents:</b>
                     <br>
-                    <ul class="required-documents-list">
+                    <ul th:if="${offer.id != null}" class="required-documents-list">
                         <li th:each="documentType : ${offer.documents}">
                             <span th:text="${documentType.title}"></span>
                         </li>
                     </ul>
+                    <ul th:unless="${offer.id != null}" class="required-documents-list-form">
+                        <li th:each="documentType : ${documentTypes}">
+                            <input type="checkbox"
+                                   th:field="*{documents}"
+                                   th:value="${documentType.id}" />
+                            <span th:text="${documentType.title}" />
+                        </li>
+                    </ul>
                 </div>
                 <div>
-                    <b>Description:</b>
+                    <label>Description:</label>
                     <br>
-                    <span th:text="${offer.description}"></span>
+                    <span th:if="${offer.id != null}"  th:text="${offer.description}"></span>
+                    <textarea rows="4" th:unless="${offer.id != null}" type="text" th:field="*{description}" />
                 </div>
             </form>
         </div>

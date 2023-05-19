@@ -12,4 +12,5 @@ public interface DocumentTypeRepository extends JpaRepository<DocumentType, Long
 
     Optional<DocumentType> findByTitle(String title);
 
+    List<DocumentType> findAllByIsActive(Boolean isActive);
 }

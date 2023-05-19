@@ -1,5 +1,6 @@
 package com.gitlab.alura.insuranceagency.service.implementation;
 
+import com.gitlab.alura.insuranceagency.entity.User;
 import com.gitlab.alura.insuranceagency.repository.CompanyRepository;
 import com.gitlab.alura.insuranceagency.entity.Company;
 import com.gitlab.alura.insuranceagency.service.CompanyService;
@@ -31,5 +32,10 @@ public class CompanyServiceImpl implements CompanyService {
                 .sorted(Comparator.comparing(Company::getActiveOffersCount).reversed())
                 .limit(n)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Company getCompanyByManager(User user) {
+        return companyRepository.findByManagers(user);
     }
 }
