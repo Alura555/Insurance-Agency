@@ -26,4 +26,7 @@ public interface OfferService {
     BigDecimal getMinPrice();
 
     Long createNewOffer(OfferDto offerDto, InsuranceType insuranceType, String managerEmail);
+    Long updateOffer(OfferDto offerDto, InsuranceType insuranceType, String managerEmail);
+
+    void deleteOffer(String managerEmail, Long offerId);
 }

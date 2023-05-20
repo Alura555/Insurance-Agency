@@ -90,4 +90,41 @@ public class CompanyOfferController {
         model.addAttribute("page", "offers");
         return "redirect:/personal/offers/" + offerId;
     }
+
+    @GetMapping("/{id}/delete")
+    public String deleteOffer(@PathVariable("id") Long id,
+                              Principal principal) {
+        String managerEmail = principal.getName();
+        offerService.deleteOffer(managerEmail, id);
+        return "redirect:/personal/offers";
+    }
+    @GetMapping("/{id}/edit")
+    public String getOfferForm(@PathVariable("id") Long id,
+                               Principal principal,
+                               Model model) {
+        String managerEmail = principal.getName();
+        OfferDto offerDto = offerService.getOfferByUserAndId(managerEmail, id);
+        List<InsuranceTypeDto> typeDtoList = insuranceTypeService.getInsuranceTypes();
+        List<DocumentType> documentTypes = documentTypeService.getAllActive();
+
+
+        model.addAttribute("offer", offerDto);
+        model.addAttribute("page", "offers");
+        model.addAttribute("edit", true);
+        model.addAttribute("types", typeDtoList);
+        model.addAttribute("documentTypes", documentTypes);
+
+        return "/personal/offer";
+    }
+
+    @PostMapping("/{id}/edit")
+    public String updateOfferById(@PathVariable(name = "id") Long id,
+                                  @ModelAttribute("offer") OfferDto offerDto,
+                                  @RequestParam(name = "type", required = false, defaultValue = "1") Long typeId,
+                                  Principal principal){
+        String userEmail = principal.getName();
+        InsuranceType insuranceType = insuranceTypeService.getById(typeId);
+        Long offerId = offerService.updateOffer(offerDto, insuranceType, userEmail);
+        return "redirect:/personal/offers/" + offerId;
+    }
 }

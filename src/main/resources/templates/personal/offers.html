@@ -35,7 +35,12 @@
             <td th:text="${offer.insuranceType.title}"></td>
             <td th:text="${offer.title}"></td>
             <td sec:authorize="hasAuthority('ADMIN')" th:text="${offer.companyName}"></td>
-            <td> update/delete</td>
+            <td>
+                <div class="handle-buttons" >
+                    <a th:href="@{/personal/offers/{id}/edit(id=${offer.id})}" class="approve-button">Edit</a>
+                    <a th:href="@{/personal/offers/{id}/delete(id=${offer.id})}"  class="reject-button">Delete</a>
+                </div>
+            </td>
         </tr>
         </tbody>
     </table>

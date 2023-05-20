@@ -14,7 +14,7 @@ import java.util.List;
 public class OfferFilter implements Specification<Offer> {
     private Integer maxPrice;
     private Integer minPrice;
-    private Boolean isActive;
+    private Boolean isActive = true;
     private Long company;
     private Long insuranceType;
     private String searchQuery;
@@ -24,6 +24,8 @@ public class OfferFilter implements Specification<Offer> {
     @Override
     public Predicate toPredicate(Root<Offer> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
         List<Predicate> predicates = new ArrayList<>();
+
+        predicates.add(criteriaBuilder.equal(root.get("isActive"), isActive));
 
         if (minPrice != null) {
             predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("price"), minPrice));
@@ -49,9 +51,7 @@ public class OfferFilter implements Specification<Offer> {
         if (id != null){
             predicates.add(criteriaBuilder.equal(root.get("id"), id));
         }
-        return predicates.isEmpty()
-                ? null
-                : criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+        return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
     }
 
 

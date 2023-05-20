@@ -12,6 +12,7 @@ import com.gitlab.alura.insuranceagency.mapper.OfferMapper;
 import com.gitlab.alura.insuranceagency.service.CompanyService;
 import com.gitlab.alura.insuranceagency.service.OfferService;
 import com.gitlab.alura.insuranceagency.service.UserService;
+import org.mapstruct.control.MappingControl;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
@@ -99,10 +100,30 @@ public class OfferServiceImpl implements OfferService {
         Company company = companyService.getCompanyByManager(manager);
 
         Offer offer = offerMapper.toOffer(offerDto);
+        offer.setId(null);
         offer.setActive(true);
         offer.setInsuranceType(insuranceType);
         offer.setCompany(company);
 
         return offerRepository.save(offer).getId();
+    }
+
+    @Override
+    public Long updateOffer(OfferDto offerDto, InsuranceType insuranceType, String managerEmail) {
+        deleteOffer(managerEmail, offerDto.getId());
+        return createNewOffer(offerDto, insuranceType, managerEmail);
+    }
+
+    @Override
+    public void deleteOffer(String managerEmail, Long offerId) {
+        User manager = userService.findByEmail(managerEmail);
+
+        OfferFilter offerFilter = new OfferFilter();
+        offerFilter.setId(offerId);
+        offerFilter.setUser(manager);
+
+        Offer offer = offerRepository.findOne(offerFilter).orElseThrow(NotFoundException::new);
+        offer.setActive(false);
+        offerRepository.save(offer);
     }
 }

@@ -12,6 +12,8 @@ public interface OfferMapper {
     @Mapping(target = "companyName", source = "offer.company.name")
     @Mapping(source = "price", target = "formattedPrice", numberFormat = "$#.##")
     @Mapping(source = "documents", target = "documents")
+    @Mapping(target = "years", expression = "java(offer.getPeriodInMonths() / 12)")
+    @Mapping(target = "months", expression = "java(offer.getPeriodInMonths() % 12)")
     OfferDto toOfferDto(Offer offer);
 
     @InheritInverseConfiguration

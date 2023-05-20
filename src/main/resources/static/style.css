@@ -57,6 +57,7 @@ button, a {
   transition: all 0.2s ease-in-out;
   text-decoration: none;
   top: 20px;
+  font-size: unset;
 }
 
 button:hover, a:hover {
@@ -229,7 +230,6 @@ input {
 .list-of-policies a {
   display: inline-block;
   padding: 5px 10px;
-  background-color: #333;
   color: #fff;
   text-decoration: none;
   border-radius: 3px;
@@ -819,6 +819,10 @@ input[type=number] {
     height: 40px;
 }
 
+td .handle-buttons {
+    width: 100%;
+}
+
 .handle-buttons form{
     flex-direction: row;
     display: flex;
@@ -826,14 +830,23 @@ input[type=number] {
     width: 100%;
 }
 
-.approve-button {
+a.approve-button,
+button.approve-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background-color: #438d43;
     color: white;
+    padding:0;
     width: 45%;
     height: 100%;
 }
 
-.reject-button {
+a.reject-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding:0;
     background-color: #dd4d4d;
     color: white;
     width: 45%;
