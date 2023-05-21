@@ -1,7 +1,9 @@
 package com.gitlab.alura.insuranceagency.controller;
 
 import com.gitlab.alura.insuranceagency.dto.DocumentTypeDto;
+import com.gitlab.alura.insuranceagency.dto.InsuranceTypeDto;
 import com.gitlab.alura.insuranceagency.service.DocumentTypeService;
+import com.gitlab.alura.insuranceagency.service.InsuranceTypeService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -18,9 +20,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping("personal/admin")
 public class AdminController {
     private final DocumentTypeService documentTypeService;
+    private final InsuranceTypeService insuranceTypeService;
 
-    public AdminController(DocumentTypeService documentTypeService) {
+    public AdminController(DocumentTypeService documentTypeService, InsuranceTypeService insuranceTypeService) {
         this.documentTypeService = documentTypeService;
+        this.insuranceTypeService = insuranceTypeService;
     }
 
     @GetMapping("/documentTypes")
@@ -61,9 +65,50 @@ public class AdminController {
     }
 
     @GetMapping("/documentTypes/{id}/delete")
-    public String deleteOffer(@PathVariable("id") Long id,
-                              Model model) {
+    public String deleteDocumentType(@PathVariable("id") Long id,
+                                     Model model) {
         documentTypeService.deleteById(id);
         return "redirect:/personal/admin/documentTypes";
+    }
+
+    @GetMapping("/insuranceTypes")
+    public String getInsuranceTypes(@RequestParam(name = "page", defaultValue = "0") int page,
+                                   @RequestParam(name = "size", defaultValue = "10") int size,
+                                   @RequestParam(name = "id", defaultValue = "0") Long typeId,
+                                   @RequestParam(name = "edit", defaultValue = "false") boolean edit,
+                                   Model model){
+        Pageable pageable = PageRequest.of(page, size);
+        Page<InsuranceTypeDto> documentTypes = insuranceTypeService.getAllActive(pageable);
+
+        model.addAttribute("typesList", documentTypes);
+        model.addAttribute("page", "insuranceTypes");
+        model.addAttribute("edit", edit);
+        if (edit && typeId != 0){
+            InsuranceTypeDto updateType = insuranceTypeService.getDtoById(typeId);
+            model.addAttribute("updatedType", updateType);
+        } else {
+            model.addAttribute("newType", new InsuranceTypeDto());
+        }
+        model.addAttribute("typeId", typeId);
+        return "personal/personal-account";
+    }
+
+
+    @PostMapping("/insuranceTypes/{id}")
+    public String updateInsuranceType(@PathVariable("id") Long id,
+                                     @ModelAttribute("updatedType") InsuranceTypeDto insuranceTypeDto) {
+        insuranceTypeService.updateInsuranceType(insuranceTypeDto);
+        return "redirect:/personal/admin/insuranceTypes";
+    }
+    @PostMapping("/insuranceTypes/new")
+    public String createNewInsuranceType(@ModelAttribute("newType") InsuranceTypeDto insuranceTypeDto) {
+        insuranceTypeService.createNewInsuranceType(insuranceTypeDto);
+        return "redirect:/personal/admin/insuranceTypes";
+    }
+
+    @GetMapping("/insuranceTypes/{id}/delete")
+    public String deleteInsuranceType(@PathVariable("id") Long id) {
+        insuranceTypeService.deleteById(id);
+        return "redirect:/personal/admin/insuranceTypes";
     }
 }

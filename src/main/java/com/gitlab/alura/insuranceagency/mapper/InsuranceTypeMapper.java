@@ -7,6 +7,8 @@ import org.mapstruct.Mapping;
 
 @Mapper
 public interface InsuranceTypeMapper {
-    @Mapping(target = "title", expression = "java(entity.getTitle() + \" insurance\")")
+    @Mapping(target = "formattedTitle", expression = "java(entity.getTitle() + \" insurance\")")
     InsuranceTypeDto toDto(InsuranceType entity);
+
+    InsuranceType toEntity(InsuranceTypeDto insuranceTypeDto);
 }

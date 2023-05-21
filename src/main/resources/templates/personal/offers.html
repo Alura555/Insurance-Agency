@@ -32,7 +32,7 @@
         <tbody>
         <tr th:each="offer : ${offers.content}">
             <td ><a th:href="@{/personal/{page}/{id}(id=${offer.id}, page=${page})}" th:text="${offer.id}"></a></td>
-            <td th:text="${offer.insuranceType.title}"></td>
+            <td th:text="${offer.insuranceType.formattedTitle}"></td>
             <td th:text="${offer.title}"></td>
             <td sec:authorize="hasAuthority('ADMIN')" th:text="${offer.companyName}"></td>
             <td>

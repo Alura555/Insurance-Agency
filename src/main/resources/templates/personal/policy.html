@@ -31,7 +31,7 @@
                     <div class="policy-field">
                         <b>Insurance type:</b>
                         <br>
-                        <span th:text="${policyDto.offer.insuranceType.title}"></span>
+                        <span th:text="${policyDto.offer.insuranceType.formattedTitle}"></span>
                     </div>
                 </div>
                 <div th:if="${policyDto.id != null}">

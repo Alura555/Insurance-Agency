@@ -18,7 +18,7 @@
             <option th:selected="${selectedType == 0}" value="0">All</option>
             <option th:each="type : ${types}"
                     th:value="${type.id}"
-                    th:text="${type.title}"
+                    th:text="${type.formattedTitle}"
                     th:selected="${selectedType == type.id}"></option>
           </select>
           <label>Price:</label>

@@ -24,7 +24,7 @@
           <h2>Insurance Types:</h2>
           <ul class="main-page-links">
               <li th:each="type : ${types}">
-                  <a th:href="@{/offers(type=${type.id})}" th:text="${type.title}"></a>
+                  <a th:href="@{/offers(type=${type.id})}" th:text="${type.formattedTitle}"></a>
               </li>
           </ul>
       </section>

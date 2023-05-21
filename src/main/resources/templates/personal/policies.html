@@ -27,7 +27,7 @@
         <tbody>
         <tr th:each="policy : ${policies.content}">
             <td ><a th:href="@{/personal/{page}/{id}(id=${policy.id}, page=${page})}" th:text="${policy.id}"></a></td>
-            <td th:text="${policy.offer.insuranceType.title}"></td>
+            <td th:text="${policy.offer.insuranceType.formattedTitle}"></td>
             <td th:text="${policy.offer.title}"></td>
             <td>
                 <div class="status-cell">

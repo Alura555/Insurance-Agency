@@ -13,5 +13,5 @@ public interface InsuranceTypeRepository extends JpaRepository<InsuranceType, Lo
 
     List<InsuranceType> findAllByIsActive(Boolean isActive);
 
-    Page<InsuranceType> findAllByIsActive(Boolean isActive, Pageable pageable);
+    Page<InsuranceType> findAllByIsActive(Pageable pageable, Boolean isActive);
 }

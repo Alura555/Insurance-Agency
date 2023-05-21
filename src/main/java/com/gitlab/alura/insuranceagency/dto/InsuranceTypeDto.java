@@ -4,13 +4,15 @@ public class InsuranceTypeDto {
 
     private Long id;
 
+    private String formattedTitle;
+
     private String title;
 
     public InsuranceTypeDto() {
     }
 
     public InsuranceTypeDto(String title) {
-        this.title = title;
+        this.formattedTitle = title;
     }
 
     public Long getId() {
@@ -19,6 +21,14 @@ public class InsuranceTypeDto {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getFormattedTitle() {
+        return formattedTitle;
+    }
+
+    public void setFormattedTitle(String formattedTitle) {
+        this.formattedTitle = formattedTitle;
     }
 
     public String getTitle() {
@@ -38,11 +48,12 @@ public class InsuranceTypeDto {
 
         InsuranceTypeDto that = (InsuranceTypeDto) o;
 
-        return title.equals(that.title);
+        return formattedTitle.equals(that.formattedTitle);
     }
 
     @Override
     public int hashCode() {
-        return title.hashCode();
+        return formattedTitle.hashCode();
     }
+
 }

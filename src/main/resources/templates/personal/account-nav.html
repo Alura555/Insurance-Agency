@@ -16,5 +16,9 @@
         th:classappend="${page == 'documentTypes'} ? active">
         <a th:href="@{/personal/admin/documentTypes}">Document types</a>
     </li>
+    <li sec:authorize="hasAnyAuthority('ADMIN', 'MANAGER')"
+        th:classappend="${page == 'insuranceTypes'} ? active">
+        <a th:href="@{/personal/admin/insuranceTypes}">Insurance types</a>
+    </li>
     </ul>
 </div>

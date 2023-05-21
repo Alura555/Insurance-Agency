@@ -44,14 +44,19 @@
             <tr th:each="type : ${typesList}">
                 <td th:text="${type.id}"></td>
                 <td >
-                    <span th:if="${type.id != typeId}" th:text="${type.title}"></span>
+                    <span th:if="${type.id != typeId and page=='insuranceTypes'}" th:text="${type.formattedTitle}"></span>
+                    <span th:if="${type.id != typeId and page!='insuranceTypes'}" th:text="${type.title}"></span>
                     <form id="documentTypeForm"
                           th:unless="${type.id != typeId}"
                           th:action="@{/personal/admin/{page}/{id}(page=${page}, id=${type.id})}"
                             th:object="${updatedType}" method="post">
-                        <input th:field="*{title}"
-                               type="text"
-                               th:value="${type.title}"></input>
+                        <label class="type-form__label">
+                            <input th:field="*{title}"
+                                   type="text"
+                                   th:value="${type.title}"
+                                   class="type-form-title__input"></input>
+                            <span th:if="${page=='insuranceTypes'}"> insurance</span>
+                        </label>
                     </form>
                 </td>
                 <td>

@@ -12,7 +12,7 @@
 
     <div class="offer-info">
         <h2 th:text="${offer.title}"></h2>
-        <p>Type: <span th:text="${offer.insuranceType.title}"></span></p>
+        <p>Type: <span th:text="${offer.insuranceType.formattedTitle}"></span></p>
 
         <p>Company: <span th:text="${offer.companyName}"></span></p>
         <p>Period: <span th:text="${offer.period}"></span></p>

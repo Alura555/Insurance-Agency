@@ -940,3 +940,34 @@ a.reject-button {
     justify-content: center;
     margin-right: 10px;
 }
+
+td input {
+    width: 50%;
+    margin-bottom: 0;
+}
+
+td form{
+    display: flex;
+}
+
+.type-form__label {
+    width: 50%;
+    height: 25px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 0px 10px;
+    background-color: #fff;
+    font-weight: revert;
+}
+
+.type-form-title__input {
+    height: 90%;
+    border: none;
+    padding: 0px;
+    position: relative;
+    background-color: #fff;
+    top: 1px;
+    font-size: unset;
+    width: 40%;
+    text-align: right;
+}

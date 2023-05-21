@@ -38,11 +38,11 @@
                 </div>
                 <div>
                     <label for="type">Insurance type:</label>
-                    <span th:if="${offer.id != null and edit!=true}" th:text="${offer.insuranceType.title}"></span>
+                    <span th:if="${offer.id != null and edit!=true}" th:text="${offer.insuranceType.formattedTitle}"></span>
                     <select th:unless="${offer.id != null and edit!=true}" id="type" th:name="type">
                         <option th:each="type : ${types}"
                                 th:value="${type.id}"
-                                th:text="${type.title}"
+                                th:text="${type.formattedTitle}"
                                 th:selected="${offer.id != null and offer.insuranceType.id == type.id}"></option>
                     </select>
                 </div>
