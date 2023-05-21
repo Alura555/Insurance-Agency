@@ -1,0 +1,75 @@
+<div class="list-of-policies">
+    <div class="title-and-pagination">
+        <div>
+            <h3 th:text="${#strings.substring(#strings.capitalize(page), 0, #strings.indexOf(page, 'T')) + ' types'}"></h3>
+        </div>
+        <div th:if="${typesList.totalPages >1}">
+            <ul>
+                <li th:if="${typesList.number > 0}">
+                    <a th:href="@{${page}(page=${typesList.number - 1}, size=${typesList.size})}"><</a>
+                </li>
+                <li th:text="|${(typesList.number * typesList.size) + 1} - ${((typesList.number + 1) * typesList.size) &lt; typesList.totalElements ? ((typesList.number + 1) * typesList.size) : typesList.totalElements} out of ${typesList.totalElements}|"></li>
+                <li th:if="${typesList.number < typesList.totalPages - 1}">
+                    <a th:href="@{${page}(page=${typesList.number + 1}, size=${typesList.size})}"> > </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div th:unless="${edit and typeId==0}" class="new-element">
+        <a th:href="@{/personal/admin/{pageName}(pageName=${page}, page=${typesList.number}, size=${typesList.size}, edit=true)}">
+            New type</a>
+
+    </div>
+    <div th:if="${edit and typeId==0}" class="new-type">
+        <form th:action="@{/personal/admin/{page}/new(page=${page})}"
+              th:object="${newType}" method="post">
+            <label for="title">Title</label>
+            <input id="title" th:field="*{title}"></input>
+            <div class="handle-buttons">
+                <button type="submit" class="approve-button">Create</button>
+                <a th:href="@{/personal/admin/{pageName}(pageName=${page}, page=${typesList.number}, size=${typesList.size})}"
+                   class="reject-button">Cancel</a>
+            </div>
+        </form>
+    </div>
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th sec:authorize="hasAuthority('ADMIN')"></th>
+        </tr>
+        </thead>
+        <tbody>
+            <tr th:each="type : ${typesList}">
+                <td th:text="${type.id}"></td>
+                <td >
+                    <span th:if="${type.id != typeId}" th:text="${type.title}"></span>
+                    <form id="documentTypeForm"
+                          th:unless="${type.id != typeId}"
+                          th:action="@{/personal/admin/{page}/{id}(page=${page}, id=${type.id})}"
+                            th:object="${updatedType}" method="post">
+                        <input th:field="*{title}"
+                               type="text"
+                               th:value="${type.title}"></input>
+                    </form>
+                </td>
+                <td>
+                    <div class="handle-buttons" >
+                        <a th:if="${type.id != typeId}"
+                           th:href="@{/personal/admin/{pageName}(pageName=${page}, page=${typesList.number}, size=${typesList.size}, id=${type.id}, edit=true)}"
+                           class="approve-button">Edit</a>
+                        <a th:if="${type.id != typeId}"
+                           th:href="@{/personal/admin/{pageName}/{id}/delete(pageName=${page}, id=${type.id})}"
+                           class="reject-button">Delete</a>
+                        <button th:if="${type.id == typeId}"
+                                form="documentTypeForm" type="submit" class="approve-button">Save</button>
+                        <a th:if="${type.id == typeId}"
+                           th:href="@{/personal/admin/{pageName}(pageName=${page}, page=${typesList.number}, size=${typesList.size})}"
+                           class="reject-button">Cancel</a>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

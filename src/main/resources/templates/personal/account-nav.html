@@ -8,8 +8,13 @@
     <li th:classappend="${page == 'applications'} ? active">
         <a th:href="@{/personal/applications}">Applications</a>
     </li>
-    <li th:classappend="${page == 'offers'} ? active">
+    <li sec:authorize="hasAnyAuthority('ADMIN', 'COMPANY MANAGER')"
+        th:classappend="${page == 'offers'} ? active">
         <a th:href="@{/personal/offers}">Offers</a>
+    </li>
+    <li sec:authorize="hasAnyAuthority('ADMIN', 'MANAGER')"
+        th:classappend="${page == 'documentTypes'} ? active">
+        <a th:href="@{/personal/admin/documentTypes}">Document types</a>
     </li>
     </ul>
 </div>

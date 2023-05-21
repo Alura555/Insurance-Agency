@@ -77,6 +77,7 @@ public class CompanyOfferController {
         model.addAttribute("page", "offers");
         return "personal/offer";
     }
+
     @PostMapping("/new")
     public String createNewOffer(@ModelAttribute("offer") OfferDto offerDto,
                                  @RequestParam(name = "type", required = false, defaultValue = "1") Long typeId,

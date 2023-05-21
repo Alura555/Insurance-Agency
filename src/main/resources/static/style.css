@@ -922,3 +922,21 @@ a.reject-button {
 .offer-form-title {
     width: 40%;
 }
+
+.new-type form{
+    display: flex;
+    flex-direction: row;
+}
+
+.new-type input{
+    margin-bottom: 0;
+    margin-right: 10px;
+}
+
+.new-type label{
+    margin-bottom: 0px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+}
