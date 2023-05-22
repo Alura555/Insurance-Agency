@@ -7,14 +7,14 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-@Mapper(componentModel = "spring")
+@Mapper(uses = RoleMapper.class)
 public interface UserMapper {
 
     @Mapping(target = "password", expression = "java(passwordEncoder.encode(userDto.getPassword()))")
-    @Mapping(target = "role", expression = "java(roleRepository.findByTitle(userDto.getRole()).orElse(null))")
-    User mapToUser(UserDto userDto, PasswordEncoder passwordEncoder, RoleRepository roleRepository);
+    User mapToUser(UserDto userDto, PasswordEncoder passwordEncoder);
+    @Mapping(target = "password")
+    User mapToUser(UserDto userDto);
 
-    @Mapping(target = "role", source = "role.title")
     @Mapping(target = "id", source = "id")
     UserDto toDto(User user);
 }

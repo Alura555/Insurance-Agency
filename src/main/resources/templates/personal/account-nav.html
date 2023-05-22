@@ -24,5 +24,9 @@
         th:classappend="${page == 'companies'} ? active">
         <a th:href="@{/personal/admin/companies}">Companies</a>
     </li>
+    <li sec:authorize="hasAuthority('ADMIN')"
+        th:classappend="${page == 'users'} ? active">
+        <a th:href="@{/personal/admin/users}">Users</a>
+    </li>
     </ul>
 </div>

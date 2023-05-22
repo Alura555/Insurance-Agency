@@ -1,8 +1,8 @@
 package com.gitlab.alura.insuranceagency.controller;
 
+import com.gitlab.alura.insuranceagency.dto.CompanyDto;
 import com.gitlab.alura.insuranceagency.dto.InsuranceTypeDto;
 import com.gitlab.alura.insuranceagency.dto.OfferDto;
-import com.gitlab.alura.insuranceagency.entity.Company;
 import com.gitlab.alura.insuranceagency.filter.OfferFilter;
 import com.gitlab.alura.insuranceagency.service.CompanyService;
 import com.gitlab.alura.insuranceagency.service.InsuranceTypeService;
@@ -72,7 +72,7 @@ public class OffersController {
         Page<OfferDto> offers = offerService.findAll(pageable, offerFilter);
 
         List<InsuranceTypeDto> insuranceTypeList = insuranceTypeService.getInsuranceTypes();
-        List<Company> companies = companyService.getActiveCompanies();
+        List<CompanyDto> companies = companyService.getActiveCompanies();
         List<String> sortOptions = sortOptionsList.getSortOptionNames();
         BigDecimal maxPrice = offerService.getMaxPrice();
         BigDecimal minPrice = offerService.getMinPrice();

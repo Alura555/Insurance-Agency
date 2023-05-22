@@ -69,7 +69,7 @@
                         </thead>
                         <tbody>
                         <tr th:each="manager : ${company.managers}">
-                            <td ><a th:href="@{/personal/{page}/{id}(id=${manager.id}, page=${page})}" th:text="${manager.id}"></a></td>
+                            <td ><a th:href="@{/personal/admin/users/{id}(id=${manager.id}, page=${page})}" th:text="${manager.id}"></a></td>
                             <td th:text="${manager.name}"></td>
                             <td th:text="${manager.secondName}"></td>
                             <td th:text="${manager.phone}"></td>

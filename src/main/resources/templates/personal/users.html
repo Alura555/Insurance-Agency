@@ -1,0 +1,47 @@
+<div class="list-of-policies">
+    <div class="title-and-pagination">
+        <div>
+            <h3>Users</h3>
+        </div>
+        <div th:if="${users.totalPages >1}">
+            <ul>
+                <li th:if="${users.number > 0}">
+                    <a th:href="@{${page}(page=${users.number - 1}, size=${users.size})}"><</a>
+                </li>
+                <li th:text="|${(users.number * users.size) + 1} - ${((users.number + 1) * users.size) &lt; users.totalElements ? ((users.number + 1) * users.size) : users.totalElements} out of ${users.totalElements}|"></li>
+                <li th:if="${users.number < users.totalPages - 1}">
+                    <a th:href="@{${page}(page=${users.number + 1}, size=${users.size})}"> > </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="new-element">
+        <a href="/personal/admin/users/new">New user</a>
+    </div>
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Second name</th>
+            <th>Role</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user : ${users.content}">
+            <td ><a th:href="@{/personal/admin/{page}/{id}(id=${user.id}, page=${page})}" th:text="${user.id}"></a></td>
+            <td th:text="${user.name}"></td>
+            <td th:text="${user.secondName}"></td>
+            <td th:text="${user.role.title}"></td>
+            <td>
+                <div class="handle-buttons" >
+                    <a th:href="@{/personal/admin/users/{id}(id=${user.id}, edit=true)}" class="approve-button">Edit</a>
+                    <a th:href="@{/personal/admin/users/{id}/delete(id=${user.id})}"  class="reject-button">Delete</a>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+</div>

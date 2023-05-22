@@ -36,8 +36,9 @@ public class WebSecurityConfig {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/personal/**").authenticated()
-                .anyRequest().permitAll()
+                    .antMatchers("/js/**").permitAll()
+                    .antMatchers("/personal/**").authenticated()
+                    .anyRequest().permitAll()
                 .and()
                 .formLogin()
                     .usernameParameter("email")

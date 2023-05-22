@@ -16,7 +16,7 @@ public class UserDto {
     private String password;
 
     private String confirmPassword;
-    private String role;
+    private RoleDto role;
 
     public Long getId() {
         return id;
@@ -90,11 +90,11 @@ public class UserDto {
         this.confirmPassword = confirmPassword;
     }
 
-    public String getRole() {
+    public RoleDto getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(RoleDto role) {
         this.role = role;
     }
 }

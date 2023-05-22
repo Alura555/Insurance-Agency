@@ -971,3 +971,11 @@ td form{
     width: 40%;
     text-align: right;
 }
+
+.role-form {
+    display:flex;
+}
+
+.role-form select{
+    width:70%;
+}

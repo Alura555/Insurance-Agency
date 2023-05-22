@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface CompanyService {
 
-    List<Company> getActiveCompanies();
+    List<CompanyDto> getActiveCompanies();
 
     List<Company> getPopularCompanies(int n);
 
@@ -25,5 +25,7 @@ public interface CompanyService {
     void deleteById(Long id);
 
     Long updateCompany(CompanyDto companyDto);
+
+    void addCompanyManager(Long managerId, Long companyId);
 }
 

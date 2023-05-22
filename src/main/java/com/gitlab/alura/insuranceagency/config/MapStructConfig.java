@@ -5,6 +5,8 @@ import com.gitlab.alura.insuranceagency.mapper.DocumentTypeMapper;
 import com.gitlab.alura.insuranceagency.mapper.InsuranceTypeMapper;
 import com.gitlab.alura.insuranceagency.mapper.OfferMapper;
 import com.gitlab.alura.insuranceagency.mapper.PolicyMapper;
+import com.gitlab.alura.insuranceagency.mapper.RoleMapper;
+import com.gitlab.alura.insuranceagency.mapper.UserMapper;
 import org.mapstruct.factory.Mappers;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,5 +35,15 @@ public class MapStructConfig {
     @Bean
     public CompanyMapper companyMapper(){
         return Mappers.getMapper(CompanyMapper.class);
+    }
+
+    @Bean
+    public RoleMapper roleMapper(){
+        return Mappers.getMapper(RoleMapper.class);
+    }
+
+    @Bean
+    public UserMapper userMapper(){
+        return Mappers.getMapper(UserMapper.class);
     }
 }

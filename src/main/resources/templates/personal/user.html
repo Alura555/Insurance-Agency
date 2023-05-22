@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org">
+<head>
+    <title>My Account</title>
+    <link th:href="@{/style.css}" rel="stylesheet" />
+</head>
+<body>
+    <div th:replace="fragments/header :: header"></div>
+    <div class="personal-account">
+        <div th:replace="personal/account-nav :: div"></div>
+
+        <div class="account policy-info-fragment">
+            <div class="title">
+                <h2 th:text="'User ' + ${user.id != null ? user.id : ''}"></h2>
+                <div th:if="${user.id == null or edit == true}" class="handle-buttons">
+                    <button th:text="${user.id == null ? 'Create' : 'Save'}"
+                            form="userForm" type="submit" name="action" class="approve-button"></button>
+                    <a th:with="url=${'/personal/admin/users' + (user.id != null ? '/' + user.id : '')}"
+                       th:href="@{${url}}"
+                       class="reject-button">Cancel</a>
+                </div>
+                <div th:unless="${user.id == null or edit == true}" class="handle-buttons">
+                    <a th:href="@{/personal/admin/users/{id}(id=${user.id}, edit=true)}" class="approve-button">Edit</a>
+                    <a th:href="@{/personal/admin/users/{id}/delete(id=${user.id})}"  class="reject-button">Delete</a>
+                </div>
+            </div>
+            <form id="userForm" th:with="url=${(user.id != null) ? '' : 'new'}"
+                  th:action="@{${url}}"
+                  th:object="${user}" method="post">
+                <div>
+                    <label for="username">Username:</label>
+                    <span th:if="${user.id != null and edit!=true}" th:text="${user.username}"></span>
+                    <input th:unless="${user.id != null and edit!=true}" type="text" id="username" name="username" th:field="*{username}" required>
+                    <div th:if="${#fields.hasErrors('username')}" th:errors="*{username}" class="alert alert-error"></div>
+                </div>
+                <div>
+                    <div class="policy-field">
+                        <label>Name:</label>
+                        <span th:if="${user.id != null and edit!=true}" th:text="${user.name}"></span>
+                        <input th:unless="${user.id != null and edit!=true}"
+                               th:field="*{name}" type="text" id="name" th:value="${user.name}" required/>
+                    </div>
+                    <div class="policy-field">
+                        <label>Second name:</label>
+                        <span th:if="${user.id != null and edit!=true}" th:text="${user.secondName}"></span>
+                        <input th:unless="${user.id != null and edit!=true}"
+                               th:field="*{secondName}" type="text"
+                               id="secondName" th:value="${user.secondName}" required/>
+                    </div>
+                </div>
+                <div class="policy-field">
+                    <label for="birthday">Birthday:</label>
+                    <br>
+                    <span th:if="${user.id != null and edit!=true}"
+                          th:text="${#dates.format(user.birthday, 'yyyy-MM-dd')}"></span>
+                    <div class="start-date-form">
+                        <input th:unless="${user.id != null and edit!=true}"
+                               type="date"
+                               id="birthday"
+                               th:field="*{birthday}"
+                               th:value="${user.birthday}" required/>
+                        <p th:if="${#fields.hasErrors('birthday')}"
+                           th:errors="*{birthday}"
+                           class="alert alert-error"></p>
+                    </div>
+                </div>
+                <div>
+                    <div class="policy-field">
+                        <label>Email:</label>
+                        <span th:if="${user.id != null and edit!=true}" th:text="${user.email}"></span>
+                        <input th:unless="${user.id != null and edit!=true}"
+                               th:field="*{email}" type="email" id="email" th:value="${user.email}" required/>
+                        <div class="alert alert-error">
+                            <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+                        </div>
+                    </div>
+                    <div class="policy-field">
+                        <label>Phone:</label>
+                        <span th:if="${user.id != null and edit!=true}" th:text="${user.phone}"></span>
+                        <input th:unless="${user.id != null and edit!=true}"
+                               th:field="*{phone}" type="text" pattern="[0-9]{8,10}"
+                               id="phone" th:value="${user.phone}" required/>
+                    </div>
+                </div>
+                <div class="role-form">
+                    <div class="policy-field">
+                        <label>Role:</label>
+                        <span th:if="${user.id != null and edit!=true}" th:text="${user.role.title}"></span>
+                        <select th:unless="${user.id != null and edit!=true}" id="role" th:name="userRole">
+                            <option th:each="type : ${roles}"
+                                    th:value="${type.title}"
+                                    th:text="${type.title}"
+                                    th:selected="${user.id != null and user.role.id == type.id}"></option>
+                        </select>
+                    </div>
+                    <div class="policy-field" id="companySelect" style="display: none;">
+                        <label>Company:</label>
+                        <select id="company" name="company">
+                            <option th:each="company : ${companies}"
+                                    th:value="${company.id}"
+                                    th:text="${company.name}"></option>
+                        </select>
+                    </div>
+                </div>
+                <div th:if="${user.id==null}">
+                    <div>
+                        <label for="password">Password:</label>
+                        <input type="password" id="password" name="password" th:field="*{password}" required>
+                    </div>
+                    <div>
+                        <label for="confirm-password">Confirm Password:</label>
+                        <input type="password" id="confirm-password" name="confirm-password" th:field="*{confirmPassword}" required>
+                        <div th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}" class="alert alert-error"></div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+
+    </div>
+    <script src="/js/company-selector.js"></script>
+</body>
+</html>

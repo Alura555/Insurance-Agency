@@ -7,6 +7,7 @@ import com.gitlab.alura.insuranceagency.mapper.CompanyMapper;
 import com.gitlab.alura.insuranceagency.repository.CompanyRepository;
 import com.gitlab.alura.insuranceagency.entity.Company;
 import com.gitlab.alura.insuranceagency.service.CompanyService;
+import com.gitlab.alura.insuranceagency.service.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -24,14 +25,21 @@ public class CompanyServiceImpl implements CompanyService {
 
     private final CompanyMapper companyMapper;
 
+    private final UserService userService;
     public CompanyServiceImpl(CompanyRepository companyRepository,
-                              CompanyMapper companyMapper) {
+                              CompanyMapper companyMapper,
+                              UserService userService) {
         this.companyRepository = companyRepository;
         this.companyMapper = companyMapper;
+        this.userService = userService;
     }
 
-    public List<Company> getActiveCompanies(){
-        return companyRepository.findAllByIsActive(true);
+    public List<CompanyDto> getActiveCompanies(){
+        List<Company> companies = companyRepository.findAllByIsActive(true);
+        return companies
+                .stream()
+                .map(companyMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -93,6 +101,13 @@ public class CompanyServiceImpl implements CompanyService {
         newCompany.setId(null);
         newCompany.setManagers(new HashSet<>(managers));
         return companyRepository.save(newCompany).getId();
+    }
+
+    @Override
+    public void addCompanyManager(Long managerId, Long companyId) {
+        Company company = companyRepository.findById(companyId).orElseThrow(NotFoundException::new);
+        company.getManagers().add(userService.findById(managerId));
+        companyRepository.save(company);
     }
 
 

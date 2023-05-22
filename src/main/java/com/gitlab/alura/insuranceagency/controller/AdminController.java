@@ -3,14 +3,19 @@ package com.gitlab.alura.insuranceagency.controller;
 import com.gitlab.alura.insuranceagency.dto.CompanyDto;
 import com.gitlab.alura.insuranceagency.dto.DocumentTypeDto;
 import com.gitlab.alura.insuranceagency.dto.InsuranceTypeDto;
+import com.gitlab.alura.insuranceagency.dto.RoleDto;
+import com.gitlab.alura.insuranceagency.dto.UserDto;
+import com.gitlab.alura.insuranceagency.exception.InvalidInputException;
 import com.gitlab.alura.insuranceagency.service.CompanyService;
 import com.gitlab.alura.insuranceagency.service.DocumentTypeService;
 import com.gitlab.alura.insuranceagency.service.InsuranceTypeService;
+import com.gitlab.alura.insuranceagency.service.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,19 +23,24 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("personal/admin")
 public class AdminController {
     private final DocumentTypeService documentTypeService;
     private final InsuranceTypeService insuranceTypeService;
     private final CompanyService companyService;
+    private final UserService userService;
 
     public AdminController(DocumentTypeService documentTypeService,
                            InsuranceTypeService insuranceTypeService,
-                           CompanyService companyService) {
+                           CompanyService companyService,
+                           UserService userService) {
         this.documentTypeService = documentTypeService;
         this.insuranceTypeService = insuranceTypeService;
         this.companyService = companyService;
+        this.userService = userService;
     }
 
     @GetMapping("/documentTypes")
@@ -58,21 +68,18 @@ public class AdminController {
 
     @PostMapping("/documentTypes/{id}")
     public String updateDocumentType(@PathVariable("id") Long id,
-                                     @ModelAttribute("updatedType") DocumentTypeDto documentType,
-                                     Model model) {
+                                     @ModelAttribute("updatedType") DocumentTypeDto documentType) {
         documentTypeService.updateDocumentType(documentType);
         return "redirect:/personal/admin/documentTypes";
     }
     @PostMapping("/documentTypes/new")
-    public String createNewDocumentType(@ModelAttribute("newType") DocumentTypeDto documentType,
-                                        Model model) {
+    public String createNewDocumentType(@ModelAttribute("newType") DocumentTypeDto documentType) {
         documentTypeService.createNewDocumentType(documentType);
         return "redirect:/personal/admin/documentTypes";
     }
 
     @GetMapping("/documentTypes/{id}/delete")
-    public String deleteDocumentType(@PathVariable("id") Long id,
-                                     Model model) {
+    public String deleteDocumentType(@PathVariable("id") Long id) {
         documentTypeService.deleteById(id);
         return "redirect:/personal/admin/documentTypes";
     }
@@ -167,4 +174,88 @@ public class AdminController {
         companyService.deleteById(id);
         return "redirect:/personal/admin/companies";
     }
+
+    @GetMapping("/users")
+    public String getUsers(@RequestParam(name = "page", defaultValue = "0") int page,
+                           @RequestParam(name = "size", defaultValue = "10") int size,
+                           Model model){
+        Pageable pageable = PageRequest.of(page, size);
+        Page<UserDto> users = userService.getAllActive(pageable);
+
+        model.addAttribute("users", users);
+        model.addAttribute("page", "users");
+        return "personal/personal-account";
+    }
+
+    @GetMapping("/users/{id}")
+    public String getUserById(@PathVariable(name="id") Long id,
+                              @RequestParam(name = "edit", defaultValue = "false") boolean edit,
+                              Model model){
+        UserDto userDto = userService.getUserDtoById(id);
+
+        if (edit){
+            List<RoleDto> roles = userService.getUserRoles();
+            List<CompanyDto> companies = companyService.getActiveCompanies();
+
+            model.addAttribute("roles", roles);
+            model.addAttribute("companies", companies);
+        }
+
+        model.addAttribute("user", userDto);
+        model.addAttribute("edit", edit);
+        model.addAttribute("page", "users");
+        return "personal/user";
+    }
+
+    @PostMapping("/users/{id}")
+    public String updateUser(@PathVariable(name="id") Long id,
+                             @ModelAttribute("user") UserDto userDto,
+                             @RequestParam(name = "userRole", required = false) String roleTitle,
+                             BindingResult result){
+        Long userId = null;
+        try {
+            userId = userService.updateUser(userDto, roleTitle);
+        } catch (InvalidInputException e){
+            result.rejectValue(e.getField(), "error.userDto", e.getMessage());
+            return "personal/user";
+        }
+        return "redirect:/personal/admin/users/" + userId;
+    }
+
+    @GetMapping("/users/new")
+    public String getNewUserForm(Model model){
+        List<RoleDto> roles = userService.getUserRoles();
+        List<CompanyDto> companies = companyService.getActiveCompanies();
+
+        model.addAttribute("roles", roles);
+        model.addAttribute("companies", companies);
+        model.addAttribute("user", new UserDto());
+        model.addAttribute("page", "users");
+        return "personal/user";
+    }
+
+    @PostMapping("/users/new")
+    public String createNewUser(@ModelAttribute("user") UserDto userDto,
+                                @RequestParam(name = "userRole", required = false) String roleTitle,
+                                @RequestParam(name = "company", defaultValue = "0") Long companyId,
+                                BindingResult result){
+        Long userId = null;
+        try {
+            userId = userService.registerNewUser(userDto, roleTitle);
+        } catch (InvalidInputException e){
+            result.rejectValue(e.getField(), "error.userDto", e.getMessage());
+            return "personal/user";
+        }
+        if (companyId != 0L){
+            companyService.addCompanyManager(userId, companyId);
+        }
+        return "redirect:/personal/admin/users/" + userId;
+    }
+
+    @GetMapping("/users/{id}/delete")
+    public String deleteUser(@PathVariable("id") Long id) {
+        userService.deleteById(id);
+        return "redirect:/personal/admin/users";
+    }
+
 }
