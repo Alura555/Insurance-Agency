@@ -52,7 +52,7 @@ public class UserDetailsServiceImpl implements UserDetailsService, UserService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByEmailAndIsActive(username, true).orElse(null);
+        User user = findByEmail(username);
         if (user == null){
             throw new UsernameNotFoundException("User not found!");
         }
@@ -79,10 +79,10 @@ public class UserDetailsServiceImpl implements UserDetailsService, UserService {
 
 
     private void validateUserData(UserDto userDto, Boolean isNew) throws InvalidInputException{
-        if (isNew && userRepository.findByUsername(userDto.getUsername()).isPresent()){
+        if (isNew && userRepository.findByUsernameAndIsActive(userDto.getUsername(), true).isPresent()){
             throw new InvalidInputException("username", "Username already exists");
         }
-        if (isNew && userRepository.findByEmailAndIsActive(userDto.getEmail(), true).isPresent()){
+        if (isNew && findByEmail(userDto.getEmail()) != null){
             throw new InvalidInputException("email", "Email already exists");
         }
         Date today = new Date();
@@ -90,7 +90,7 @@ public class UserDetailsServiceImpl implements UserDetailsService, UserService {
         calendar.setTime(today);
         calendar.add(Calendar.YEAR, -18);
 
-        if (userDto.getBirthday().after(calendar.getTime())) {
+        if (userDto.getBirthday() == null || userDto.getBirthday().after(calendar.getTime())) {
             throw new InvalidInputException("birthday", "You must be at least 18 years old to register");
         }
 
@@ -125,8 +125,7 @@ public class UserDetailsServiceImpl implements UserDetailsService, UserService {
 
     @Override
     public Long updateUser(UserDto userDto, String roleTitle) throws InvalidInputException{
-        User oldUser = userRepository.findByIdAndIsActive(userDto.getId(), true)
-                .orElseThrow(NotFoundException::new);
+        User oldUser = findById(userDto.getId());
         User updatedUser = createNewUser(userDto, roleTitle, false);
         updatedUser.setPassword(oldUser.getPassword());
         return userRepository.save(updatedUser).getId();
