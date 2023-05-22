@@ -12,7 +12,6 @@ import com.gitlab.alura.insuranceagency.mapper.OfferMapper;
 import com.gitlab.alura.insuranceagency.service.CompanyService;
 import com.gitlab.alura.insuranceagency.service.OfferService;
 import com.gitlab.alura.insuranceagency.service.UserService;
-import org.mapstruct.control.MappingControl;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
