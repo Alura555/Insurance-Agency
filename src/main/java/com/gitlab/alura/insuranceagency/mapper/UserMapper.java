@@ -14,5 +14,7 @@ public interface UserMapper {
     @Mapping(target = "role", expression = "java(roleRepository.findByTitle(userDto.getRole()).orElse(null))")
     User mapToUser(UserDto userDto, PasswordEncoder passwordEncoder, RoleRepository roleRepository);
 
-
+    @Mapping(target = "role", source = "role.title")
+    @Mapping(target = "id", source = "id")
+    UserDto toDto(User user);
 }

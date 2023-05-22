@@ -121,6 +121,22 @@ public class Company {
         this.activeOffersCount = approvedPolicyCount;
     }
 
+    public Boolean getActive() {
+        return isActive;
+    }
+
+    public void setActive(Boolean active) {
+        isActive = active;
+    }
+
+    public Set<User> getManagers() {
+        return managers;
+    }
+
+    public void setManagers(Set<User> managers) {
+        this.managers = managers;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o)
@@ -153,7 +169,6 @@ public class Company {
         result = 31 * result + address.hashCode();
         result = 31 * result + isActive.hashCode();
         result = 31 * result + (managers != null ? managers.hashCode() : 0);
-        result = 31 * result + activeOffersCount.hashCode();
         return result;
     }
 }

@@ -12,13 +12,17 @@
         th:classappend="${page == 'offers'} ? active">
         <a th:href="@{/personal/offers}">Offers</a>
     </li>
-    <li sec:authorize="hasAnyAuthority('ADMIN', 'MANAGER')"
+    <li sec:authorize="hasAnyAuthority('ADMIN')"
         th:classappend="${page == 'documentTypes'} ? active">
         <a th:href="@{/personal/admin/documentTypes}">Document types</a>
     </li>
-    <li sec:authorize="hasAnyAuthority('ADMIN', 'MANAGER')"
+    <li sec:authorize="hasAnyAuthority('ADMIN')"
         th:classappend="${page == 'insuranceTypes'} ? active">
         <a th:href="@{/personal/admin/insuranceTypes}">Insurance types</a>
+    </li>
+    <li sec:authorize="hasAuthority('ADMIN')"
+        th:classappend="${page == 'companies'} ? active">
+        <a th:href="@{/personal/admin/companies}">Companies</a>
     </li>
     </ul>
 </div>

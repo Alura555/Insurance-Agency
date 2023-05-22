@@ -81,14 +81,10 @@ public class CompanyOfferController {
     @PostMapping("/new")
     public String createNewOffer(@ModelAttribute("offer") OfferDto offerDto,
                                  @RequestParam(name = "type", required = false, defaultValue = "1") Long typeId,
-                                 Principal principal,
-                                 Model model){
+                                 Principal principal){
         String userEmail = principal.getName();
         InsuranceType insuranceType = insuranceTypeService.getById(typeId);
         Long offerId = offerService.createNewOffer(offerDto, insuranceType, userEmail);
-
-        model.addAttribute("offer", offerDto);
-        model.addAttribute("page", "offers");
         return "redirect:/personal/offers/" + offerId;
     }
 

@@ -5,6 +5,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.util.Date;
 
 public class UserDto {
+    private Long id;
     private String username;
     private String secondName;
     private String name;
@@ -16,6 +17,14 @@ public class UserDto {
 
     private String confirmPassword;
     private String role;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getUsername() {
         return username;

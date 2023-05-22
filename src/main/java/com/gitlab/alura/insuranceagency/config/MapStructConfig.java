@@ -1,5 +1,6 @@
 package com.gitlab.alura.insuranceagency.config;
 
+import com.gitlab.alura.insuranceagency.mapper.CompanyMapper;
 import com.gitlab.alura.insuranceagency.mapper.DocumentTypeMapper;
 import com.gitlab.alura.insuranceagency.mapper.InsuranceTypeMapper;
 import com.gitlab.alura.insuranceagency.mapper.OfferMapper;
@@ -27,5 +28,10 @@ public class MapStructConfig {
     @Bean
     public DocumentTypeMapper documentTypeMapper(){
         return Mappers.getMapper(DocumentTypeMapper.class);
+    }
+
+    @Bean
+    public CompanyMapper companyMapper(){
+        return Mappers.getMapper(CompanyMapper.class);
     }
 }

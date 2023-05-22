@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org">
+<head>
+    <title>My Account</title>
+    <link th:href="@{/style.css}" rel="stylesheet" />
+</head>
+<body>
+    <div th:replace="fragments/header :: header"></div>
+    <div class="personal-account">
+        <div th:replace="personal/account-nav :: div"></div>
+
+        <div class="account policy-info-fragment">
+            <div class="title">
+                <h2 th:text="'Company ' + ${company.id != null ? company.id : ''}"></h2>
+                <div th:if="${company.id == null or edit == true}" class="handle-buttons">
+                    <button th:text="${company.id == null ? 'Create' : 'Save'}"
+                            form="companyForm" type="submit" name="action" class="approve-button"></button>
+                    <a th:with="url=${'/personal/admin/companies' + (company.id != null ? '/' + company.id : '')}"
+                       th:href="@{${url}}"
+                       class="reject-button">Cancel</a>
+                </div>
+                <div th:unless="${company.id == null or edit == true}" class="handle-buttons">
+                    <a th:href="@{/personal/admin/companies/{id}(id=${company.id}, edit=true)}" class="approve-button">Edit</a>
+                    <a th:href="@{/personal/admin/companies/{id}/delete(id=${company.id})}"  class="reject-button">Delete</a>
+                </div>
+            </div>
+            <form id="companyForm" th:with="url=${(company.id != null) ? '' : 'new'}"
+                  th:action="@{${url}}"
+                  th:object="${company}" method="post">
+                <div th:if="${company.id!=null and edit!=true}" class="offer-title">
+                    <b th:if="${company.name!=null}" th:text="${company.name}"></b>
+                </div>
+                <div class="offer-form-title" th:unless="${company.id!=null and edit!=true}">
+                    <label for="title">Company name:</label>
+                    <input th:field="*{name}" type="text" id="title" th:value="${company.name}"/>
+                </div>
+                <div>
+                    <div class="policy-field">
+                        <label>Email:</label>
+                        <span th:if="${company.id != null and edit!=true}" th:text="${company.email}"></span>
+                        <input th:unless="${company.id != null and edit!=true}"
+                               th:field="*{email}" type="text" id="email" th:value="${company.email}"/>
+                    </div>
+                    <div class="policy-field">
+                        <label>Phone:</label>
+                        <span th:if="${company.id != null and edit!=true}" th:text="${company.phone}"></span>
+                        <input th:unless="${company.id != null and edit!=true}"
+                               th:field="*{phone}" type="text" pattern="[0-9]{10}"
+                               id="phone" th:value="${company.phone}"/>
+                    </div>
+                </div>
+                <div>
+                    <label>Address:</label>
+                    <span th:if="${company.id != null and edit!=true}" th:text="${company.address}"></span>
+                    <input th:unless="${company.id != null and edit!=true}"
+                           th:field="*{address}" type="text" id="address" th:value="${company.address}"/>
+                </div>
+                <div class="list-of-policies" th:if="${company.id != null and edit!=true}" >
+                    <b>Managers:</b>
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Second name</th>
+                            <th>Phone</th>
+                            <th>Email</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="manager : ${company.managers}">
+                            <td ><a th:href="@{/personal/{page}/{id}(id=${manager.id}, page=${page})}" th:text="${manager.id}"></a></td>
+                            <td th:text="${manager.name}"></td>
+                            <td th:text="${manager.secondName}"></td>
+                            <td th:text="${manager.phone}"></td>
+                            <td th:text="${manager.email}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </form>
+        </div>
+
+
+    </div>
+</body>
+</html>
