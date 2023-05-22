@@ -8,9 +8,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CompanyRepository extends JpaRepository<Company, Long> {
     List<Company> findAllByIsActive(Boolean isActive);
     Page<Company> findAllByIsActive(Pageable pageable, Boolean isActive);
     Company findByManagers(User user);
+
+    Optional<Company> findByIdAndIsActive(Long companyId, boolean b);
 }

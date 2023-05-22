@@ -72,7 +72,7 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public CompanyDto getCompanyDtoById(Long id) {
-        Company company = companyRepository.findById(id).orElseThrow(NotFoundException::new);
+        Company company = getCompanyById(id);
         return companyMapper.toDto(company);
     }
 
@@ -85,14 +85,14 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public void deleteById(Long id) {
-        Company company = companyRepository.findById(id).orElseThrow(NotFoundException::new);
+        Company company = getCompanyById(id);
         company.setActive(false);
         companyRepository.save(company);
     }
 
     @Override
     public Long updateCompany(CompanyDto companyDto) {
-        Company oldCompany = companyRepository.findById(companyDto.getId()).orElseThrow(NotFoundException::new);
+        Company oldCompany = getCompanyById(companyDto.getId());
         Set<User> managers = oldCompany.getManagers();
         deleteById(companyDto.getId());
 
@@ -105,10 +105,13 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public void addCompanyManager(Long managerId, Long companyId) {
-        Company company = companyRepository.findById(companyId).orElseThrow(NotFoundException::new);
+        Company company = getCompanyById(companyId);
         company.getManagers().add(userService.findById(managerId));
         companyRepository.save(company);
     }
 
-
+    private Company getCompanyById(Long companyId) {
+        return companyRepository.findByIdAndIsActive(companyId, true)
+                .orElseThrow(NotFoundException::new);
+    }
 }
