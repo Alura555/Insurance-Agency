@@ -82,7 +82,8 @@ public class PolicyServiceImpl implements PolicyService {
 
     @Override
     public void handleApplication(String manager, String action, Long applicationId) {
-        Policy policy = policyRepository.findById(applicationId).orElseThrow(IllegalArgumentException::new);
+        Policy policy = policyRepository.findByIdAndIsActive(applicationId, true)
+                .orElseThrow(IllegalArgumentException::new);
         policy.setManager(userDetailsService.findByEmail(manager));
         if (policy.getStartDate() == null){
             policy.setStartDate(Date.from(LocalDateTime.now().toInstant(ZoneOffset.UTC)));
@@ -137,7 +138,8 @@ public class PolicyServiceImpl implements PolicyService {
     }
 
     private Policy getUpdatedPolicy(Long id, PolicyDto policyDto) {
-        Policy policy = policyRepository.findById(id).orElseThrow(NotFoundException::new);
+        Policy policy = policyRepository.findByIdAndIsActive(id, true)
+                .orElseThrow(NotFoundException::new);
 
         PolicyDto existingPolicyDto = policyMapper.toPolicyDto(policy);
         policyMapper.updatePolicyDtoFromExisting(policyDto, existingPolicyDto);

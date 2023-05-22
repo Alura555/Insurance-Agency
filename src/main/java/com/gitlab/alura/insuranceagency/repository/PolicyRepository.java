@@ -20,4 +20,6 @@ public interface PolicyRepository extends JpaRepository<Policy, Long>, JpaSpecif
     Page<Policy> findAll(Specification<Policy> spec, Pageable pageable);
 
     Optional<Policy> findOne(Specification<Policy> spec);
+
+    Optional<Policy> findByIdAndIsActive(Long applicationId, boolean b);
 }
