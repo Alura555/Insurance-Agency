@@ -46,15 +46,19 @@ public class DocumentTypeServiceImpl implements DocumentTypeService {
 
     @Override
     public void deleteById(Long id) {
-        DocumentType documentType = documentTypeRepository.findById(id).orElseThrow(NotFoundException::new);
+        DocumentType documentType = getById(id);
         documentType.setActive(false);
         documentTypeRepository.save(documentType);
     }
 
-    @Override
-    public DocumentTypeDto getById(Long id) {
-        DocumentType documentType = documentTypeRepository.findByIdAndIsActive(id, true)
+    private DocumentType getById(Long id) {
+        return documentTypeRepository.findByIdAndIsActive(id, true)
                 .orElseThrow(NotFoundException::new);
+    }
+
+    @Override
+    public DocumentTypeDto getDtoById(Long id) {
+        DocumentType documentType = getById(id);
         return documentTypeMapper.toDocumentTypeDto(documentType);
     }
 

@@ -56,7 +56,7 @@ public class AdminController {
         model.addAttribute("page", "documentTypes");
         model.addAttribute("edit", edit);
         if (edit && typeId != 0){
-            DocumentTypeDto updateType = documentTypeService.getById(typeId);
+            DocumentTypeDto updateType = documentTypeService.getDtoById(typeId);
             model.addAttribute("updatedType", updateType);
         } else {
             model.addAttribute("newType", new DocumentTypeDto());

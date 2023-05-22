@@ -14,7 +14,7 @@ public interface DocumentTypeService {
 
     void deleteById(Long id);
 
-    DocumentTypeDto getById(Long id);
+    DocumentTypeDto getDtoById(Long id);
 
     Long updateDocumentType(DocumentTypeDto documentType);
 
