@@ -1,6 +1,5 @@
 package com.gitlab.alura.insuranceagency.service;
 
-import com.gitlab.alura.insuranceagency.dto.DocumentTypeDto;
 import com.gitlab.alura.insuranceagency.dto.InsuranceTypeDto;
 import com.gitlab.alura.insuranceagency.entity.InsuranceType;
 import org.springframework.data.domain.Page;

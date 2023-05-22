@@ -1,7 +1,5 @@
 package com.gitlab.alura.insuranceagency.service.implementation;
 
-import com.gitlab.alura.insuranceagency.dto.DocumentTypeDto;
-import com.gitlab.alura.insuranceagency.entity.DocumentType;
 import com.gitlab.alura.insuranceagency.exception.NotFoundException;
 import com.gitlab.alura.insuranceagency.repository.InsuranceTypeRepository;
 import com.gitlab.alura.insuranceagency.dto.InsuranceTypeDto;
@@ -53,7 +51,8 @@ public class InsuranceTypeServiceImpl implements InsuranceTypeService {
 
     @Override
     public InsuranceType getById(Long id) {
-        return insuranceTypeRepository.findById(id).orElseThrow(NotFoundException::new);
+        return insuranceTypeRepository.findByIdAndIsActive(id, true)
+                .orElseThrow(NotFoundException::new);
     }
 
     @Override
@@ -74,7 +73,7 @@ public class InsuranceTypeServiceImpl implements InsuranceTypeService {
 
     @Override
     public void deleteById(Long id) {
-        InsuranceType insuranceType = insuranceTypeRepository.findById(id).orElseThrow(NotFoundException::new);
+        InsuranceType insuranceType = getById(id);
         insuranceType.setActive(false);
         insuranceTypeRepository.save(insuranceType);
     }
