@@ -78,7 +78,7 @@
                         <label>Phone:</label>
                         <span th:if="${user.id != null and edit!=true}" th:text="${user.phone}"></span>
                         <input th:unless="${user.id != null and edit!=true}"
-                               th:field="*{phone}" type="text" pattern="[0-9]{8,10}"
+                               th:field="*{phone}" type="text" placeholder="0123456789" pattern="[0-9]{8,10}"
                                id="phone" th:value="${user.phone}" required/>
                     </div>
                 </div>
