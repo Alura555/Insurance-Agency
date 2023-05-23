@@ -72,7 +72,7 @@ public class PolicyServiceImpl implements PolicyService {
     }
 
     @Override
-    public void updatePolicy(Long id, PolicyDto policyDto) {
+    public void updatePolicy(Long id, PolicyDto policyDto) throws InvalidInputException{
         Policy policy = getUpdatedPolicy(id, policyDto);
 
         Date currentDate = new Date();
@@ -128,7 +128,7 @@ public class PolicyServiceImpl implements PolicyService {
         return policyRepository.save(policy).getId();
     }
 
-    private void setNewPolicyInfo(PolicyDto policyDto, Date currentDate, Policy policy) {
+    private void setNewPolicyInfo(PolicyDto policyDto, Date currentDate, Policy policy) throws InvalidInputException{
         validatePolicyDate(policyDto, currentDate);
         policy.setStartDate(policyDto.getStartDate());
 
@@ -146,7 +146,7 @@ public class PolicyServiceImpl implements PolicyService {
         return policy;
     }
 
-    private void validatePolicyDate(PolicyDto policyDto, Date currentDate) {
+    private void validatePolicyDate(PolicyDto policyDto, Date currentDate) throws InvalidInputException{
         if (policyDto.getStartDate() != null && policyDto.getStartDate().before(currentDate)) {
             throw new InvalidInputException("startDate", "Start date must be later than current date.");
         }
@@ -162,7 +162,9 @@ public class PolicyServiceImpl implements PolicyService {
         policy.setDocuments(documents);
     }
 
-    private void processDocument(Date currentDate, Set<Document> documents, Map.Entry<DocumentType, Document> documentEntry) {
+    private void processDocument(Date currentDate,
+                                 Set<Document> documents,
+                                 Map.Entry<DocumentType, Document> documentEntry) {
         documentEntry.getValue().setDocumentType(documentEntry.getKey());
         validateDocumentDate(currentDate, documentEntry);
         if (!documents.contains(documentEntry.getValue())) {
@@ -171,7 +173,7 @@ public class PolicyServiceImpl implements PolicyService {
         documents.add(documentEntry.getValue());
     }
 
-    private void validateDocumentDate(Date currentDate, Map.Entry<DocumentType, Document> documentEntry) {
+    private void validateDocumentDate(Date currentDate, Map.Entry<DocumentType, Document> documentEntry) throws InvalidInputException{
         if (documentEntry.getValue().getIssueDate().after(currentDate)) {
             throw new InvalidInputException(
                     String.format("documents[%d].issueDate", documentEntry.getKey().getId()),

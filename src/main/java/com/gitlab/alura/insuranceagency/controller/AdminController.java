@@ -13,9 +13,11 @@ import com.gitlab.alura.insuranceagency.service.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -78,10 +80,10 @@ public class AdminController {
         return "redirect:/personal/admin/documentTypes";
     }
 
-    @GetMapping("/documentTypes/{id}/delete")
-    public String deleteDocumentType(@PathVariable("id") Long id) {
+    @DeleteMapping("/documentTypes/{id}")
+    public ResponseEntity<Void> deleteDocumentType(@PathVariable("id") Long id) {
         documentTypeService.deleteById(id);
-        return "redirect:/personal/admin/documentTypes";
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/insuranceTypes")
@@ -119,10 +121,10 @@ public class AdminController {
         return "redirect:/personal/admin/insuranceTypes";
     }
 
-    @GetMapping("/insuranceTypes/{id}/delete")
-    public String deleteInsuranceType(@PathVariable("id") Long id) {
+    @DeleteMapping("/insuranceTypes/{id}")
+    public ResponseEntity<Void> deleteInsuranceType(@PathVariable("id") Long id) {
         insuranceTypeService.deleteById(id);
-        return "redirect:/personal/admin/insuranceTypes";
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/companies")
@@ -169,10 +171,10 @@ public class AdminController {
         return "redirect:/personal/admin/companies/" + companyId;
     }
 
-    @GetMapping("/companies/{id}/delete")
-    public String deleteCompany(@PathVariable("id") Long id) {
+    @DeleteMapping("/companies/{id}")
+    public ResponseEntity<Void> deleteCompany(@PathVariable("id") Long id) {
         companyService.deleteById(id);
-        return "redirect:/personal/admin/companies";
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/users")
@@ -235,10 +237,10 @@ public class AdminController {
     }
 
     @PostMapping("/users/new")
-    public String createNewUser(@ModelAttribute("user") UserDto userDto,
-                                @RequestParam(name = "userRole", required = false) String roleTitle,
-                                @RequestParam(name = "company", defaultValue = "0") Long companyId,
-                                BindingResult result){
+    public String createUser(@ModelAttribute("user") UserDto userDto,
+                             @RequestParam(name = "userRole", required = false) String roleTitle,
+                             @RequestParam(name = "company", defaultValue = "0") Long companyId,
+                             BindingResult result){
         Long userId = null;
         try {
             userId = userService.registerNewUser(userDto, roleTitle);
@@ -252,10 +254,10 @@ public class AdminController {
         return "redirect:/personal/admin/users/" + userId;
     }
 
-    @GetMapping("/users/{id}/delete")
-    public String deleteUser(@PathVariable("id") Long id) {
+    @DeleteMapping("/users/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable("id") Long id) {
         userService.deleteById(id);
-        return "redirect:/personal/admin/users";
+        return ResponseEntity.noContent().build();
     }
 
 }

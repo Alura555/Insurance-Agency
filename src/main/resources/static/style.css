@@ -842,7 +842,8 @@ button.approve-button {
     height: 100%;
 }
 
-a.reject-button {
+a.reject-button,
+button.reject-button {
     display: flex;
     align-items: center;
     justify-content: center;

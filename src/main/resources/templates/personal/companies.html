@@ -35,7 +35,8 @@
             <td>
                 <div class="handle-buttons" >
                     <a th:href="@{/personal/admin/companies/{id}(id=${company.id}, edit=true)}" class="approve-button">Edit</a>
-                    <a th:href="@{/personal/admin/companies/{id}/delete(id=${company.id})}"  class="reject-button">Delete</a>
+                    <button type="button" th:attr="onclick=|sendDelete('/personal/admin/companies', '${company.id}', 'Are you sure you want to delete company?')|"
+                            class="reject-button">Delete</button>
                 </div>
             </td>
         </tr>

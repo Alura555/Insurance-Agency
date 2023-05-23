@@ -37,11 +37,11 @@
             <td>
                 <div class="handle-buttons" >
                     <a th:href="@{/personal/admin/users/{id}(id=${user.id}, edit=true)}" class="approve-button">Edit</a>
-                    <a th:href="@{/personal/admin/users/{id}/delete(id=${user.id})}"  class="reject-button">Delete</a>
+                    <button type="button" th:attr="onclick=|sendDelete('/personal/admin/users', '${user.id}', 'Are you sure you want to delete user?')|"
+                        class="reject-button">Delete</button>
                 </div>
             </td>
         </tr>
         </tbody>
     </table>
-
 </div>
