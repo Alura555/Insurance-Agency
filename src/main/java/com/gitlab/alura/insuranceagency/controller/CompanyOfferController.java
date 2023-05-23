@@ -82,9 +82,9 @@ public class CompanyOfferController {
     }
 
     @PostMapping("/new")
-    public String createNewOffer(@ModelAttribute("offer") OfferDto offerDto,
-                                 @RequestParam(name = "type", required = false, defaultValue = "1") Long typeId,
-                                 Principal principal){
+    public String createOffer(@ModelAttribute("offer") OfferDto offerDto,
+                              @RequestParam(name = "type", required = false, defaultValue = "1") Long typeId,
+                              Principal principal){
         String userEmail = principal.getName();
         InsuranceType insuranceType = insuranceTypeService.getById(typeId);
         Long offerId = offerService.createNewOffer(offerDto, insuranceType, userEmail);
@@ -98,7 +98,7 @@ public class CompanyOfferController {
         offerService.deleteOffer(managerEmail, id);
         return ResponseEntity.noContent().build();
     }
-    @GetMapping("/{id}/edit")
+    @GetMapping("/{id}/getOfferForm")
     public String getOfferForm(@PathVariable("id") Long id,
                                Principal principal,
                                Model model) {

@@ -28,7 +28,7 @@
                        class="reject-button">Cancel</a>
                 </div>
                 <div th:unless="${offer.id == null or edit == true}" class="handle-buttons">
-                    <a th:href="@{/personal/offers/{id}/edit(id=${offer.id})}" class="approve-button">Edit</a>
+                    <a th:href="@{/personal/offers/{id}/getOfferForm(id=${offer.id})}" class="approve-button">Edit</a>
                     <button type="button" th:attr="onclick=|sendDelete('/personal/offers', '${offer.id}', 'Are you sure you want to delete offer?')|"
                             class="reject-button">Delete</button>
                 </div>
