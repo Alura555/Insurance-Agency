@@ -6,25 +6,25 @@
         <div th:if="${typesList.totalPages >1}">
             <ul>
                 <li th:if="${typesList.number > 0}">
-                    <a th:href="@{${page}(page=${typesList.number - 1}, size=${typesList.size})}"><</a>
+                    <a th:href="@{/personal/admin/{pageName}(pageName=${page}, page=${typesList.number - 1}, size=${typesList.size})}"><</a>
                 </li>
                 <li th:text="|${(typesList.number * typesList.size) + 1} - ${((typesList.number + 1) * typesList.size) &lt; typesList.totalElements ? ((typesList.number + 1) * typesList.size) : typesList.totalElements} out of ${typesList.totalElements}|"></li>
                 <li th:if="${typesList.number < typesList.totalPages - 1}">
-                    <a th:href="@{${page}(page=${typesList.number + 1}, size=${typesList.size})}"> > </a>
+                    <a th:href="@{/personal/admin/{pageName}(pageName=${page}, page=${typesList.number + 1}, size=${typesList.size})}"> > </a>
                 </li>
             </ul>
         </div>
     </div>
-    <div th:unless="${edit and typeId==0}" class="new-element">
-        <a th:href="@{/personal/admin/{pageName}(pageName=${page}, page=${typesList.number}, size=${typesList.size}, edit=true)}">
+    <div th:if="${newType==null}" class="new-element">
+        <a th:href="@{/personal/admin/{pageName}/new(pageName=${page}, page=${typesList.number}, size=${typesList.size})}">
             New type</a>
 
     </div>
-    <div th:if="${edit and typeId==0}" class="new-type">
+    <div th:unless="${newType==null}" class="new-type">
         <form th:action="@{/personal/admin/{page}/new(page=${page})}"
               th:object="${newType}" method="post">
             <label for="title">Title</label>
-            <input id="title" th:field="*{title}"></input>
+            <input id="title" th:field="*{title}" required></input>
             <div class="handle-buttons">
                 <button type="submit" class="approve-button">Create</button>
                 <a th:href="@{/personal/admin/{pageName}(pageName=${page}, page=${typesList.number}, size=${typesList.size})}"
@@ -54,7 +54,8 @@
                             <input th:field="*{title}"
                                    type="text"
                                    th:value="${type.title}"
-                                   class="type-form-title__input"></input>
+                                   class="type-form-title__input"
+                                   required></input>
                             <span th:if="${page=='insuranceTypes'}"> insurance</span>
                         </label>
                     </form>
@@ -62,7 +63,7 @@
                 <td>
                     <div class="handle-buttons" >
                         <a th:if="${type.id != typeId}"
-                           th:href="@{/personal/admin/{pageName}(pageName=${page}, page=${typesList.number}, size=${typesList.size}, id=${type.id}, edit=true)}"
+                           th:href="@{/personal/admin/{pageName}/{id}(pageName=${page}, page=${typesList.number}, size=${typesList.size}, id=${type.id})}"
                            class="approve-button">Edit</a>
                         <button type="button" th:if="${type.id != typeId}"
                                 th:attr="onclick=|sendDelete('/personal/admin/' + '${page}', '${type.id}', 'Are you sure you want to delete type?')|"

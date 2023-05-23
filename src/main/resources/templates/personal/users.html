@@ -36,7 +36,7 @@
             <td th:text="${user.role.title}"></td>
             <td>
                 <div class="handle-buttons" >
-                    <a th:href="@{/personal/admin/users/{id}(id=${user.id}, edit=true)}" class="approve-button">Edit</a>
+                    <a th:href="@{/personal/admin/users/{id}/getUserForm(id=${user.id})}" class="approve-button">Edit</a>
                     <button type="button" th:attr="onclick=|sendDelete('/personal/admin/users', '${user.id}', 'Are you sure you want to delete user?')|"
                         class="reject-button">Delete</button>
                 </div>

@@ -49,21 +49,27 @@ public class AdminController {
     @GetMapping("/documentTypes")
     public String getDocumentTypes(@RequestParam(name = "page", defaultValue = "0") int page,
                                    @RequestParam(name = "size", defaultValue = "10") int size,
-                                   @RequestParam(name = "id", defaultValue = "0") Long typeId,
-                                   @RequestParam(name = "edit", defaultValue = "false") boolean edit,
                                    Model model){
         Pageable pageable = PageRequest.of(page, size);
         Page<DocumentTypeDto> documentTypes = documentTypeService.getAllActive(pageable);
 
         model.addAttribute("typesList", documentTypes);
         model.addAttribute("page", "documentTypes");
-        model.addAttribute("edit", edit);
-        if (edit && typeId != 0){
-            DocumentTypeDto updateType = documentTypeService.getDtoById(typeId);
-            model.addAttribute("updatedType", updateType);
-        } else {
-            model.addAttribute("newType", new DocumentTypeDto());
-        }
+        return "personal/personal-account";
+    }
+
+    @GetMapping("/documentTypes/{id}")
+    public String getDocumentTypeForm(@PathVariable(name = "id") Long typeId,
+                                      @RequestParam(name = "page", defaultValue = "0") int page,
+                                      @RequestParam(name = "size", defaultValue = "10") int size,
+                                      Model model){
+        Pageable pageable = PageRequest.of(page, size);
+        Page<DocumentTypeDto> documentTypes = documentTypeService.getAllActive(pageable);
+        DocumentTypeDto updateType = documentTypeService.getDtoById(typeId);
+
+        model.addAttribute("typesList", documentTypes);
+        model.addAttribute("page", "documentTypes");
+        model.addAttribute("updatedType", updateType);
         model.addAttribute("typeId", typeId);
         return "personal/personal-account";
     }
@@ -74,6 +80,19 @@ public class AdminController {
                                                    @ModelAttribute("updatedType") DocumentTypeDto documentType) {
         documentTypeService.updateDocumentType(documentType);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/documentTypes/new")
+    public String getDocumentTypeForm(@RequestParam(name = "page", defaultValue = "0") int page,
+                                      @RequestParam(name = "size", defaultValue = "10") int size,
+                                      Model model){
+        Pageable pageable = PageRequest.of(page, size);
+        Page<DocumentTypeDto> documentTypes = documentTypeService.getAllActive(pageable);
+
+        model.addAttribute("typesList", documentTypes);
+        model.addAttribute("page", "documentTypes");
+        model.addAttribute("newType", new DocumentTypeDto());
+        return "personal/personal-account";
     }
     @PostMapping("/documentTypes/new")
     public String createNewDocumentType(@ModelAttribute("newType") DocumentTypeDto documentType) {
@@ -90,31 +109,48 @@ public class AdminController {
     @GetMapping("/insuranceTypes")
     public String getInsuranceTypes(@RequestParam(name = "page", defaultValue = "0") int page,
                                    @RequestParam(name = "size", defaultValue = "10") int size,
-                                   @RequestParam(name = "id", defaultValue = "0") Long typeId,
-                                   @RequestParam(name = "edit", defaultValue = "false") boolean edit,
                                    Model model){
         Pageable pageable = PageRequest.of(page, size);
         Page<InsuranceTypeDto> documentTypes = insuranceTypeService.getAllActive(pageable);
 
         model.addAttribute("typesList", documentTypes);
         model.addAttribute("page", "insuranceTypes");
-        model.addAttribute("edit", edit);
-        if (edit && typeId != 0){
-            InsuranceTypeDto updateType = insuranceTypeService.getDtoById(typeId);
-            model.addAttribute("updatedType", updateType);
-        } else {
-            model.addAttribute("newType", new InsuranceTypeDto());
-        }
-        model.addAttribute("typeId", typeId);
         return "personal/personal-account";
     }
 
+    @GetMapping("/insuranceTypes/{id}")
+    public String getInsuranceTypeForm(@PathVariable(name = "id") Long typeId,
+                                        @RequestParam(name = "page", defaultValue = "0") int page,
+                                        @RequestParam(name = "size", defaultValue = "10") int size,
+                                        Model model){
+        Pageable pageable = PageRequest.of(page, size);
+        Page<InsuranceTypeDto> documentTypes = insuranceTypeService.getAllActive(pageable);
+        InsuranceTypeDto updateType = insuranceTypeService.getDtoById(typeId);
 
+        model.addAttribute("typesList", documentTypes);
+        model.addAttribute("page", "insuranceTypes");
+        model.addAttribute("updatedType", updateType);
+        model.addAttribute("typeId", typeId);
+        return "personal/personal-account";
+    }
     @PutMapping("/insuranceTypes/{id}")
     public ResponseEntity<Void> updateInsuranceType(@PathVariable("id") Long id,
                                                     @ModelAttribute("updatedType") InsuranceTypeDto insuranceTypeDto) {
         insuranceTypeService.updateInsuranceType(insuranceTypeDto);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/insuranceTypes/new")
+    public String getNewInsuranceTypesForm(@RequestParam(name = "page", defaultValue = "0") int page,
+                                           @RequestParam(name = "size", defaultValue = "10") int size,
+                                           Model model){
+        Pageable pageable = PageRequest.of(page, size);
+        Page<InsuranceTypeDto> documentTypes = insuranceTypeService.getAllActive(pageable);
+
+        model.addAttribute("typesList", documentTypes);
+        model.addAttribute("page", "insuranceTypes");
+        model.addAttribute("newType", new InsuranceTypeDto());
+        return "personal/personal-account";
     }
     @PostMapping("/insuranceTypes/new")
     public String createNewInsuranceType(@ModelAttribute("newType") InsuranceTypeDto insuranceTypeDto) {
@@ -142,12 +178,22 @@ public class AdminController {
 
     @GetMapping("/companies/{id}")
     public String getCompanyById(@PathVariable(name="id") Long id,
-                                 @RequestParam(name = "edit", defaultValue = "false") boolean edit,
                                  Model model){
         CompanyDto company = companyService.getCompanyDtoById(id);
 
         model.addAttribute("company", company);
-        model.addAttribute("edit", edit);
+        model.addAttribute("edit", false);
+        model.addAttribute("page", "companies");
+        return "personal/company";
+    }
+
+    @GetMapping("/companies/{id}/getCompanyForm")
+    public String getCompanyFormById(@PathVariable(name="id") Long id,
+                                     Model model){
+        CompanyDto company = companyService.getCompanyDtoById(id);
+
+        model.addAttribute("company", company);
+        model.addAttribute("edit", true);
         model.addAttribute("page", "companies");
         return "personal/company";
     }
@@ -192,20 +238,26 @@ public class AdminController {
 
     @GetMapping("/users/{id}")
     public String getUserById(@PathVariable(name="id") Long id,
-                              @RequestParam(name = "edit", defaultValue = "false") boolean edit,
                               Model model){
         UserDto userDto = userService.getUserDtoById(id);
+        model.addAttribute("user", userDto);
+        model.addAttribute("edit", false);
+        model.addAttribute("page", "users");
+        return "personal/user";
+    }
 
-        if (edit){
-            List<RoleDto> roles = userService.getUserRoles();
-            List<CompanyDto> companies = companyService.getActiveCompanies();
+    @GetMapping("/users/{id}/getUserForm")
+    public String getUserFormById(@PathVariable(name="id") Long id,
+                                  Model model){
+        UserDto userDto = userService.getUserDtoById(id);
+        List<RoleDto> roles = userService.getUserRoles();
+        List<CompanyDto> companies = companyService.getActiveCompanies();
 
-            model.addAttribute("roles", roles);
-            model.addAttribute("companies", companies);
-        }
+        model.addAttribute("roles", roles);
+        model.addAttribute("companies", companies);
 
         model.addAttribute("user", userDto);
-        model.addAttribute("edit", edit);
+        model.addAttribute("edit", true);
         model.addAttribute("page", "users");
         return "personal/user";
     }
