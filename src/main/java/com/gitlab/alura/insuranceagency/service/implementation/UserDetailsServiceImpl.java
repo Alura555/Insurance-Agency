@@ -7,6 +7,7 @@ import com.gitlab.alura.insuranceagency.mapper.RoleMapper;
 import com.gitlab.alura.insuranceagency.repository.RoleRepository;
 import com.gitlab.alura.insuranceagency.repository.UserRepository;
 import com.gitlab.alura.insuranceagency.security.UserDetailsImpl;
+import com.gitlab.alura.insuranceagency.service.CompanyService;
 import com.gitlab.alura.insuranceagency.service.UserService;
 import com.gitlab.alura.insuranceagency.dto.UserDto;
 import com.gitlab.alura.insuranceagency.entity.User;
@@ -38,16 +39,19 @@ public class UserDetailsServiceImpl implements UserDetailsService, UserService {
     private final UserMapper userMapper;
     private final RoleMapper roleMapper;
 
+    private final CompanyService companyService;
     public UserDetailsServiceImpl(UserRepository userRepository,
                                   RoleRepository roleRepository,
                                   PasswordEncoder passwordEncoder,
                                   UserMapper userMapper,
-                                  RoleMapper roleMapper) {
+                                  RoleMapper roleMapper,
+                                  CompanyService companyService) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
         this.userMapper = userMapper;
         this.roleMapper = roleMapper;
+        this.companyService = companyService;
     }
 
     @Override
@@ -71,11 +75,19 @@ public class UserDetailsServiceImpl implements UserDetailsService, UserService {
     }
 
     @Override
-    public Long registerNewUser(UserDto userDto, String roleTitle) {
+    public Long registerNewUser(UserDto userDto, String roleTitle, Long companyId) {
         User newUser = createNewUser(userDto, roleTitle, true);
-        return userRepository.save(newUser).getId();
+        newUser = userRepository.save(newUser);
+        if (companyId != null && companyId != 0L) {
+            companyService.addCompanyManager(newUser, companyId);
+        }
+        return newUser.getId();
     }
 
+    @Override
+    public void registerNewClient(UserDto userDto) {
+        registerNewUser(userDto, "CLIENT", null);
+    }
 
 
     private void validateUserData(UserDto userDto, Boolean isNew) throws InvalidInputException{

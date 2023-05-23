@@ -25,13 +25,10 @@ public class CompanyServiceImpl implements CompanyService {
 
     private final CompanyMapper companyMapper;
 
-    private final UserService userService;
     public CompanyServiceImpl(CompanyRepository companyRepository,
-                              CompanyMapper companyMapper,
-                              UserService userService) {
+                              CompanyMapper companyMapper) {
         this.companyRepository = companyRepository;
         this.companyMapper = companyMapper;
-        this.userService = userService;
     }
 
     public List<CompanyDto> getActiveCompanies(){
@@ -104,9 +101,9 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public void addCompanyManager(Long managerId, Long companyId) {
+    public void addCompanyManager(User manager, Long companyId) {
         Company company = getCompanyById(companyId);
-        company.getManagers().add(userService.findById(managerId));
+        company.getManagers().add(manager);
         companyRepository.save(company);
     }
 

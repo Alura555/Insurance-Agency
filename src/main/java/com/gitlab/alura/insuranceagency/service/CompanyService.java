@@ -26,6 +26,6 @@ public interface CompanyService {
 
     Long updateCompany(CompanyDto companyDto);
 
-    void addCompanyManager(Long managerId, Long companyId);
+    void addCompanyManager(User manager, Long companyId);
 }
 

@@ -12,7 +12,9 @@ public interface UserService {
     User findByEmail(String email);
     User findById(Long id);
 
-    Long registerNewUser(UserDto userDto, String role);
+    Long registerNewUser(UserDto userDto, String role, Long companyId);
+    void registerNewClient(UserDto userDto);
+
 
     Page<UserDto> getAllActive(Pageable pageable);
 
@@ -23,4 +25,5 @@ public interface UserService {
     Long updateUser(UserDto userDto, String roleTitle);
 
     List<RoleDto> getUserRoles();
+
 }

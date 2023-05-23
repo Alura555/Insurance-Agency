@@ -30,7 +30,7 @@ public class SignupController {
     public String signup(@ModelAttribute("userDto") UserDto userDto,
                          BindingResult result, Model model) {
         try {
-            userService.registerNewUser(userDto, "CLIENT");
+            userService.registerNewClient(userDto);
         } catch (InvalidInputException e){
             result.rejectValue(e.getField(), "error.userDto", e.getMessage());
             return "signup";

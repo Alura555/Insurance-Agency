@@ -296,13 +296,10 @@ public class AdminController {
                              BindingResult result){
         Long userId = null;
         try {
-            userId = userService.registerNewUser(userDto, roleTitle);
+            userId = userService.registerNewUser(userDto, roleTitle, companyId);
         } catch (InvalidInputException e){
             result.rejectValue(e.getField(), "error.userDto", e.getMessage());
             return "personal/user";
-        }
-        if (companyId != 0L){
-            companyService.addCompanyManager(userId, companyId);
         }
         return "redirect:/personal/admin/users/" + userId;
     }
