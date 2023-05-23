@@ -11,7 +11,7 @@
                     Personal account
                     <br>
                     <span th:with="role=${#authentication.getAuthorities()[0]}"
-                          th:text="${'Role: ' + #strings.toLowerCase(role.getAuthority())}">
+                          th:text="${#strings.toLowerCase(role.getAuthority())}">
 
                     </span>
                 </a>
