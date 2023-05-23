@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -116,14 +117,14 @@ public class CompanyOfferController {
         return "/personal/offer";
     }
 
-    @PostMapping("/{id}/edit")
-    public String updateOfferById(@PathVariable(name = "id") Long id,
+    @PutMapping("/{id}")
+    public ResponseEntity<Long> updateOfferById(@PathVariable(name = "id") Long id,
                                   @ModelAttribute("offer") OfferDto offerDto,
                                   @RequestParam(name = "type", required = false, defaultValue = "1") Long typeId,
                                   Principal principal){
         String userEmail = principal.getName();
         InsuranceType insuranceType = insuranceTypeService.getById(typeId);
         Long offerId = offerService.updateOffer(offerDto, insuranceType, userEmail);
-        return "redirect:/personal/offers/" + offerId;
+        return ResponseEntity.ok(offerId);
     }
 }

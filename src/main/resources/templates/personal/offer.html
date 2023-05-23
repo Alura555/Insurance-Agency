@@ -8,6 +8,7 @@
 <body>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="/js/send-delete.js"></script>
+<script src="/js/send-put.js"></script>
     <div th:replace="fragments/header :: header"></div>
     <div class="personal-account">
         <div th:replace="personal/account-nav :: div"></div>
@@ -17,8 +18,11 @@
                 <h2 th:text="'Offer ' + ${offer.id != null ? offer.id : ''}"></h2>
                 <div th:if="${offer.id == null or edit == true}" class="handle-buttons"
                      sec:authorize="hasAuthority('COMPANY MANAGER')">
-                    <button th:text="${offer.id == null ? 'Create' : 'Save'}"
-                            form="offerForm" type="submit" name="action" value="approve" class="approve-button"></button>
+                    <button th:if="${offer.id == null}"
+                            form="offerForm" type="submit" name="action" class="approve-button">Create</button>
+                    <button th:unless="${offer.id == null}"
+                            th:attr="onclick=|sendPutRequest('/personal/offers', '${offer.id}', 'offerForm')|"
+                            class="approve-button">Save</button>
                     <a th:with="url=${'/personal/offers' + (offer.id != null ? '/' + offer.id : '')}"
                        th:href="@{${url}}"
                        class="reject-button">Cancel</a>
