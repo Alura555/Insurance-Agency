@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -68,11 +69,11 @@ public class AdminController {
     }
 
 
-    @PostMapping("/documentTypes/{id}")
-    public String updateDocumentType(@PathVariable("id") Long id,
-                                     @ModelAttribute("updatedType") DocumentTypeDto documentType) {
+    @PutMapping("/documentTypes/{id}")
+    public ResponseEntity<Void> updateDocumentType(@PathVariable("id") Long id,
+                                                   @ModelAttribute("updatedType") DocumentTypeDto documentType) {
         documentTypeService.updateDocumentType(documentType);
-        return "redirect:/personal/admin/documentTypes";
+        return ResponseEntity.ok().build();
     }
     @PostMapping("/documentTypes/new")
     public String createNewDocumentType(@ModelAttribute("newType") DocumentTypeDto documentType) {
@@ -109,11 +110,11 @@ public class AdminController {
     }
 
 
-    @PostMapping("/insuranceTypes/{id}")
-    public String updateInsuranceType(@PathVariable("id") Long id,
-                                     @ModelAttribute("updatedType") InsuranceTypeDto insuranceTypeDto) {
+    @PutMapping("/insuranceTypes/{id}")
+    public ResponseEntity<Void> updateInsuranceType(@PathVariable("id") Long id,
+                                                    @ModelAttribute("updatedType") InsuranceTypeDto insuranceTypeDto) {
         insuranceTypeService.updateInsuranceType(insuranceTypeDto);
-        return "redirect:/personal/admin/insuranceTypes";
+        return ResponseEntity.ok().build();
     }
     @PostMapping("/insuranceTypes/new")
     public String createNewInsuranceType(@ModelAttribute("newType") InsuranceTypeDto insuranceTypeDto) {
@@ -151,11 +152,11 @@ public class AdminController {
         return "personal/company";
     }
 
-    @PostMapping("/companies/{id}")
-    public String updateCompany(@PathVariable(name="id") Long id,
+    @PutMapping("/companies/{id}")
+    public ResponseEntity<Long> updateCompany(@PathVariable(name="id") Long id,
                                 @ModelAttribute("company") CompanyDto companyDto){
         Long companyId = companyService.updateCompany(companyDto);
-        return "redirect:/personal/admin/companies/" + companyId;
+        return ResponseEntity.ok(companyId);
     }
 
     @GetMapping("/companies/new")

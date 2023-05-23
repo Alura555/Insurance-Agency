@@ -49,7 +49,7 @@
                     <form id="documentTypeForm"
                           th:unless="${type.id != typeId}"
                           th:action="@{/personal/admin/{page}/{id}(page=${page}, id=${type.id})}"
-                            th:object="${updatedType}" method="post">
+                            th:object="${updatedType}" method="put">
                         <label class="type-form__label">
                             <input th:field="*{title}"
                                    type="text"
@@ -64,11 +64,12 @@
                         <a th:if="${type.id != typeId}"
                            th:href="@{/personal/admin/{pageName}(pageName=${page}, page=${typesList.number}, size=${typesList.size}, id=${type.id}, edit=true)}"
                            class="approve-button">Edit</a>
-                        <button type="button"
+                        <button type="button" th:if="${type.id != typeId}"
                                 th:attr="onclick=|sendDelete('/personal/admin/' + '${page}', '${type.id}', 'Are you sure you want to delete type?')|"
                                 class="reject-button">Delete</button>
                         <button th:if="${type.id == typeId}"
-                                form="documentTypeForm" type="submit" class="approve-button">Save</button>
+                                th:attr="onclick=|sendPutRequest('/personal/admin/' + '${page}', '${type.id}', 'documentTypeForm')|"
+                                class="approve-button">Save</button>
                         <a th:if="${type.id == typeId}"
                            th:href="@{/personal/admin/{pageName}(pageName=${page}, page=${typesList.number}, size=${typesList.size})}"
                            class="reject-button">Cancel</a>

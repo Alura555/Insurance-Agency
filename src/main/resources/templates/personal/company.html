@@ -7,6 +7,7 @@
 <body>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="/js/send-delete.js"></script>
+<script src="/js/send-put.js"></script>
     <div th:replace="fragments/header :: header"></div>
     <div class="personal-account">
         <div th:replace="personal/account-nav :: div"></div>
@@ -15,8 +16,11 @@
             <div class="title">
                 <h2 th:text="'Company ' + ${company.id != null ? company.id : ''}"></h2>
                 <div th:if="${company.id == null or edit == true}" class="handle-buttons">
-                    <button th:text="${company.id == null ? 'Create' : 'Save'}"
-                            form="companyForm" type="submit" name="action" class="approve-button"></button>
+                    <button th:if="${company.id == null}"
+                            form="companyForm" type="submit" name="action" class="approve-button">Create</button>
+                    <button th:unless="${company.id == null}"
+                            th:attr="onclick=|sendPutRequest('/personal/admin/companies', '${company.id}', 'companyForm')|"
+                            class="approve-button">Save</button>
                     <a th:with="url=${'/personal/admin/companies' + (company.id != null ? '/' + company.id : '')}"
                        th:href="@{${url}}"
                        class="reject-button">Cancel</a>
