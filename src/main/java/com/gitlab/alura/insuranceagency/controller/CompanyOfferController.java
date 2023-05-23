@@ -11,8 +11,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -56,8 +58,8 @@ public class CompanyOfferController {
 
     @GetMapping("/{id}")
     public String getOfferById(@PathVariable(name = "id") Long id,
-                            Principal principal,
-                            Model model){
+                               Principal principal,
+                               Model model){
         String userEmail = principal.getName();
         OfferDto offerDto = offerService.getOfferByUserAndId(userEmail, id);
 
@@ -88,12 +90,12 @@ public class CompanyOfferController {
         return "redirect:/personal/offers/" + offerId;
     }
 
-    @GetMapping("/{id}/delete")
-    public String deleteOffer(@PathVariable("id") Long id,
-                              Principal principal) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteOffer(@PathVariable("id") Long id,
+                                              Principal principal) {
         String managerEmail = principal.getName();
         offerService.deleteOffer(managerEmail, id);
-        return "redirect:/personal/offers";
+        return ResponseEntity.noContent().build();
     }
     @GetMapping("/{id}/edit")
     public String getOfferForm(@PathVariable("id") Long id,
