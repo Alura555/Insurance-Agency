@@ -92,11 +92,11 @@ public class CompanyOfferController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteOffer(@PathVariable("id") Long id,
+    public String deleteOffer(@PathVariable("id") Long id,
                                               Principal principal) {
         String managerEmail = principal.getName();
         offerService.deleteOffer(managerEmail, id);
-        return ResponseEntity.noContent().build();
+        return "redirect:/personal/offers";
     }
     @GetMapping("/{id}/getOfferForm")
     public String getOfferForm(@PathVariable("id") Long id,

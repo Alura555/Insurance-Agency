@@ -62,12 +62,14 @@
                 </td>
                 <td>
                     <div class="handle-buttons" >
-                        <a th:if="${type.id != typeId}"
-                           th:href="@{/personal/admin/{pageName}/{id}(pageName=${page}, page=${typesList.number}, size=${typesList.size}, id=${type.id})}"
-                           class="approve-button">Edit</a>
-                        <button type="button" th:if="${type.id != typeId}"
-                                th:attr="onclick=|sendDelete('/personal/admin/' + '${page}', '${type.id}', 'Are you sure you want to delete type?')|"
-                                class="reject-button">Delete</button>
+                        <form th:if="${type.id != typeId}"
+                              th:action="@{/personal/admin/{pageName}/{id}(pageName=${page}, id=${type.id})}"
+                              th:method="delete">
+                            <a th:href="@{/personal/admin/{pageName}/{id}(pageName=${page}, page=${typesList.number}, size=${typesList.size}, id=${type.id})}"
+                               class="approve-button">Edit</a>
+                            <button type="submit" class="reject-button">Delete</button>
+                        </form>
+
                         <button th:if="${type.id == typeId}"
                                 th:attr="onclick=|sendPutRequest('/personal/admin/' + '${page}', '${type.id}', 'documentTypeForm')|"
                                 class="approve-button">Save</button>

@@ -23,9 +23,10 @@
                        class="reject-button">Cancel</a>
                 </div>
                 <div th:unless="${user.id == null or edit == true}" class="handle-buttons">
-                    <a th:href="@{/personal/admin/users/{id}/getUserForm(id=${user.id})}" class="approve-button">Edit</a>
-                    <button type="button" th:attr="onclick=|sendDelete('/personal/admin/users', '${user.id}', 'Are you sure you want to delete user?')|"
-                            class="reject-button">Delete</button>
+                    <form th:action="@{/personal/admin/users/{id}(id=${user.id})}" th:method="delete">
+                        <a th:href="@{/personal/admin/users/{id}/getUserForm(id=${user.id})}" class="approve-button">Edit</a>
+                        <button type="submit" class="reject-button">Delete</button>
+                    </form>
                 </div>
             </div>
             <form id="userForm" th:with="url=${(user.id != null) ? '/personal/admin/users/' + user.id : '/personal/admin/users/new'}"

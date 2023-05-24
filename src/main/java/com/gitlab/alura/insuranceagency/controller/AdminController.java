@@ -101,9 +101,9 @@ public class AdminController {
     }
 
     @DeleteMapping("/documentTypes/{id}")
-    public ResponseEntity<Void> deleteDocumentType(@PathVariable("id") Long id) {
+    public String deleteDocumentType(@PathVariable("id") Long id) {
         documentTypeService.deleteById(id);
-        return ResponseEntity.noContent().build();
+        return "redirect:/personal/admin/documentTypes";
     }
 
     @GetMapping("/insuranceTypes")
@@ -159,9 +159,9 @@ public class AdminController {
     }
 
     @DeleteMapping("/insuranceTypes/{id}")
-    public ResponseEntity<Void> deleteInsuranceType(@PathVariable("id") Long id) {
+    public String deleteInsuranceType(@PathVariable("id") Long id) {
         insuranceTypeService.deleteById(id);
-        return ResponseEntity.noContent().build();
+        return "redirect:/personal/admin/insuranceTypes";
     }
 
     @GetMapping("/companies")
@@ -219,9 +219,9 @@ public class AdminController {
     }
 
     @DeleteMapping("/companies/{id}")
-    public ResponseEntity<Void> deleteCompany(@PathVariable("id") Long id) {
+    public String deleteCompany(@PathVariable("id") Long id) {
         companyService.deleteById(id);
-        return ResponseEntity.noContent().build();
+        return "redirect:/personal/admin/companies";
     }
 
     @GetMapping("/users")
@@ -305,9 +305,9 @@ public class AdminController {
     }
 
     @DeleteMapping("/users/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable("id") Long id) {
+    public String deleteUser(@PathVariable("id") Long id) {
         userService.deleteById(id);
-        return ResponseEntity.noContent().build();
+        return "redirect:/personal/admin/users";
     }
 
 }
