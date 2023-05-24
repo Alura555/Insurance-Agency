@@ -13,6 +13,8 @@ import com.gitlab.alura.insuranceagency.dto.UserDto;
 import com.gitlab.alura.insuranceagency.entity.User;
 import com.gitlab.alura.insuranceagency.exception.InvalidInputException;
 import com.gitlab.alura.insuranceagency.mapper.UserMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -31,6 +33,8 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 public class UserDetailsServiceImpl implements UserDetailsService, UserService {
+
+    private static final Logger logger = LoggerFactory.getLogger(UserDetailsServiceImpl.class);
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
 
@@ -56,10 +60,13 @@ public class UserDetailsServiceImpl implements UserDetailsService, UserService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        logger.info("Loading user by email: {}", username);
         User user = findByEmail(username);
         if (user == null){
+            logger.warn("User not found for email: {}", username);
             throw new UsernameNotFoundException("User not found!");
         }
+        logger.info("User loaded successfully: {}", user.getUsername());
         return new UserDetailsImpl(user);
     }
 
@@ -70,17 +77,24 @@ public class UserDetailsServiceImpl implements UserDetailsService, UserService {
 
     @Override
     public User findById(Long id) {
+        logger.info("Finding user by ID: {}", id);
         return userRepository.findByIdAndIsActive(id, true)
-                .orElseThrow(NotFoundException::new);
+                .orElseThrow(() -> {
+                    logger.error("User not found for ID: {}", id);
+                    return new NotFoundException("User not found!");
+                });
     }
 
     @Override
     public Long registerNewUser(UserDto userDto, String roleTitle, Long companyId) {
-        User newUser = createNewUser(userDto, roleTitle, true);
+        logger.info("Registering new user with email: {} with role: {}", userDto.getEmail(), roleTitle);
+        User newUser = createUser(userDto, roleTitle, true);
         newUser = userRepository.save(newUser);
         if (companyId != null && companyId != 0L) {
             companyService.addCompanyManager(newUser, companyId);
+            logger.info("Added company manager for user with email: {} and companyId: {}", userDto.getEmail(), companyId);
         }
+        logger.info("Registered new user with email: {} and id: {}", userDto.getEmail(), newUser.getId());
         return newUser.getId();
     }
 
@@ -130,21 +144,25 @@ public class UserDetailsServiceImpl implements UserDetailsService, UserService {
 
     @Override
     public void deleteById(Long id) {
+        logger.info("Deleting user by ID: {}", id);
         User user = findById(id);
         user.setActive(false);
         userRepository.save(user);
+        logger.info("User with ID {} deleted successfully", id);
     }
 
     @Override
     public Long updateUser(UserDto userDto, String roleTitle) throws InvalidInputException{
+        logger.info("Updating user with ID: {}", userDto.getId());
         User oldUser = findById(userDto.getId());
-        User updatedUser = createNewUser(userDto, roleTitle, false);
+        User updatedUser = createUser(userDto, roleTitle, false);
         updatedUser.setPassword(oldUser.getPassword());
+        logger.info("User updated successfully with ID: {}", updatedUser.getId());
         return userRepository.save(updatedUser).getId();
     }
 
 
-    private User createNewUser(UserDto userDto, String roleTitle, Boolean isNew) throws InvalidInputException{
+    private User createUser(UserDto userDto, String roleTitle, Boolean isNew) throws InvalidInputException{
         Role role = roleRepository.findByTitle(roleTitle).orElseThrow(NotFoundException::new);
         userDto.setRole(roleMapper.toDto(role));
         validateUserData(userDto, isNew);
