@@ -7,7 +7,8 @@ import com.gitlab.alura.insuranceagency.mapper.CompanyMapper;
 import com.gitlab.alura.insuranceagency.repository.CompanyRepository;
 import com.gitlab.alura.insuranceagency.entity.Company;
 import com.gitlab.alura.insuranceagency.service.CompanyService;
-import com.gitlab.alura.insuranceagency.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +22,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class CompanyServiceImpl implements CompanyService {
+    private static final Logger logger = LoggerFactory.getLogger(CompanyServiceImpl.class);
+
     private final CompanyRepository companyRepository;
 
     private final CompanyMapper companyMapper;
@@ -74,17 +77,23 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public Long createNewCompany(CompanyDto companyDto) {
+    public Long createCompany(CompanyDto companyDto) {
+        logger.info("Creating new company: {}", companyDto.getName());
         Company company = companyMapper.toEntity(companyDto);
         company.setActive(true);
-        return companyRepository.save(company).getId();
+        Long companyId = companyRepository.save(company).getId();
+
+        logger.info("New company created with ID: {}", companyId);
+        return companyId;
     }
 
     @Override
     public void deleteById(Long id) {
+        logger.info("Deleting company with ID: {}", id);
         Company company = getCompanyById(id);
         company.setActive(false);
         companyRepository.save(company);
+        logger.info("Company with ID: {} deleted successfully", id);
     }
 
     @Override
@@ -105,6 +114,7 @@ public class CompanyServiceImpl implements CompanyService {
         Company company = getCompanyById(companyId);
         company.getManagers().add(manager);
         companyRepository.save(company);
+        logger.info("Added company manager for manager with email: {} and companyId: {}", manager.getEmail(), companyId);
     }
 
     private Company getCompanyById(Long companyId) {

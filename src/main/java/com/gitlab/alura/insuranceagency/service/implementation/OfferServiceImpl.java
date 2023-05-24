@@ -12,6 +12,8 @@ import com.gitlab.alura.insuranceagency.mapper.OfferMapper;
 import com.gitlab.alura.insuranceagency.service.CompanyService;
 import com.gitlab.alura.insuranceagency.service.OfferService;
 import com.gitlab.alura.insuranceagency.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +24,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class OfferServiceImpl implements OfferService {
+
+    private static final Logger logger = LoggerFactory.getLogger(OfferServiceImpl.class);
 
     private final OfferRepository offerRepository;
 
@@ -42,7 +46,7 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
-    public Page<OfferDto> findAll(Pageable pageable, OfferFilter offerFilter) {
+    public Page<OfferDto> getAll(Pageable pageable, OfferFilter offerFilter) {
         Page<Offer> offerPage = offerRepository.findAll(offerFilter, pageable);
         List<OfferDto> offerDtoList = offerPage
                 .getContent()
@@ -53,23 +57,23 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
-    public Page<OfferDto> findAll(Pageable pageable, String userEmail) {
-        User user = userService.findByEmail(userEmail);
+    public Page<OfferDto> getAll(Pageable pageable, String userEmail) {
+        User user = userService.getByEmail(userEmail);
         OfferFilter offerFilter = new OfferFilter();
         offerFilter.setActive(true);
         offerFilter.setUser(user);
-        return findAll(pageable, offerFilter);
+        return getAll(pageable, offerFilter);
     }
 
     @Override
-    public OfferDto findDtoById(Long id) {
-        Offer offer = findById(id);
+    public OfferDto getDtoById(Long id) {
+        Offer offer = getById(id);
         return offerMapper.toOfferDto(offer);
     }
 
     @Override
-    public OfferDto getOfferByUserAndId(String userEmail, Long id) {
-        User user = userService.findByEmail(userEmail);
+    public OfferDto getOfferByManagerAndId(String userEmail, Long id) {
+        User user = userService.getByEmail(userEmail);
         OfferFilter offerFilter = new OfferFilter();
         offerFilter.setActive(true);
         offerFilter.setUser(user);
@@ -79,7 +83,7 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
-    public Offer findById(Long id) {
+    public Offer getById(Long id) {
         return offerRepository.findById(id).orElse(null);
     }
 
@@ -92,10 +96,11 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
-    public Long createNewOffer(OfferDto offerDto,
-                               InsuranceType insuranceType,
-                               String managerEmail) {
-        User manager = userService.findByEmail(managerEmail);
+    public Long createOffer(OfferDto offerDto,
+                            InsuranceType insuranceType,
+                            String managerEmail) {
+        logger.info("Creating a new offer");
+        User manager = userService.getByEmail(managerEmail);
         Company company = companyService.getCompanyByManager(manager);
 
         Offer offer = offerMapper.toOffer(offerDto);
@@ -104,18 +109,21 @@ public class OfferServiceImpl implements OfferService {
         offer.setInsuranceType(insuranceType);
         offer.setCompany(company);
 
-        return offerRepository.save(offer).getId();
+        offer = offerRepository.save(offer);
+        logger.info("New offer created with ID: {}", offer.getId());
+        return offer.getId();
     }
 
     @Override
     public Long updateOffer(OfferDto offerDto, InsuranceType insuranceType, String managerEmail) {
         deleteOffer(managerEmail, offerDto.getId());
-        return createNewOffer(offerDto, insuranceType, managerEmail);
+        return createOffer(offerDto, insuranceType, managerEmail);
     }
 
     @Override
     public void deleteOffer(String managerEmail, Long offerId) {
-        User manager = userService.findByEmail(managerEmail);
+        logger.info("Deleting offer with ID: {}", offerId);
+        User manager = userService.getByEmail(managerEmail);
 
         OfferFilter offerFilter = new OfferFilter();
         offerFilter.setId(offerId);
@@ -124,5 +132,6 @@ public class OfferServiceImpl implements OfferService {
         Offer offer = offerRepository.findOne(offerFilter).orElseThrow(NotFoundException::new);
         offer.setActive(false);
         offerRepository.save(offer);
+        logger.info("Offer with ID: {} deleted successfully", offerId);
     }
 }

@@ -18,7 +18,7 @@ public interface InsuranceTypeService {
 
     void deleteById(Long id);
 
-    void createNewInsuranceType(InsuranceTypeDto insuranceType);
+    void createInsuranceType(InsuranceTypeDto insuranceType);
 
     void updateInsuranceType(InsuranceTypeDto insuranceTypeDto);
 }

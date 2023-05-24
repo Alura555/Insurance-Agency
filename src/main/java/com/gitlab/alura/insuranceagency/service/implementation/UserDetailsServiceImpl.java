@@ -61,22 +61,22 @@ public class UserDetailsServiceImpl implements UserDetailsService, UserService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         logger.info("Loading user by email: {}", username);
-        User user = findByEmail(username);
+        User user = getByEmail(username);
         if (user == null){
             logger.warn("User not found for email: {}", username);
             throw new UsernameNotFoundException("User not found!");
         }
-        logger.info("User loaded successfully: {}", user.getUsername());
+        logger.info("User loaded successfully: {}", user.getEmail());
         return new UserDetailsImpl(user);
     }
 
     @Override
-    public User findByEmail(String email) {
+    public User getByEmail(String email) {
         return userRepository.findByEmailAndIsActive(email, true).orElse(null);
     }
 
     @Override
-    public User findById(Long id) {
+    public User getById(Long id) {
         logger.info("Finding user by ID: {}", id);
         return userRepository.findByIdAndIsActive(id, true)
                 .orElseThrow(() -> {
@@ -86,21 +86,20 @@ public class UserDetailsServiceImpl implements UserDetailsService, UserService {
     }
 
     @Override
-    public Long registerNewUser(UserDto userDto, String roleTitle, Long companyId) {
+    public Long registerUser(UserDto userDto, String roleTitle, Long companyId) {
         logger.info("Registering new user with email: {} with role: {}", userDto.getEmail(), roleTitle);
         User newUser = createUser(userDto, roleTitle, true);
         newUser = userRepository.save(newUser);
         if (companyId != null && companyId != 0L) {
             companyService.addCompanyManager(newUser, companyId);
-            logger.info("Added company manager for user with email: {} and companyId: {}", userDto.getEmail(), companyId);
         }
         logger.info("Registered new user with email: {} and id: {}", userDto.getEmail(), newUser.getId());
         return newUser.getId();
     }
 
     @Override
-    public void registerNewClient(UserDto userDto) {
-        registerNewUser(userDto, "CLIENT", null);
+    public void registerClient(UserDto userDto) {
+        registerUser(userDto, "CLIENT", null);
     }
 
 
@@ -108,7 +107,7 @@ public class UserDetailsServiceImpl implements UserDetailsService, UserService {
         if (isNew && userRepository.findByUsernameAndIsActive(userDto.getUsername(), true).isPresent()){
             throw new InvalidInputException("username", "Username already exists");
         }
-        if (isNew && findByEmail(userDto.getEmail()) != null){
+        if (isNew && getByEmail(userDto.getEmail()) != null){
             throw new InvalidInputException("email", "Email already exists");
         }
         Date today = new Date();
@@ -138,14 +137,14 @@ public class UserDetailsServiceImpl implements UserDetailsService, UserService {
 
     @Override
     public UserDto getUserDtoById(Long id) {
-        User user = findById(id);
+        User user = getById(id);
         return userMapper.toDto(user);
     }
 
     @Override
     public void deleteById(Long id) {
         logger.info("Deleting user by ID: {}", id);
-        User user = findById(id);
+        User user = getById(id);
         user.setActive(false);
         userRepository.save(user);
         logger.info("User with ID {} deleted successfully", id);
@@ -154,7 +153,7 @@ public class UserDetailsServiceImpl implements UserDetailsService, UserService {
     @Override
     public Long updateUser(UserDto userDto, String roleTitle) throws InvalidInputException{
         logger.info("Updating user with ID: {}", userDto.getId());
-        User oldUser = findById(userDto.getId());
+        User oldUser = getById(userDto.getId());
         User updatedUser = createUser(userDto, roleTitle, false);
         updatedUser.setPassword(oldUser.getPassword());
         logger.info("User updated successfully with ID: {}", updatedUser.getId());

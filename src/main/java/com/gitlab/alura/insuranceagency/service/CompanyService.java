@@ -20,7 +20,7 @@ public interface CompanyService {
 
     CompanyDto getCompanyDtoById(Long id);
 
-    Long createNewCompany(CompanyDto companyDto);
+    Long createCompany(CompanyDto companyDto);
 
     void deleteById(Long id);
 

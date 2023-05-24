@@ -18,5 +18,5 @@ public interface DocumentTypeService {
 
     Long updateDocumentType(DocumentTypeDto documentType);
 
-    Long createNewDocumentType(DocumentTypeDto documentType);
+    Long createDocumentType(DocumentTypeDto documentType);
 }

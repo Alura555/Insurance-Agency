@@ -7,7 +7,6 @@ import org.mapstruct.Mapping;
 
 @Mapper(uses = {UserMapper.class, RoleMapper.class})
 public interface CompanyMapper {
-    //@Mapping(target = "managers", source = "managers")
     CompanyDto toDto(Company company);
 
     @Mapping(target = "managers", ignore = true)

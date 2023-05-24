@@ -95,7 +95,7 @@ public class AdminController {
     }
     @PostMapping("/documentTypes/new")
     public String createNewDocumentType(@ModelAttribute("newType") DocumentTypeDto documentType) {
-        documentTypeService.createNewDocumentType(documentType);
+        documentTypeService.createDocumentType(documentType);
         return "redirect:/personal/admin/documentTypes";
     }
 
@@ -153,7 +153,7 @@ public class AdminController {
     }
     @PostMapping("/insuranceTypes/new")
     public String createNewInsuranceType(@ModelAttribute("newType") InsuranceTypeDto insuranceTypeDto) {
-        insuranceTypeService.createNewInsuranceType(insuranceTypeDto);
+        insuranceTypeService.createInsuranceType(insuranceTypeDto);
         return "redirect:/personal/admin/insuranceTypes";
     }
 
@@ -213,7 +213,7 @@ public class AdminController {
 
     @PostMapping("/companies/new")
     public String createNewCompany(@ModelAttribute("company") CompanyDto companyDto){
-        Long companyId = companyService.createNewCompany(companyDto);
+        Long companyId = companyService.createCompany(companyDto);
         return "redirect:/personal/admin/companies/" + companyId;
     }
 
@@ -295,7 +295,7 @@ public class AdminController {
                              BindingResult result){
         Long userId = null;
         try {
-            userId = userService.registerNewUser(userDto, roleTitle, companyId);
+            userId = userService.registerUser(userDto, roleTitle, companyId);
         } catch (InvalidInputException e){
             result.rejectValue(e.getField(), "error.userDto", e.getMessage());
             return "personal/user";

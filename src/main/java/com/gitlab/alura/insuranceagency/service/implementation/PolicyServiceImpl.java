@@ -14,6 +14,8 @@ import com.gitlab.alura.insuranceagency.repository.PolicyRepository;
 import com.gitlab.alura.insuranceagency.service.DocumentService;
 import com.gitlab.alura.insuranceagency.service.OfferService;
 import com.gitlab.alura.insuranceagency.service.PolicyService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +32,7 @@ import java.util.stream.Collectors;
 @Transactional
 public class PolicyServiceImpl implements PolicyService {
 
+    private static final Logger logger = LoggerFactory.getLogger(PolicyServiceImpl.class);
     private final PolicyRepository policyRepository;
     private final PolicyMapper policyMapper;
 
@@ -73,18 +76,21 @@ public class PolicyServiceImpl implements PolicyService {
 
     @Override
     public void updatePolicy(Long id, PolicyDto policyDto) throws InvalidInputException{
+        logger.info("Updating policy with ID: {}", id);
         Policy policy = getUpdatedPolicy(id, policyDto);
 
         Date currentDate = new Date();
         setNewPolicyInfo(policyDto, currentDate, policy);
-        policyRepository.save(policy);
+        policy = policyRepository.save(policy);
+        logger.info("Policy updated successfully: {}", policy.getId());
     }
 
     @Override
     public void handleApplication(String manager, String action, Long applicationId) {
+        logger.info("Handling application. Manager: {}, Action: {}, Application ID: {}", manager, action, applicationId);
         Policy policy = policyRepository.findByIdAndIsActive(applicationId, true)
                 .orElseThrow(IllegalArgumentException::new);
-        policy.setManager(userDetailsService.findByEmail(manager));
+        policy.setManager(userDetailsService.getByEmail(manager));
         if (policy.getStartDate() == null){
             policy.setStartDate(Date.from(LocalDateTime.now().toInstant(ZoneOffset.UTC)));
         }
@@ -92,13 +98,14 @@ public class PolicyServiceImpl implements PolicyService {
             policy.setApproved(true);
         }
         policyRepository.save(policy);
+        logger.info("Application handled successfully.");
     }
 
     @Override
     public PolicyDto getApplicationForm(String clientEmail, Long offerId) {
         Policy application = new Policy();
-        User client = userDetailsService.findByEmail(clientEmail);
-        Offer offer = offerService.findById(offerId);
+        User client = userDetailsService.getByEmail(clientEmail);
+        Offer offer = offerService.getById(offerId);
 
         application.setActive(true);
         application.setClient(client);
@@ -110,8 +117,9 @@ public class PolicyServiceImpl implements PolicyService {
 
     @Override
     public Long createApplication(String clientEmail, PolicyDto policyDto, Long offerId) {
-        User client = userDetailsService.findByEmail(clientEmail);
-        Offer offer = offerService.findById(offerId);
+        logger.info("Creating application for client: {}, offer: {}", clientEmail, offerId);
+        User client = userDetailsService.getByEmail(clientEmail);
+        Offer offer = offerService.getById(offerId);
         Date currentDate = new Date();
 
         Policy policy = new Policy();
@@ -125,7 +133,9 @@ public class PolicyServiceImpl implements PolicyService {
 
         setNewPolicyInfo(policyDto, currentDate, policy);
 
-        return policyRepository.save(policy).getId();
+        Long policyId = policyRepository.save(policy).getId();
+        logger.info("Application created with ID: {}", policyId);
+        return policyId;
     }
 
     private void setNewPolicyInfo(PolicyDto policyDto, Date currentDate, Policy policy) throws InvalidInputException{
@@ -168,7 +178,7 @@ public class PolicyServiceImpl implements PolicyService {
         documentEntry.getValue().setDocumentType(documentEntry.getKey());
         validateDocumentDate(currentDate, documentEntry);
         if (!documents.contains(documentEntry.getValue())) {
-            documentService.addNewDocument(documentEntry.getValue());
+            documentService.addDocument(documentEntry.getValue());
         }
         documents.add(documentEntry.getValue());
     }
@@ -186,7 +196,7 @@ public class PolicyServiceImpl implements PolicyService {
 
 
     private PageImpl<PolicyDto> getPolicyByFilter(String email, boolean isPolicy, Pageable pageable) {
-        User user = userDetailsService.findByEmail(email);
+        User user = userDetailsService.getByEmail(email);
 
         PolicyFilter policyFilter = new PolicyFilter();
         policyFilter.setActive(true);
@@ -204,7 +214,7 @@ public class PolicyServiceImpl implements PolicyService {
     }
 
     private PolicyDto getPolicyDtoByIdAndUser(String email, boolean isPolicy, Long id) {
-        User user = userDetailsService.findByEmail(email);
+        User user = userDetailsService.getByEmail(email);
 
         PolicyFilter policyFilter = new PolicyFilter();
         policyFilter.setActive(true);

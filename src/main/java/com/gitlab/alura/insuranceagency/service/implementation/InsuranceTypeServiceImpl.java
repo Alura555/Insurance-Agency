@@ -6,6 +6,8 @@ import com.gitlab.alura.insuranceagency.dto.InsuranceTypeDto;
 import com.gitlab.alura.insuranceagency.entity.InsuranceType;
 import com.gitlab.alura.insuranceagency.mapper.InsuranceTypeMapper;
 import com.gitlab.alura.insuranceagency.service.InsuranceTypeService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +19,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class InsuranceTypeServiceImpl implements InsuranceTypeService {
+    private static final Logger logger = LoggerFactory.getLogger(InsuranceTypeServiceImpl.class);
+
     private final InsuranceTypeRepository insuranceTypeRepository;
 
     private final InsuranceTypeMapper insuranceTypeMapper;
@@ -73,16 +77,20 @@ public class InsuranceTypeServiceImpl implements InsuranceTypeService {
 
     @Override
     public void deleteById(Long id) {
+        logger.info("Deleting insurance type with ID: {}", id);
         InsuranceType insuranceType = getById(id);
         insuranceType.setActive(false);
         insuranceTypeRepository.save(insuranceType);
+        logger.info("Insurance type deleted successfully");
     }
 
     @Override
-    public void createNewInsuranceType(InsuranceTypeDto insuranceTypeDto) {
+    public void createInsuranceType(InsuranceTypeDto insuranceTypeDto) {
+        logger.info("Creating new insurance type");
         InsuranceType insuranceType = insuranceTypeMapper.toEntity(insuranceTypeDto);
         insuranceType.setActive(true);
-        insuranceTypeRepository.save(insuranceType);
+        insuranceType = insuranceTypeRepository.save(insuranceType);
+        logger.info("New insurance type created successfully with ID: {}", insuranceType.getId());
     }
 
     @Override
@@ -90,6 +98,6 @@ public class InsuranceTypeServiceImpl implements InsuranceTypeService {
         deleteById(insuranceTypeDto.getId());
 
         insuranceTypeDto.setId(null);
-        createNewInsuranceType(insuranceTypeDto);
+        createInsuranceType(insuranceTypeDto);
     }
 }

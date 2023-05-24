@@ -69,7 +69,7 @@ public class OffersController {
         Sort sortOption = sortOptionsList.getSortByIndex(sort - 1);
         Pageable pageable = PageRequest.of(page, size, sortOption);
 
-        Page<OfferDto> offers = offerService.findAll(pageable, offerFilter);
+        Page<OfferDto> offers = offerService.getAll(pageable, offerFilter);
 
         List<InsuranceTypeDto> insuranceTypeList = insuranceTypeService.getInsuranceTypes();
         List<CompanyDto> companies = companyService.getActiveCompanies();
@@ -97,7 +97,7 @@ public class OffersController {
 
     @GetMapping("/{id}")
     public String getOfferById(Model model, @PathVariable Long id){
-        OfferDto offerDto = offerService.findDtoById(id);
+        OfferDto offerDto = offerService.getDtoById(id);
         if (offerDto == null){
             throw new NotFoundException();
         }

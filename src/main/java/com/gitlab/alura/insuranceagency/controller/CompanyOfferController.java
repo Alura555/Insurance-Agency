@@ -49,7 +49,7 @@ public class CompanyOfferController {
         String userEmail = principal.getName();
         Sort sort = Sort.by("id").descending();
         Pageable pageable = PageRequest.of(page, size, sort);
-        Page<OfferDto> offerDtoPage = offerService.findAll(pageable, userEmail);
+        Page<OfferDto> offerDtoPage = offerService.getAll(pageable, userEmail);
 
         model.addAttribute("offers", offerDtoPage);
         model.addAttribute("page", "offers");
@@ -61,7 +61,7 @@ public class CompanyOfferController {
                                Principal principal,
                                Model model){
         String userEmail = principal.getName();
-        OfferDto offerDto = offerService.getOfferByUserAndId(userEmail, id);
+        OfferDto offerDto = offerService.getOfferByManagerAndId(userEmail, id);
 
         model.addAttribute("offer", offerDto);
         model.addAttribute("page", "offers");
@@ -86,7 +86,7 @@ public class CompanyOfferController {
                               Principal principal){
         String userEmail = principal.getName();
         InsuranceType insuranceType = insuranceTypeService.getById(typeId);
-        Long offerId = offerService.createNewOffer(offerDto, insuranceType, userEmail);
+        Long offerId = offerService.createOffer(offerDto, insuranceType, userEmail);
         return "redirect:/personal/offers/" + offerId;
     }
 
@@ -102,7 +102,7 @@ public class CompanyOfferController {
                                Principal principal,
                                Model model) {
         String managerEmail = principal.getName();
-        OfferDto offerDto = offerService.getOfferByUserAndId(managerEmail, id);
+        OfferDto offerDto = offerService.getOfferByManagerAndId(managerEmail, id);
         List<InsuranceTypeDto> typeDtoList = insuranceTypeService.getInsuranceTypes();
         List<DocumentType> documentTypes = documentTypeService.getAllActive();
 

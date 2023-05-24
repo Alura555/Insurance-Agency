@@ -1,12 +1,13 @@
 package com.gitlab.alura.insuranceagency.service.implementation;
 
 import com.gitlab.alura.insuranceagency.dto.DocumentTypeDto;
-import com.gitlab.alura.insuranceagency.dto.OfferDto;
 import com.gitlab.alura.insuranceagency.entity.DocumentType;
 import com.gitlab.alura.insuranceagency.exception.NotFoundException;
 import com.gitlab.alura.insuranceagency.mapper.DocumentTypeMapper;
 import com.gitlab.alura.insuranceagency.repository.DocumentTypeRepository;
 import com.gitlab.alura.insuranceagency.service.DocumentTypeService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class DocumentTypeServiceImpl implements DocumentTypeService {
+    private static final Logger logger = LoggerFactory.getLogger(DocumentTypeServiceImpl.class);
 
     private final DocumentTypeRepository documentTypeRepository;
 
@@ -46,9 +48,11 @@ public class DocumentTypeServiceImpl implements DocumentTypeService {
 
     @Override
     public void deleteById(Long id) {
+        logger.info("Deleting document type with ID: {}", id);
         DocumentType documentType = getById(id);
         documentType.setActive(false);
         documentTypeRepository.save(documentType);
+        logger.info("Document type deleted successfully");
     }
 
     private DocumentType getById(Long id) {
@@ -68,14 +72,17 @@ public class DocumentTypeServiceImpl implements DocumentTypeService {
 
         documentType.setActive(true);
         documentType.setId(null);
-        return createNewDocumentType(documentType);
+        return createDocumentType(documentType);
     }
 
     @Override
-    public Long createNewDocumentType(DocumentTypeDto documentTypeDto) {
+    public Long createDocumentType(DocumentTypeDto documentTypeDto) {
+        logger.info("Creating new document type");
         documentTypeDto.setActive(true);
 
         DocumentType documentType = documentTypeMapper.toDocumentType(documentTypeDto);
-        return documentTypeRepository.save(documentType).getId();
+        documentType = documentTypeRepository.save(documentType);
+        logger.info("New document type created successfully with ID: {}", documentType.getId());
+        return documentType.getId();
     }
 }

@@ -46,7 +46,7 @@ public class PersonalPageController {
     @GetMapping("/info")
     public String getInfo(Model model, Principal principal){
         String email = principal.getName();
-        User user = userService.findByEmail(email);
+        User user = userService.getByEmail(email);
         model.addAttribute("user", user);
         model.addAttribute("page", "info");
         return "personal/personal-account";
