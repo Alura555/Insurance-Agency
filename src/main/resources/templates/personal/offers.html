@@ -38,7 +38,7 @@
             <td>
                 <div class="handle-buttons" >
                     <form th:action="@{/personal/offers/{id}(id=${offer.id})}" th:method="delete">
-                        <a th:href="@{/personal/offers/{id}/getOfferForm(id=${offer.id})}" class="approve-button">Edit</a>
+                        <a sec:authorize="hasAuthority('COMPANY MANAGER')" th:href="@{/personal/offers/{id}/getOfferForm(id=${offer.id})}" class="approve-button">Edit</a>
                         <button type="submit" class="reject-button">Delete</button>
                     </form>
                 </div>

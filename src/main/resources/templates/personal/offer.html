@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://thymeleaf.org">
+<html xmlns:th="http://thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <title>My Account</title>
     <link th:href="@{/style.css}" rel="stylesheet" />
@@ -12,20 +13,18 @@
         <div class="account policy-info-fragment">
             <div class="title">
                 <h2 th:text="'Offer ' + ${offer.id != null ? offer.id : ''}"></h2>
-                <div th:if="${offer.id == null or edit == true}" class="handle-buttons">
+                <div sec:authorize="hasAuthority('COMPANY MANAGER')" th:if="${offer.id == null or edit == true}" class="handle-buttons">
                     <button th:text="${offer.id == null ? 'Create' : 'Save'}"
                             form="offerForm" type="submit" name="action" class="approve-button"></button>
                     <a th:with="url=${'/personal/offers' + (offer.id != null ? '/' + offer.id : '')}"
                        th:href="@{${url}}"
                        class="reject-button">Cancel</a>
                 </div>
-                <div th:unless="${offer.id == null or edit == true}" class="handle-buttons">
-
+                <div sec:authorize="hasAuthority('COMPANY MANAGER')" th:unless="${offer.id == null or edit == true}" class="handle-buttons">
                     <form th:action="@{/personal/offers/{id}(id=${offer.id})}" th:method="delete">
                         <a th:href="@{/personal/offers/{id}/getOfferForm(id=${offer.id})}" class="approve-button">Edit</a>
                         <button type="submit" class="reject-button">Delete</button>
                     </form>
-
                 </div>
             </div>
             <form id="offerForm" th:with="url=${(offer.id != null) ? '/personal/offers/' + offer.id  : '/personal/offers/new'}"
