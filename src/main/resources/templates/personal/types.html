@@ -49,7 +49,7 @@
                     <form id="documentTypeForm"
                           th:unless="${type.id != typeId}"
                           th:action="@{/personal/admin/{page}/{id}(page=${page}, id=${type.id})}"
-                            th:object="${updatedType}" method="put">
+                            th:object="${updatedType}" th:method="put">
                         <label class="type-form__label">
                             <input th:field="*{title}"
                                    type="text"
@@ -69,13 +69,12 @@
                                class="approve-button">Edit</a>
                             <button type="submit" class="reject-button">Delete</button>
                         </form>
+                            <button th:unless="${type.id != typeId}"
+                                    form="documentTypeForm" type="submit" class="approve-button">Save</button>
+                            <a th:unless="${type.id != typeId}"
+                               th:href="@{/personal/admin/{pageName}(pageName=${page}, page=${typesList.number}, size=${typesList.size})}"
+                               class="reject-button">Cancel</a>
 
-                        <button th:if="${type.id == typeId}"
-                                th:attr="onclick=|sendPutRequest('/personal/admin/' + '${page}', '${type.id}', 'documentTypeForm')|"
-                                class="approve-button">Save</button>
-                        <a th:if="${type.id == typeId}"
-                           th:href="@{/personal/admin/{pageName}(pageName=${page}, page=${typesList.number}, size=${typesList.size})}"
-                           class="reject-button">Cancel</a>
                     </div>
                 </td>
             </tr>

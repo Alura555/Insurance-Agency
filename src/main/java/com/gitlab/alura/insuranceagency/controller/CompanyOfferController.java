@@ -11,7 +11,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -118,13 +117,13 @@ public class CompanyOfferController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Long> updateOfferById(@PathVariable(name = "id") Long id,
+    public String updateOfferById(@PathVariable(name = "id") Long id,
                                   @ModelAttribute("offer") OfferDto offerDto,
                                   @RequestParam(name = "type", required = false, defaultValue = "1") Long typeId,
                                   Principal principal){
         String userEmail = principal.getName();
         InsuranceType insuranceType = insuranceTypeService.getById(typeId);
         Long offerId = offerService.updateOffer(offerDto, insuranceType, userEmail);
-        return ResponseEntity.ok(offerId);
+        return "redirect:/personal/offers/" + offerId;
     }
 }

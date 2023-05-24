@@ -5,7 +5,6 @@
     <link th:href="@{/style.css}" rel="stylesheet" />
 </head>
 <body>
-<script src="/js/send-put.js"></script>
     <div th:replace="fragments/header :: header"></div>
     <div class="personal-account">
         <div th:replace="personal/account-nav :: div"></div>
@@ -14,25 +13,24 @@
             <div class="title">
                 <h2 th:text="'Company ' + ${company.id != null ? company.id : ''}"></h2>
                 <div th:if="${company.id == null or edit == true}" class="handle-buttons">
-                    <button th:if="${company.id == null}"
-                            form="companyForm" type="submit" name="action" class="approve-button">Create</button>
-                    <button th:unless="${company.id == null}"
-                            th:attr="onclick=|sendPutRequest('/personal/admin/companies', '${company.id}', 'companyForm')|"
-                            class="approve-button">Save</button>
+                    <button th:text="${company.id == null ? 'Create' : 'Save'}"
+                                form="companyForm" type="submit" name="action" class="approve-button"></button>
                     <a th:with="url=${'/personal/admin/companies' + (company.id != null ? '/' + company.id : '')}"
-                       th:href="@{${url}}"
-                       class="reject-button">Cancel</a>
+                           th:href="@{${url}}"
+                           class="reject-button">Cancel</a>
                 </div>
-                <div th:unless="${company.id == null or edit == true}" class="handle-buttons">\
+                <div th:unless="${company.id == null or edit == true}" class="handle-buttons">
                     <form th:action="@{/personal/admin/companies/{id}(id=${company.id})}" th:method="delete">
                         <a th:href="@{/personal/admin/companies/{id}/getCompanyForm(id=${company.id})}" class="approve-button">Edit</a>
                         <button type="submit" class="reject-button">Delete</button>
                     </form>
                 </div>
             </div>
-            <form id="companyForm" th:with="url=${(company.id != null) ? '' : 'new'}"
+            <form id="companyForm"
+                  th:with="url=${(company.id != null) ? '/personal/admin/companies/' + company.id : '/personal/admin/users/new'}"
                   th:action="@{${url}}"
-                  th:object="${company}" method="post">
+                  th:object="${company}"
+                  th:method="${(company.id != null) ? 'put' : 'post'}">
                 <div th:if="${company.id!=null and edit!=true}" class="offer-title">
                     <b th:if="${company.name!=null}" th:text="${company.name}"></b>
                 </div>

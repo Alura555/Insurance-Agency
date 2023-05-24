@@ -1,14 +1,10 @@
 <!DOCTYPE html>
-<html xmlns:th="http://thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html xmlns:th="http://thymeleaf.org">
 <head>
     <title>My Account</title>
     <link th:href="@{/style.css}" rel="stylesheet" />
 </head>
 <body>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="/js/send-delete.js"></script>
-<script src="/js/send-put.js"></script>
     <div th:replace="fragments/header :: header"></div>
     <div class="personal-account">
         <div th:replace="personal/account-nav :: div"></div>
@@ -16,13 +12,9 @@
         <div class="account policy-info-fragment">
             <div class="title">
                 <h2 th:text="'Offer ' + ${offer.id != null ? offer.id : ''}"></h2>
-                <div th:if="${offer.id == null or edit == true}" class="handle-buttons"
-                     sec:authorize="hasAuthority('COMPANY MANAGER')">
-                    <button th:if="${offer.id == null}"
-                            form="offerForm" type="submit" name="action" class="approve-button">Create</button>
-                    <button th:unless="${offer.id == null}"
-                            th:attr="onclick=|sendPutRequest('/personal/offers', '${offer.id}', 'offerForm')|"
-                            class="approve-button">Save</button>
+                <div th:if="${offer.id == null or edit == true}" class="handle-buttons">
+                    <button th:text="${offer.id == null ? 'Create' : 'Save'}"
+                            form="offerForm" type="submit" name="action" class="approve-button"></button>
                     <a th:with="url=${'/personal/offers' + (offer.id != null ? '/' + offer.id : '')}"
                        th:href="@{${url}}"
                        class="reject-button">Cancel</a>
@@ -36,9 +28,10 @@
 
                 </div>
             </div>
-            <form id="offerForm" th:with="url=${(offer.id != null) ? '' : 'new'}"
+            <form id="offerForm" th:with="url=${(offer.id != null) ? '/personal/offers/' + offer.id  : '/personal/offers/new'}"
                   th:action="@{${url}}"
-                  th:object="${offer}" method="post">
+                  th:object="${offer}"
+                  th:method="${(offer.id != null) ? 'put' : 'post'}">
                 <div th:if="${offer.id!=null and edit!=true}" class="offer-title">
                     <b th:if="${offer.title!=null}" th:text="${offer.title}"></b>
                 </div>

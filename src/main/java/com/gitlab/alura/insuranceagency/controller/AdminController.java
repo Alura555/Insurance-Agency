@@ -13,7 +13,6 @@ import com.gitlab.alura.insuranceagency.service.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -76,10 +75,10 @@ public class AdminController {
 
 
     @PutMapping("/documentTypes/{id}")
-    public ResponseEntity<Void> updateDocumentType(@PathVariable("id") Long id,
+    public String updateDocumentType(@PathVariable("id") Long id,
                                                    @ModelAttribute("updatedType") DocumentTypeDto documentType) {
         documentTypeService.updateDocumentType(documentType);
-        return ResponseEntity.ok().build();
+        return "redirect:/personal/admin/documentTypes";
     }
 
     @GetMapping("/documentTypes/new")
@@ -134,10 +133,10 @@ public class AdminController {
         return "personal/personal-account";
     }
     @PutMapping("/insuranceTypes/{id}")
-    public ResponseEntity<Void> updateInsuranceType(@PathVariable("id") Long id,
+    public String updateInsuranceType(@PathVariable("id") Long id,
                                                     @ModelAttribute("updatedType") InsuranceTypeDto insuranceTypeDto) {
         insuranceTypeService.updateInsuranceType(insuranceTypeDto);
-        return ResponseEntity.ok().build();
+        return "redirect:/personal/admin/insuranceTypes";
     }
 
     @GetMapping("/insuranceTypes/new")
@@ -199,10 +198,10 @@ public class AdminController {
     }
 
     @PutMapping("/companies/{id}")
-    public ResponseEntity<Long> updateCompany(@PathVariable(name="id") Long id,
+    public String updateCompany(@PathVariable(name="id") Long id,
                                 @ModelAttribute("company") CompanyDto companyDto){
         Long companyId = companyService.updateCompany(companyDto);
-        return ResponseEntity.ok(companyId);
+        return "redirect:/personal/admin/companies/" + companyId;
     }
 
     @GetMapping("/companies/new")
@@ -262,7 +261,7 @@ public class AdminController {
         return "personal/user";
     }
 
-    @PostMapping("/users/{id}")
+    @PutMapping("/users/{id}")
     public String updateUser(@PathVariable(name="id") Long id,
                              @ModelAttribute("user") UserDto userDto,
                              @RequestParam(name = "userRole", required = false) String roleTitle,
