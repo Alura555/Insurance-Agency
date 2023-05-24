@@ -23,7 +23,7 @@
                     </form>
 
                 </div>
-                <button th:if="${policyDto.status=='Waiting for documents' or policyDto.startDate == null or #fields.hasErrors()}"
+                <button th:if="${policyDto.status=='Waiting for documents'}"
                         form="policyForm"
                         sec:authorize="hasAnyAuthority('CLIENT', 'MANAGER')"
                         type="submit">Save changes</button>
