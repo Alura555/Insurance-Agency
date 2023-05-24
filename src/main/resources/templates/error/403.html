@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>403 Forbidden</title>
+        <link th:href="@{/style.css}" rel="stylesheet" />
+    </head>
+    <body>
+        <div th:replace="fragments/header :: header"></div>
+        <div class="error-container">
+            <h1>403 Forbidden</h1>
+            <p>Sorry, you don't have permission to access this page.</p>
+        </div>
+    </body>
+</html>

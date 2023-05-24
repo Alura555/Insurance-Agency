@@ -37,6 +37,8 @@ public class WebSecurityConfig {
                 .csrf().disable()
                 .authorizeRequests()
                     .antMatchers("/js/**").permitAll()
+                    .antMatchers("/personal/admin/**").hasAuthority("ADMIN")
+                    .antMatchers("/personal/offers/**").hasAnyAuthority("ADMIN", "COMPANY MANAGER")
                     .antMatchers("/personal/**").authenticated()
                     .anyRequest().permitAll()
                 .and()
