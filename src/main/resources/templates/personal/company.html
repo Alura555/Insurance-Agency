@@ -27,7 +27,7 @@
                 </div>
             </div>
             <form id="companyForm"
-                  th:with="url=${(company.id != null) ? '/personal/admin/companies/' + company.id : '/personal/admin/users/new'}"
+                  th:with="url=${(company.id != null) ? '/personal/admin/companies/' + company.id : '/personal/admin/companies/new'}"
                   th:action="@{${url}}"
                   th:object="${company}"
                   th:method="${(company.id != null) ? 'put' : 'post'}">
