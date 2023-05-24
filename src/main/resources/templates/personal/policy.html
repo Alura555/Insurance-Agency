@@ -6,6 +6,8 @@
     <link th:href="@{/style.css}" rel="stylesheet" />
 </head>
 <body>
+<script src="/js/check-dates.js"></script>
+
     <div th:replace="fragments/header :: header"></div>
     <div class="personal-account">
         <div th:replace="personal/account-nav :: div"></div>
@@ -15,15 +17,23 @@
                 <h2 th:text="${policyDto.manager != null} ? 'Policy ' : 'Application ' + ${policyDto.id != null ? policyDto.id : ''}"></h2>
                 <div class="handle-buttons" sec:authorize="hasAuthority('MANAGER')"
                      th:if="${policyDto.status == 'Awaiting manager approval'}">
-                    <form  th:action="@{/personal/applications/{id}/approve (id=${policyDto.id})}" method="post">
+                    <form  th:action="@{/personal/applications/{id}(id=${policyDto.id})}" th:method="put">
                         <button type="submit" name="action" value="approve" class="approve-button">Approve</button>
                         <button type="submit" name="action" value="reject" class="reject-button">Reject</button>
                     </form>
+
                 </div>
+                <button th:if="${policyDto.status=='Waiting for documents' or policyDto.startDate == null or #fields.hasErrors()}"
+                        form="policyForm"
+                        sec:authorize="hasAnyAuthority('CLIENT', 'MANAGER')"
+                        type="submit">Save changes</button>
             </div>
-            <form th:with="url=${((policyDto.id != null) ? policyDto.id : 'new/?id=' + offerId)}"
+            <form id="policyForm" th:with="url=${((policyDto.id != null) ? policyDto.id : 'new/?id=' + offerId)}"
                   th:action="@{${url}}"
-                  th:object="${policyDto}" method="post">
+                  th:object="${policyDto}"
+                  method="post"
+                  onsubmit="return checkDates()">
+
                 <div class="offer-title">
                     <b th:text="${policyDto.offer.title}"></b>
                 </div>
@@ -53,16 +63,16 @@
                     <div class="policy-field">
                         <label for="startDate">Start Date:</label>
                         <br>
-                        <span th:if="${policyDto.startDate != null && !#fields.hasErrors()}" th:text="${policyDto.startDate}"></span>
+                        <span th:if="${policyDto.startDate != null && !#fields.hasErrors()}"
+                              th:text="${policyDto.startDate}"></span>
                         <div sec:authorize="hasAnyAuthority('CLIENT', 'MANAGER')" class="start-date-form">
                             <input th:unless="${policyDto.startDate != null && !#fields.hasErrors()}"
                                    type="date"
                                    id="startDate"
                                    th:field="*{startDate}"
                                    th:value="${policyDto.startDate}" />
-                            <p th:if="${#fields.hasErrors('startDate')}"
-                               th:errors="*{startDate}"
-                               class="alert alert-error"></p>
+                            <p class="alert alert-error"
+                               id="startDateError"></p>
                         </div>
                     </div>
                     <div  class="policy-field" th:if="${policyDto.expiredDate != null}">
@@ -88,31 +98,30 @@
                 </div>
 
                 <ul sec:authorize="hasAnyAuthority('CLIENT', 'MANAGER')" class="documents-list">
-                    <li th:each="document : ${policyDto.documents}">
+                    <li th:each="document, iterStat : ${policyDto.documents}">
                         <h2 th:text="${document.key.title}"></h2>
                         <br>
                         <div class="document-form">
                             <label for="number">Document No:</label>
                             <span th:if="${document.value != null && document.value.number != '' && !#fields.hasErrors()}">
-                            <span th:text="${document.value.number}"></span>
+                                <span th:text="${document.value.number}"></span>
                             </span>
                             <input th:unless="${document.value != null && document.value.number != '' && !#fields.hasErrors()}"
-                                   type="text" id="number" th:field="*{documents[__${document.key.id}__].number}" />
+                                   type="text" id="number" th:field="*{documents[__${document.key.id}__].number}"
+                                   th:value="${document.value}" />
                             <br>
                             <label for="date">Date of issue:</label>
                             <span th:if="${document.value != null && document.value.issueDate != null && !#fields.hasErrors()}">
                                 <span th:text="${document.value.issueDate}"></span>
                             </span>
                             <input th:unless="${document.value != null && document.value.issueDate != null && !#fields.hasErrors()}"
-                                   type="date" id="date" th:field="*{documents[__${document.key.id}__].issueDate}" />
-                            <p class="alert alert-error" th:if="${#fields.hasErrors('documents[__${document.key.id}__].issueDate')}"
-                               th:errors="*{documents[__${document.key.id}__].issueDate}"></p>
+                                   type="date" th:id="'date-' + ${iterStat.index}" th:field="*{documents[__${document.key.id}__].issueDate}" />
+                            <p class="alert alert-error"
+                               th:id="'issueDateError-' + ${iterStat.index}"></p>
                         </div>
                     </li>
                 </ul>
-                <button th:if="${policyDto.status=='Waiting for documents' or policyDto.startDate == null or #fields.hasErrors()}"
-                        sec:authorize="hasAnyAuthority('CLIENT', 'MANAGER')"
-                        type="submit">Save changes</button>
+
             </form>
         </div>
 
