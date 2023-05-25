@@ -980,3 +980,7 @@ td form{
 .role-form select{
     width:70%;
 }
+
+button.wide-button {
+    width: 90%;
+}

@@ -49,7 +49,7 @@
 
 	<div class="split right">
         <div class="search-box">
-            <input form="filter" type="text" name="q" placeholder="Search..." th:value="${query != null} ? ${query}">
+            <input form="filter" type="text" autocomplete="off" name="q" placeholder="Search..." th:value="${query != null} ? ${query}">
             <button form="filter" type="submit">Search</button>
         </div>
 
