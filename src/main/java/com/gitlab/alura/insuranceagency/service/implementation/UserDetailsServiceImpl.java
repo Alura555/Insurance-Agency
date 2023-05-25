@@ -90,7 +90,7 @@ public class UserDetailsServiceImpl implements UserDetailsService, UserService {
         logger.info("Registering new user with email: {} with role: {}", userDto.getEmail(), roleTitle);
         User newUser = createUser(userDto, roleTitle, true);
         newUser = userRepository.save(newUser);
-        if (companyId != null && companyId != 0L) {
+        if (companyId != null && companyId != 0L && roleTitle.equals("COMPANY MANAGER")) {
             companyService.addCompanyManager(newUser, companyId);
         }
         logger.info("Registered new user with email: {} and id: {}", userDto.getEmail(), newUser.getId());

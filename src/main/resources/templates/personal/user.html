@@ -99,7 +99,7 @@
                     <div class="policy-field" id="companySelect" style="display: none;">
                         <label>Company:</label>
                         <select id="company" name="company">
-                            <option th:each="company : ${companies}"
+                            <option th:each="company : ${listCompanies}"
                                     th:value="${company.id}"
                                     th:text="${company.name}"></option>
                         </select>

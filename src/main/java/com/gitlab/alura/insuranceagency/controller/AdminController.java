@@ -249,11 +249,6 @@ public class AdminController {
     public String getUserFormById(@PathVariable(name="id") Long id,
                                   Model model){
         UserDto userDto = userService.getUserDtoById(id);
-        List<RoleDto> roles = userService.getUserRoles();
-        List<CompanyDto> companies = companyService.getActiveCompanies();
-
-        model.addAttribute("roles", roles);
-        model.addAttribute("companies", companies);
 
         model.addAttribute("user", userDto);
         model.addAttribute("edit", true);
@@ -278,11 +273,6 @@ public class AdminController {
 
     @GetMapping("/users/new")
     public String getNewUserForm(Model model){
-        List<RoleDto> roles = userService.getUserRoles();
-        List<CompanyDto> companies = companyService.getActiveCompanies();
-
-        model.addAttribute("roles", roles);
-        model.addAttribute("companies", companies);
         model.addAttribute("user", new UserDto());
         model.addAttribute("page", "users");
         return "personal/user";
@@ -309,4 +299,12 @@ public class AdminController {
         return "redirect:/personal/admin/users";
     }
 
+    @ModelAttribute("listCompanies")
+    public List<CompanyDto> getListCompanies() {
+        return companyService.getActiveCompanies();
+    }
+    @ModelAttribute("roles")
+    public List<RoleDto> getRoles() {
+        return userService.getUserRoles();
+    }
 }
