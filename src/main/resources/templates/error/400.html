@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>400 Bad Request</title>
+        <link th:href="@{/style.css}" rel="stylesheet" />
+    </head>
+    <body>
+        <div th:replace="fragments/header :: header"></div>
+        <div class="error-container">
+            <h1>400 Bad Request</h1>
+            <p>The server could not understand the request.</p>
+        </div>
+    </body>
+</html>

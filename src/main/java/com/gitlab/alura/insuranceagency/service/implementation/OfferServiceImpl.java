@@ -84,7 +84,7 @@ public class OfferServiceImpl implements OfferService {
 
     @Override
     public Offer getById(Long id) {
-        return offerRepository.findById(id).orElse(null);
+        return offerRepository.findById(id).orElseThrow(NotFoundException::new);
     }
 
     public BigDecimal getMaxPrice(){

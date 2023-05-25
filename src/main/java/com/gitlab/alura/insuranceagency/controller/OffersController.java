@@ -98,9 +98,6 @@ public class OffersController {
     @GetMapping("/{id}")
     public String getOfferById(Model model, @PathVariable Long id){
         OfferDto offerDto = offerService.getDtoById(id);
-        if (offerDto == null){
-            throw new NotFoundException();
-        }
         model.addAttribute("offer", offerDto);
         return "offers/page";
     }
