@@ -39,6 +39,7 @@ public class WebSecurityConfig {
                     .antMatchers("/style.css", "/js/**").permitAll()
                     .antMatchers("/personal/admin/**").hasAuthority("ADMIN")
                     .antMatchers("/personal/offers/**").hasAnyAuthority("ADMIN", "COMPANY MANAGER")
+                    .antMatchers("/personal/applications/new").hasAnyAuthority("CLIENT")
                     .antMatchers("/personal/**").authenticated()
                     .anyRequest().permitAll()
                 .and()
