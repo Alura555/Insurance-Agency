@@ -43,7 +43,7 @@ public class Company {
             inverseJoinColumns = @JoinColumn(name = "manager_id"))
     private Set<User> managers;
 
-    @Formula("(SELECT COUNT(*) FROM Offer o WHERE o.company_id = id AND o.is_active = true)")
+    @Formula("(SELECT COUNT(*) FROM offer o WHERE o.company_id = id AND o.is_active = true)")
     private Integer activeOffersCount;
 
     public Company() {

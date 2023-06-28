@@ -1,0 +1,11 @@
+DROP TABLE IF EXISTS document_set;
+DROP TABLE IF EXISTS policy;
+DROP TABLE IF EXISTS document;
+DROP TABLE IF EXISTS required_document;
+DROP TABLE IF EXISTS offer;
+DROP TABLE IF EXISTS company_manager;
+DROP TABLE IF EXISTS user;
+DROP TABLE IF EXISTS company;
+DROP TABLE IF EXISTS role;
+DROP TABLE IF EXISTS document_type;
+DROP TABLE IF EXISTS insurance_type;

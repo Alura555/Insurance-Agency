@@ -24,7 +24,7 @@ public class InsuranceType {
     @Column(nullable = false)
     private boolean isActive;
 
-    @Formula("(SELECT COUNT(*) FROM Offer o WHERE o.insurance_type_id = id AND o.is_active = true)")
+    @Formula("(SELECT COUNT(*) FROM offer o WHERE o.insurance_type_id = id AND o.is_active = true)")
     private Integer activeOffersCount;
 
     public InsuranceType(String title, boolean isActive, Integer activeOffersCount) {
