@@ -43,5 +43,56 @@ companies, insurance offers.
 * MySQL
 * JUnit 5 
 * Mock
+* Docker
 
 ---
+
+### Getting Started
+
+### Installation and Setup
+1. Install Docker on your machine if it is not already installed. 
+Visit the Docker website (https://www.docker.com/) and follow the 
+installation instructions for your operating system. 
+
+2. Clone the repository to your local machine:
+
+```
+git clone https://github.com/Alura555/Insurance-Agency.git
+```
+
+3. Navigate to the project directory: 
+```
+cd Insurance-Agency
+```
+
+### Building and Running
+1. Build the Docker images using Docker Compose:
+
+```
+docker-compose build
+```
+
+2. Start the containers:
+
+
+```
+docker-compose up -d
+```
+3. Once the containers are up and running, 
+you can access the application by opening 
+a web browser and navigating to `http://localhost:8080`.
+
+### Stopping the Application
+
+To stop the application, run the following command:
+```
+docker-compose down
+```
+
+
+### Cleanup
+
+If you want to remove the Docker containers and images associated with the application, run the following command:
+```
+docker-compose down --volumes --rmi all
+```
